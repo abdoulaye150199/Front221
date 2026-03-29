@@ -1,0 +1,211 @@
+<div class="professeurs">
+  <div class="page-header">
+    <div class="title-block">
+      <h1 class="page-title">
+        Liste des professeurs <span>({{ professors.length }})</span>
+      </h1>
+    </div>
+    <div class="header-actions">
+      <button mat-stroked-button class="ghost-btn" type="button">
+        <mat-icon>download</mat-icon>
+        Télécharger la liste
+      </button>
+      <button mat-stroked-button class="ghost-btn" type="button">
+        <mat-icon>file_upload</mat-icon>
+        Ajouter en masse
+      </button>
+      <button mat-flat-button class="primary-btn" type="button">
+        <mat-icon>person_add</mat-icon>
+        Ajouter un professeur
+      </button>
+    </div>
+  </div>
+
+  <div class="filters-card">
+    <div class="filters-left">
+      <div class="filter-group">
+        <label>Professeurs/page</label>
+        <select [ngModel]="pageSize" (ngModelChange)="onPageSizeChange($event)">
+          <option *ngFor="let item of pageSizeOptions" [value]="item.value">
+            {{ item.label }}
+          </option>
+        </select>
+      </div>
+      <div class="filter-group">
+        <label>Classe</label>
+        <select [(ngModel)]="selectedClass">
+          <option *ngFor="let item of classOptions" [value]="item.value">
+            {{ item.label }}
+          </option>
+        </select>
+      </div>
+      <div class="filter-group">
+        <label>Statut</label>
+        <select [(ngModel)]="selectedStatus">
+          <option *ngFor="let item of statusOptions" [value]="item.value">
+            {{ item.label }}
+          </option>
+        </select>
+      </div>
+    </div>
+    <label class="search-box">
+      <mat-icon>search</mat-icon>
+      <input
+        type="text"
+        placeholder="Rechercher..."
+        [(ngModel)]="searchTerm"
+        (ngModelChange)="onSearchChange($event)"
+      />
+    </label>
+  </div>
+
+  <div class="table-card">
+    <table class="prof-table">
+      <thead>
+        <tr>
+          <th>Photo</th>
+          <th>Nom complet</th>
+          <th>Grade</th>
+          <th>Téléphone</th>
+          <th>Email</th>
+          <th>Nb. d'heures effectué</th>
+          <th>Statuts</th>
+          <th class="actions-head">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let prof of pagedProfessors">
+          <td>
+            <div class="avatar">{{ getInitials(prof.name) }}</div>
+          </td>
+          <td class="name-cell">{{ prof.name }}</td>
+          <td>{{ prof.grade }}</td>
+          <td>{{ prof.phone }}</td>
+          <td>{{ prof.email }}</td>
+          <td class="hours-cell">{{ prof.hours }} Heures</td>
+          <td>
+            <span class="status-pill" [class.inactive]="prof.status === 'Inactif'">
+              {{ prof.status }}
+            </span>
+          </td>
+          <td class="actions-cell">
+            <button class="menu-trigger" type="button" (click)="toggleMenu(prof.id)">
+              <span></span>
+              <span></span>
+              <span></span>
+            </button>
+            <div class="menu-card" *ngIf="openMenuId === prof.id">
+              <button type="button" (click)="openProfile(prof)">
+                <mat-icon>visibility</mat-icon>
+                Voir le profil
+              </button>
+              <button type="button">
+                <mat-icon>edit</mat-icon>
+                Modifier
+              </button>
+              <button type="button" class="danger">
+                <mat-icon>delete</mat-icon>
+                Supprimer
+              </button>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="table-footer">
+      <div class="results">
+        {{ startIndex }} à {{ endIndex }} professeurs pour {{ totalResults }}
+      </div>
+      <div class="pagination">
+        <button
+          mat-stroked-button
+          type="button"
+          class="page-nav"
+          [disabled]="!canPrev"
+          (click)="previousPage()"
+        >
+          <mat-icon>chevron_left</mat-icon>
+        </button>
+        <button
+          *ngFor="let p of pages"
+          type="button"
+          class="page-btn"
+          [class.active]="p === currentPage"
+          (click)="page = p"
+        >
+          {{ p }}
+        </button>
+        <button
+          mat-stroked-button
+          type="button"
+          class="page-nav"
+          [disabled]="!canNext"
+          (click)="nextPage()"
+        >
+          <mat-icon>chevron_right</mat-icon>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal-backdrop" *ngIf="selectedProfessor">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3>Profil du professeur</h3>
+        <button type="button" class="close-btn" (click)="closeProfile()">
+          <mat-icon>close</mat-icon>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="profile-header">
+          <div class="avatar large">{{ getInitials(selectedProfessor?.name || '') }}</div>
+          <div>
+            <div class="profile-name">{{ selectedProfessor?.name }}</div>
+            <div class="profile-grade">{{ selectedProfessor?.grade }}</div>
+            <span
+              class="status-pill"
+              [class.inactive]="selectedProfessor?.status === 'Inactif'"
+            >
+              {{ selectedProfessor?.status }}
+            </span>
+          </div>
+        </div>
+
+        <div class="profile-grid">
+          <div class="profile-card">
+            <mat-icon>call</mat-icon>
+            <div>
+              <div class="label">Téléphone</div>
+              <div class="value">{{ selectedProfessor?.phone }}</div>
+            </div>
+          </div>
+          <div class="profile-card">
+            <mat-icon>mail</mat-icon>
+            <div>
+              <div class="label">Email</div>
+              <div class="value">{{ selectedProfessor?.email }}</div>
+            </div>
+          </div>
+          <div class="profile-card">
+            <mat-icon>school</mat-icon>
+            <div>
+              <div class="label">Classe</div>
+              <div class="value">{{ selectedProfessor?.classe }}</div>
+            </div>
+          </div>
+          <div class="profile-card">
+            <mat-icon>schedule</mat-icon>
+            <div>
+              <div class="label">Heures effectuées</div>
+              <div class="value">{{ selectedProfessor?.hours }} Heures</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button mat-stroked-button type="button" (click)="closeProfile()">Fermer</button>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,395 @@
+.dashboard {
+  max-width: 1400px;
+  margin: 0 auto;
+
+  .dashboard-header {
+    margin-bottom: 2rem;
+
+    .dashboard-title {
+      margin: 0;
+      font-size: 2rem;
+      font-weight: 700;
+      color: #1a1a1a;
+    }
+  }
+
+  // Summary Section
+  .summary-section {
+    display: grid;
+    grid-template-columns: minmax(320px, 1.2fr) repeat(2, minmax(240px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 3rem;
+    align-items: stretch;
+
+    app-stat-card {
+      display: block;
+      height: 100%;
+    }
+
+    .academic-year-card {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+      padding: 1.2rem;
+      background: linear-gradient(135deg, #c8452a, #c17712);
+      border-radius: 16px;
+      color: #fff;
+      box-shadow: 0 8px 24px rgba(193, 54, 28, 0.25);
+      height: 100%;
+      position: relative;
+
+      .academic-year-top {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+      }
+
+      .academic-year-icon {
+        width: 44px;
+        height: 44px;
+        background-color: rgba(255, 255, 255, 0.18);
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+
+        mat-icon {
+          font-size: 22px;
+          width: 22px;
+          height: 22px;
+        }
+      }
+
+      .status-badge {
+        background-color: rgba(255, 255, 255, 0.28);
+        padding: 0.25rem 0.7rem;
+        border-radius: 999px;
+        font-size: 0.75rem;
+        font-weight: 600;
+      }
+
+      .academic-year-content {
+        flex: 1;
+
+        .academic-year-label {
+          font-size: 0.85rem;
+          opacity: 0.95;
+          margin-bottom: 0.25rem;
+          font-weight: 500;
+        }
+
+        .academic-year-year {
+          font-size: 1.6rem;
+          font-weight: 700;
+          margin-bottom: 0.35rem;
+        }
+
+        .academic-year-meta {
+          display: flex;
+          align-items: center;
+          gap: 0.4rem;
+          font-size: 0.8rem;
+          opacity: 0.95;
+
+          .meta-icon {
+            font-size: 16px;
+            width: 16px;
+            height: 16px;
+          }
+        }
+      }
+    }
+  }
+
+  @media (max-width: 1100px) {
+    .summary-section {
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    }
+  }
+
+  // School Info Section
+  .school-info-section {
+    margin-top: 0.5rem;
+    margin-bottom: 2rem;
+
+    .school-info-card {
+      background-color: #fff;
+      border-radius: 12px;
+      padding: 2rem;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+
+      .school-info-header {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        margin-bottom: 1rem;
+
+        .school-icon {
+          width: 50px;
+          height: 50px;
+          border-radius: 10px;
+          background: linear-gradient(135deg, #d17e3a, #c1361c);
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          flex-shrink: 0;
+
+          mat-icon {
+            color: #fff;
+            font-size: 28px;
+            width: 28px;
+            height: 28px;
+          }
+        }
+
+        .school-name {
+          font-size: 1.5rem;
+          font-weight: 700;
+          color: #1a1a1a;
+        }
+      }
+
+      .school-description {
+        font-size: 0.95rem;
+        color: #666;
+        margin-bottom: 1.5rem;
+      }
+
+      .school-details {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 1.5rem;
+
+        .school-detail {
+          display: flex;
+          flex-direction: column;
+          gap: 0.4rem;
+
+          .label {
+            font-size: 0.8rem;
+            color: #999;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+          }
+
+          .value {
+            font-size: 1rem;
+            font-weight: 600;
+            color: #1a1a1a;
+          }
+        }
+      }
+    }
+  }
+
+  // Events and Courses Grid
+  .events-courses-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+    gap: 2rem;
+    margin-bottom: 2rem;
+
+    @media (max-width: 900px) {
+      grid-template-columns: 1fr;
+    }
+
+    .section-column {
+      .section-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 1.5rem;
+
+        .section-title {
+          margin: 0;
+          font-size: 1.25rem;
+          font-weight: 700;
+          color: #1a1a1a;
+        }
+
+        .view-all {
+          color: #c1361c;
+          text-decoration: none;
+          font-size: 0.9rem;
+          font-weight: 600;
+          transition: color 0.3s;
+
+          &:hover {
+            color: #a02815;
+          }
+        }
+
+        .section-status {
+          color: #22a855;
+          font-size: 0.9rem;
+          font-weight: 600;
+        }
+      }
+
+      .cards-container {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+      }
+    }
+  }
+
+  // Charts Section
+  .charts-section {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(450px, 1fr));
+    gap: 2rem;
+
+    @media (max-width: 900px) {
+      grid-template-columns: 1fr;
+    }
+
+    .chart-card {
+      background-color: #fff;
+      border-radius: 12px;
+      padding: 2rem;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+
+      .chart-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 2rem;
+
+        .chart-title {
+          margin: 0;
+          font-size: 1.1rem;
+          font-weight: 700;
+          color: #1a1a1a;
+        }
+
+        .chart-tabs {
+          display: flex;
+          gap: 0.5rem;
+          background-color: #f5f5f5;
+          padding: 0.3rem;
+          border-radius: 6px;
+
+          .tab-btn {
+            padding: 0.4rem 0.8rem;
+            border: none;
+            background-color: transparent;
+            color: #666;
+            font-size: 0.85rem;
+            font-weight: 600;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.3s;
+
+            &.active {
+              background-color: #c1361c;
+              color: #fff;
+            }
+
+            &:hover:not(.active) {
+              background-color: #e8e8e8;
+            }
+          }
+        }
+      }
+
+      // Bar Chart
+      .bar-chart {
+        display: flex;
+        align-items: flex-end;
+        justify-content: space-around;
+        height: 300px;
+        gap: 1rem;
+
+        .bar-container {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          gap: 0.75rem;
+          flex: 1;
+
+          .bar-wrapper {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: flex-end;
+            justify-content: center;
+
+            .bar {
+              width: 60%;
+              background: linear-gradient(180deg, #d17e3a, #c1361c);
+              border-radius: 6px 6px 0 0;
+              min-height: 20px;
+              transition: all 0.3s;
+
+              &:hover {
+                background: linear-gradient(180deg, #a02815, #7d1f10);
+                filter: brightness(1.1);
+              }
+            }
+          }
+
+          .bar-label {
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: #1a1a1a;
+          }
+
+          .bar-value {
+            font-size: 0.8rem;
+            color: #999;
+            font-weight: 500;
+          }
+        }
+      }
+
+      // Line Chart
+      .line-chart {
+        .chart-line {
+          margin-bottom: 2rem;
+
+          svg {
+            width: 100%;
+            height: 200px;
+          }
+        }
+
+        .attendance-points {
+          display: flex;
+          justify-content: space-around;
+          gap: 1rem;
+
+          .attendance-point {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.5rem;
+
+            .point-dot {
+              width: 12px;
+              height: 12px;
+              border-radius: 50%;
+              background-color: var(--color, #c1361c);
+              border: 3px solid #fff;
+              box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+            }
+
+            .point-label {
+              font-size: 0.8rem;
+              color: #999;
+              font-weight: 500;
+            }
+
+            .point-value {
+              font-size: 0.85rem;
+              font-weight: 700;
+              color: var(--color, #c1361c);
+            }
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,370 @@
+.referentiel {
+  max-width: 1400px;
+  margin: 0 auto;
+
+  .page-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 1.5rem;
+    margin-bottom: 1.75rem;
+  }
+
+  .page-title {
+    margin: 0;
+    font-size: 2rem;
+    font-weight: 700;
+    color: #c1361c;
+  }
+
+  .page-subtitle {
+    margin: 0.35rem 0 0;
+    color: #6b7280;
+    font-size: 0.95rem;
+  }
+
+  .header-actions {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+
+  .primary-btn {
+    background-color: #c1361c;
+    color: #fff;
+    border-radius: 10px;
+    font-weight: 600;
+    text-transform: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .ghost-btn {
+    border-radius: 10px;
+    text-transform: none;
+    font-weight: 600;
+    color: #374151;
+    background: #fff;
+  }
+
+  .filters-card {
+    background: #fff;
+    border-radius: 16px;
+    padding: 1.5rem;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.06);
+    margin-bottom: 1.25rem;
+  }
+
+  .filters-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+
+    select {
+      padding: 0.75rem 0.9rem;
+      border-radius: 12px;
+      border: 1px solid #e5e7eb;
+      background: #fff;
+      font-size: 0.95rem;
+      color: #111827;
+      outline: none;
+    }
+  }
+
+  .create-row {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-top: 1rem;
+    flex-wrap: wrap;
+
+    input {
+      flex: 1;
+      min-width: 220px;
+      padding: 0.75rem 0.9rem;
+      border-radius: 12px;
+      border: 1px solid #e5e7eb;
+      font-size: 0.95rem;
+      outline: none;
+    }
+  }
+
+  .summary-card {
+    background: #fff;
+    border-radius: 14px;
+    padding: 0.95rem 1.25rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+    border: 1px solid #f3f4f6;
+    margin-bottom: 1.2rem;
+    color: #374151;
+    font-weight: 600;
+  }
+
+  .summary-item span {
+    margin-left: 0.3rem;
+    color: #111827;
+  }
+
+  .divider {
+    width: 1px;
+    height: 18px;
+    background: #e5e7eb;
+  }
+
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    background: #fff7e6;
+    color: #c9831c;
+    padding: 0.15rem 0.6rem;
+    border-radius: 999px;
+    font-size: 0.75rem;
+    font-weight: 600;
+
+    mat-icon {
+      font-size: 16px;
+      width: 16px;
+      height: 16px;
+    }
+  }
+
+  .semester-tabs {
+    display: flex;
+    gap: 1.4rem;
+    border-bottom: 1px solid #f1f2f4;
+    margin-bottom: 1.25rem;
+    flex-wrap: wrap;
+  }
+
+  .semester-tab {
+    border: none;
+    background: none;
+    padding: 0.8rem 0;
+    font-weight: 600;
+    color: #6b7280;
+    cursor: pointer;
+    position: relative;
+  }
+
+  .semester-tab.active {
+    color: #c1361c;
+  }
+
+  .semester-tab.active::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: -1px;
+    height: 2px;
+    background: #c1361c;
+  }
+
+  .table-card {
+    background: #fff;
+    border-radius: 16px;
+    padding: 1.25rem;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.06);
+  }
+
+  .referentiel-table {
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 1100px;
+    margin-bottom: 1.5rem;
+
+    th,
+    td {
+      text-align: left;
+      padding: 0.85rem 0.75rem;
+      vertical-align: middle;
+      border-bottom: 1px solid #eef0f2;
+      font-size: 0.9rem;
+    }
+
+    thead th {
+      color: #6b7280;
+      font-weight: 700;
+      background: #fafafa;
+      border-bottom: none;
+      vertical-align: middle;
+    }
+
+    thead tr:last-child th,
+    thead th[rowspan] {
+      border-bottom: 1px solid #eef0f2;
+    }
+
+    thead .group-head {
+      text-align: center;
+    }
+
+    thead tr:last-child th {
+      font-size: 0.82rem;
+      letter-spacing: 0.2px;
+    }
+  }
+
+  .ue-head {
+    width: 240px;
+    border-right: 1px solid #eef0f2;
+  }
+
+  .prof-head {
+    width: 220px;
+    border-right: 1px solid #eef0f2;
+  }
+
+  .actions-head {
+    width: 70px;
+    text-align: center;
+
+    mat-icon {
+      color: #9ca3af;
+    }
+  }
+
+  .ue-cell {
+    font-weight: 600;
+    color: #111827;
+    vertical-align: top;
+    border-right: 1px solid #eef0f2;
+
+    .ue-code {
+      display: inline-flex;
+      align-items: center;
+      background: #fdecec;
+      color: #c1361c;
+      font-size: 0.75rem;
+      font-weight: 700;
+      border-radius: 999px;
+      padding: 0.15rem 0.55rem;
+      margin-bottom: 0.4rem;
+    }
+
+    .ue-title {
+      display: block;
+      font-weight: 600;
+      color: #1f2937;
+    }
+  }
+
+  .credit-cell {
+    text-align: center;
+    vertical-align: middle;
+    border-right: 1px solid #eef0f2;
+  }
+
+  .credit-pill {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: #fff7e6;
+    color: #c9831c;
+    border-radius: 8px;
+    font-weight: 700;
+    padding: 0.2rem 0.6rem;
+    font-size: 0.8rem;
+  }
+
+  .coef-cell {
+    font-weight: 600;
+    color: #111827;
+    text-align: center;
+  }
+
+  .credit-head {
+    text-align: center;
+    border-right: 1px solid #eef0f2;
+  }
+
+  .prof-cell {
+    border-right: 1px solid #eef0f2;
+  }
+
+  .teacher-select {
+    width: 100%;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    padding: 0.4rem 0.6rem;
+    background: #fff;
+    font-size: 0.85rem;
+    color: #111827;
+  }
+
+  .hours-cell {
+    text-align: center;
+    font-weight: 600;
+  }
+
+  .hours-head {
+    text-align: center;
+  }
+
+  .hours-divider {
+    border-right: 1px solid #eef0f2;
+  }
+
+  .actions-cell {
+    text-align: center;
+    vertical-align: middle;
+  }
+
+  .icon-btn {
+    border: 1px solid #f2c6bb;
+    background: #fff5f4;
+    color: #c1361c;
+    width: 32px;
+    height: 32px;
+    border-radius: 10px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .add-module-row td {
+    border-bottom: 1px solid #eef0f2;
+    padding-top: 0.35rem;
+    padding-bottom: 1rem;
+  }
+
+  .add-module-btn {
+    border: none;
+    background: none;
+    color: #c1361c;
+    font-weight: 600;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    cursor: pointer;
+  }
+
+  .add-ue-btn {
+    border: 1px dashed #c1361c;
+    color: #c1361c;
+    background: transparent;
+    padding: 0.7rem 1.2rem;
+    border-radius: 12px;
+    font-weight: 600;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  @media (max-width: 1024px) {
+    .page-header {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+
+    .header-actions {
+      width: 100%;
+      justify-content: flex-start;
+    }
+  }
+}

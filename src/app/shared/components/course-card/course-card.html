@@ -1,0 +1,24 @@
+<div class="course-card" [style.--color]="course.color">
+  <div class="course-icon">
+    <mat-icon>{{ course.icon }}</mat-icon>
+  </div>
+  <div class="course-content">
+    <h4 class="course-title">{{ course.title }}</h4>
+    <div class="course-detail">
+      <mat-icon>person</mat-icon>
+      <span>{{ course.instructor }}</span>
+    </div>
+    <div class="course-detail">
+      <mat-icon>schedule</mat-icon>
+      <span>{{ course.dayOfWeek || 'Aujourd\'hui' }}, {{ course.time }}</span>
+    </div>
+    <div class="course-detail">
+      <mat-icon>location_on</mat-icon>
+      <span>{{ course.room }}</span>
+    </div>
+    <div class="course-detail">
+      <mat-icon>group</mat-icon>
+      <span>{{ course.students }} étudiants</span>
+    </div>
+  </div>
+</div>

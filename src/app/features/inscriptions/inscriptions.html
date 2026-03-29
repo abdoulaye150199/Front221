@@ -1,0 +1,203 @@
+<div class="inscriptions">
+  <div class="page-header">
+    <div class="title-block">
+      <h1 class="page-title">
+        Liste des étudiants <span>({{ totalResults }})</span>
+      </h1>
+    </div>
+    <div class="header-actions">
+      <button mat-flat-button class="dark-btn" type="button">
+        <mat-icon>download</mat-icon>
+        Télécharger le fichier modèle
+      </button>
+      <button mat-flat-button class="dark-btn" type="button">
+        <mat-icon>file_upload</mat-icon>
+        Importer le fichier
+      </button>
+      <button mat-flat-button class="primary-btn" type="button">
+        <mat-icon>person_add</mat-icon>
+        Inscription / Réinscription
+      </button>
+    </div>
+  </div>
+
+  <div class="filters-card">
+    <div class="filters-left">
+      <div class="filter-group">
+        <label>Apprenants/page</label>
+        <select [ngModel]="pageSize" (ngModelChange)="onPageSizeChange($event)">
+          <option *ngFor="let item of pageSizeOptions" [value]="item.value">
+            {{ item.label }}
+          </option>
+        </select>
+      </div>
+      <div class="filter-group">
+        <label>Classe</label>
+        <select [(ngModel)]="selectedClass">
+          <option *ngFor="let item of classOptions" [value]="item.value">
+            {{ item.label }}
+          </option>
+        </select>
+      </div>
+      <div class="filter-group">
+        <label>Statut</label>
+        <select [(ngModel)]="selectedStatus">
+          <option *ngFor="let item of statusOptions" [value]="item.value">
+            {{ item.label }}
+          </option>
+        </select>
+      </div>
+    </div>
+    <label class="search-box">
+      <mat-icon>search</mat-icon>
+      <input
+        type="text"
+        placeholder="Rechercher..."
+        [(ngModel)]="searchTerm"
+        (ngModelChange)="onSearchChange($event)"
+      />
+    </label>
+  </div>
+
+  <div class="table-card">
+    <table class="students-table">
+      <thead>
+        <tr>
+          <th>Photo</th>
+          <th>Matricule</th>
+          <th>Nom complet</th>
+          <th>Adresse</th>
+          <th>Téléphone</th>
+          <th>Classe</th>
+          <th>Statut</th>
+          <th class="actions-head">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let student of pagedStudents">
+          <td>
+            <div class="avatar">{{ getInitials(student.name) }}</div>
+          </td>
+          <td class="matricule-cell">{{ student.matricule }}</td>
+          <td class="name-cell">{{ student.name }}</td>
+          <td class="address-cell">{{ student.address }}</td>
+          <td>{{ student.phone }}</td>
+          <td>{{ student.classe }}</td>
+          <td>
+            <span class="status-pill" [class.inactive]="student.status === 'Inactif'">
+              {{ student.status }}
+            </span>
+          </td>
+          <td class="actions-cell">
+            <button class="menu-trigger" type="button" (click)="toggleMenu(student.id)">
+              <span></span>
+              <span></span>
+              <span></span>
+            </button>
+            <div class="menu-card" *ngIf="openMenuId === student.id">
+              <button type="button" (click)="openDetails(student)">
+                <mat-icon>visibility</mat-icon>
+                Voir
+              </button>
+              <button type="button">
+                <mat-icon>edit</mat-icon>
+                Modifier
+              </button>
+              <button type="button" class="danger">
+                <mat-icon>delete</mat-icon>
+                Supprimer
+              </button>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="table-footer">
+      <div class="results">
+        {{ startIndex }} à {{ endIndex }} apprenants pour {{ totalResults }}
+      </div>
+      <div class="pagination">
+        <button
+          mat-stroked-button
+          type="button"
+          class="page-nav"
+          [disabled]="!canPrev"
+          (click)="previousPage()"
+        >
+          <mat-icon>chevron_left</mat-icon>
+        </button>
+        <button
+          *ngFor="let p of pages"
+          type="button"
+          class="page-btn"
+          [class.active]="p === currentPage"
+          (click)="page = p"
+        >
+          {{ p }}
+        </button>
+        <button
+          mat-stroked-button
+          type="button"
+          class="page-nav"
+          [disabled]="!canNext"
+          (click)="nextPage()"
+        >
+          <mat-icon>chevron_right</mat-icon>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal-backdrop" *ngIf="selectedStudent">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3>Détails de l'apprenant</h3>
+        <button type="button" class="close-btn" (click)="closeDetails()">
+          <mat-icon>close</mat-icon>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="profile-header">
+          <div class="avatar large">{{ getInitials(selectedStudent?.name || '') }}</div>
+          <div>
+            <div class="profile-name">{{ selectedStudent?.name }}</div>
+            <div class="profile-meta">Matricule : {{ selectedStudent?.matricule }}</div>
+            <span
+              class="status-pill"
+              [class.inactive]="selectedStudent?.status === 'Inactif'"
+            >
+              {{ selectedStudent?.status }}
+            </span>
+          </div>
+        </div>
+
+        <div class="profile-grid">
+          <div class="field-card">
+            <div class="label">Nom Complet</div>
+            <div class="value">{{ selectedStudent?.name }}</div>
+          </div>
+          <div class="field-card">
+            <div class="label">Matricule</div>
+            <div class="value">{{ selectedStudent?.matricule }}</div>
+          </div>
+          <div class="field-card full">
+            <div class="label">Adresse</div>
+            <div class="value">{{ selectedStudent?.address }}</div>
+          </div>
+          <div class="field-card">
+            <div class="label">Téléphone</div>
+            <div class="value">{{ selectedStudent?.phone }}</div>
+          </div>
+          <div class="field-card">
+            <div class="label">Classe</div>
+            <div class="value">{{ selectedStudent?.classe }}</div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button mat-stroked-button type="button" (click)="closeDetails()">Fermer</button>
+      </div>
+    </div>
+  </div>
+</div>

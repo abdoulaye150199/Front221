@@ -1,0 +1,175 @@
+<div class="ressources">
+  <div class="page-header">
+    <h1 class="page-title">Gestion des Ressources</h1>
+    <button mat-flat-button class="primary-btn" type="button">
+      <mat-icon>add</mat-icon>
+      Nouvelle Ressource
+    </button>
+  </div>
+
+  <div class="resource-card">
+    <div class="main-tabs">
+      <button
+        class="main-tab"
+        type="button"
+        *ngFor="let tab of mainTabs; let i = index"
+        [class.active]="activeMainTab === i"
+        (click)="setActiveMainTab(i)"
+      >
+        <span class="tab-icon">
+          <mat-icon>{{ tab.icon }}</mat-icon>
+        </span>
+        <span class="tab-text">
+          <span class="tab-title">{{ tab.title }}</span>
+          <span class="tab-subtitle" *ngIf="tab.subtitle">{{ tab.subtitle }}</span>
+        </span>
+        <mat-icon class="tab-more">more_vert</mat-icon>
+      </button>
+    </div>
+
+    <div class="tab-content" *ngIf="activeMainTab === 0">
+      <div class="sub-tabs">
+        <button
+          class="sub-tab"
+          type="button"
+          *ngFor="let tab of subTabs; let i = index"
+          [class.active]="activeSubTab === i"
+          (click)="setActiveSubTab(i)"
+        >
+          {{ tab }}
+        </button>
+      </div>
+
+      <div class="subtab-content" *ngIf="activeSubTab === 0">
+        <div class="subtab-form">
+          <label class="field">
+            <input type="text" placeholder="Année scolaire" />
+          </label>
+          <label class="field date-field">
+            <mat-icon>calendar_today</mat-icon>
+            <input type="text" placeholder="Date Ouverture" />
+          </label>
+          <label class="field date-field">
+            <mat-icon>calendar_today</mat-icon>
+            <input type="text" placeholder="Date Fermeture" />
+          </label>
+          <button mat-flat-button class="primary-btn" type="button">Créer</button>
+        </div>
+
+        <div class="tab-toolbar">
+          <label class="search-box">
+            <mat-icon>search</mat-icon>
+            <input
+              type="text"
+              placeholder="Rechercher une année..."
+              [(ngModel)]="searchTerm"
+              (ngModelChange)="onSearchChange($event)"
+            />
+          </label>
+          <button mat-flat-button class="secondary-btn" type="button">
+            <mat-icon>add</mat-icon>
+            Ajouter Année
+          </button>
+        </div>
+
+        <div class="table-wrapper">
+          <table class="resources-table">
+            <thead>
+              <tr>
+                <th>Année Académique</th>
+                <th>Date Début</th>
+                <th>Date Fin</th>
+                <th>Semestre</th>
+                <th>Étudiants</th>
+                <th>Cours</th>
+                <th>Statut</th>
+                <th class="actions-header">Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let year of pagedAcademicYears">
+                <td class="year-cell">{{ year.year }}</td>
+                <td class="meta-muted">{{ year.startDate }}</td>
+                <td class="meta-muted">{{ year.endDate }}</td>
+                <td class="meta-muted">{{ year.semester }}</td>
+                <td class="metric">{{ year.students }}</td>
+                <td class="metric">{{ year.courses }}</td>
+                <td>
+                  <span
+                    class="status-pill"
+                    [class.active]="year.status === 'En cours'"
+                    [class.done]="year.status === 'Terminé'"
+                  >
+                    {{ year.status }}
+                  </span>
+                </td>
+              <td class="actions-cell">
+                <button
+                  class="icon-btn menu"
+                  type="button"
+                  aria-label="Options"
+                  (click)="$event.stopPropagation(); toggleActionMenu(year)"
+                >
+                  <mat-icon>more_vert</mat-icon>
+                </button>
+                <div
+                  class="actions-menu"
+                  *ngIf="openActionId === year.id"
+                  (click)="$event.stopPropagation()"
+                >
+                  <button type="button" (click)="setYearStatus(year, 'En cours'); closeActionMenu()">
+                    En cours
+                  </button>
+                  <button type="button" (click)="setYearStatus(year, 'Terminé'); closeActionMenu()">
+                    Clôturer
+                  </button>
+                </div>
+              </td>
+            </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="table-footer">
+          <div class="results">
+            Affichage de {{ startIndex }} à {{ endIndex }} sur {{ totalResults }} résultats
+          </div>
+          <div class="pagination">
+            <button mat-stroked-button type="button" [disabled]="!canPrev" (click)="previousPage()">
+              Précédent
+            </button>
+            <span class="page-indicator">{{ currentPage }}</span>
+            <button mat-stroked-button type="button" [disabled]="!canNext" (click)="nextPage()">
+              Suivant
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div class="tab-content placeholder" *ngIf="activeSubTab !== 0">
+        <div class="placeholder-card">
+          <div class="placeholder-icon">
+            <mat-icon>insert_drive_file</mat-icon>
+          </div>
+          <div class="placeholder-title">Section en préparation</div>
+          <p class="placeholder-text">
+            Les informations pour "{{ subTabs[activeSubTab] }}" seront disponibles prochainement.
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <div class="tab-content placeholder" *ngIf="activeMainTab !== 0">
+      <div class="placeholder-card">
+        <div class="placeholder-icon">
+          <mat-icon>insert_drive_file</mat-icon>
+        </div>
+        <div class="placeholder-title">Section en préparation</div>
+        <p class="placeholder-text">
+          Les informations pour "{{ mainTabs[activeMainTab].title }}" seront disponibles
+          prochainement.
+        </p>
+      </div>
+    </div>
+  </div>
+</div>

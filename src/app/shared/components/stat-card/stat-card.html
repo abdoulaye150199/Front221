@@ -1,0 +1,14 @@
+<div class="stat-card">
+  <div class="stat-header">
+    <div class="stat-icon">
+      <mat-icon>{{ icon }}</mat-icon>
+    </div>
+    <span [class.positive]="isPositive" [class.negative]="!isPositive" class="stat-change">
+      {{ isPositive ? '+' : '-' }}{{ change }}
+    </span>
+  </div>
+  <div class="stat-content">
+    <h3 class="stat-title">{{ title }}</h3>
+    <div class="stat-value">{{ value }}</div>
+  </div>
+</div>

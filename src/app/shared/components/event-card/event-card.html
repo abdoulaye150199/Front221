@@ -1,0 +1,20 @@
+<div class="event-card" [style.--color]="event.color">
+  <div class="event-icon">
+    <mat-icon>{{ event.icon }}</mat-icon>
+  </div>
+  <div class="event-content">
+    <h4 class="event-title">{{ event.title }}</h4>
+    <div class="event-detail">
+      <mat-icon>calendar_today</mat-icon>
+      <span>{{ event.date }}</span>
+    </div>
+    <div class="event-detail">
+      <mat-icon>schedule</mat-icon>
+      <span>{{ event.time }}</span>
+    </div>
+    <div class="event-detail">
+      <mat-icon>location_on</mat-icon>
+      <span>{{ event.location }}</span>
+    </div>
+  </div>
+</div>

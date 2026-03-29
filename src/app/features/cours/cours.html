@@ -1,0 +1,126 @@
+<div class="courses">
+  <div class="page-header">
+    <h1 class="page-title">Gestion des Cours</h1>
+    <button mat-flat-button class="primary-btn" type="button">
+      <mat-icon>add</mat-icon>
+      Nouveau Cours
+    </button>
+  </div>
+
+  <div class="filters-card">
+    <div class="filters-title">Filtres</div>
+    <div class="filters-grid">
+      <div class="filter-field">
+        <label>Spécialité</label>
+        <select [(ngModel)]="selectedSpecialite">
+          <option *ngFor="let item of specialites" [value]="item.value">
+            {{ item.label }}
+          </option>
+        </select>
+      </div>
+      <div class="filter-field">
+        <label>Niveau</label>
+        <select [(ngModel)]="selectedNiveau">
+          <option *ngFor="let item of niveaux" [value]="item.value">
+            {{ item.label }}
+          </option>
+        </select>
+      </div>
+      <div class="filter-field">
+        <label>Classe</label>
+        <select [(ngModel)]="selectedClasse">
+          <option *ngFor="let item of classes" [value]="item.value">
+            {{ item.label }}
+          </option>
+        </select>
+      </div>
+      <div class="filter-field">
+        <label>Semestre</label>
+        <select [(ngModel)]="selectedSemestre">
+          <option *ngFor="let item of semestres" [value]="item.value">
+            {{ item.label }}
+          </option>
+        </select>
+      </div>
+    </div>
+  </div>
+
+  <div class="table-card">
+    <div class="table-toolbar">
+      <label class="search-box">
+        <mat-icon>search</mat-icon>
+        <input
+          type="text"
+          placeholder="Rechercher un cours..."
+          [(ngModel)]="searchTerm"
+          (ngModelChange)="onSearchChange($event)"
+        />
+      </label>
+      <button mat-stroked-button class="export-btn" type="button">
+        <mat-icon>download</mat-icon>
+        Exporter
+      </button>
+    </div>
+
+    <div class="table-wrapper">
+      <table class="courses-table">
+        <thead>
+          <tr>
+            <th>UE</th>
+            <th>Module</th>
+            <th>Professeur</th>
+            <th>Crédits</th>
+            <th>Heures</th>
+            <th>Étudiants</th>
+            <th class="actions-header">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let course of pagedCourses">
+            <td class="ue-cell">{{ course.ue }}</td>
+            <td>{{ course.module }}</td>
+            <td>
+              <div class="teacher-cell">
+                <span class="teacher-avatar">
+                  <mat-icon>person</mat-icon>
+                </span>
+                {{ course.professor }}
+              </div>
+            </td>
+            <td>
+              <span class="credit-pill">{{ course.credits }} crédits</span>
+            </td>
+            <td>{{ course.hours }}</td>
+            <td class="students-cell">{{ course.students }}</td>
+            <td class="actions-cell">
+              <button class="icon-btn" type="button" aria-label="Voir">
+                <mat-icon>visibility</mat-icon>
+              </button>
+              <button class="icon-btn" type="button" aria-label="Modifier">
+                <mat-icon>edit</mat-icon>
+              </button>
+              <button class="icon-btn danger" type="button" aria-label="Supprimer">
+                <mat-icon>delete</mat-icon>
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="table-footer">
+      <div class="results">
+        Affichage de {{ startIndex }} à {{ endIndex }} sur {{ totalResults }} résultats
+      </div>
+      <div class="pagination">
+        <button mat-stroked-button type="button" [disabled]="!canPrev" (click)="previousPage()">
+          Précédent
+        </button>
+        <span class="page-indicator">{{ currentPage }}</span>
+        <button mat-stroked-button type="button" [disabled]="!canNext" (click)="nextPage()">
+          Suivant
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

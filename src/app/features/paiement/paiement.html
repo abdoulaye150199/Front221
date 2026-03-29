@@ -1,0 +1,33 @@
+<div class="paiement">
+  <div class="page-header">
+    <h1 class="page-title">Paiement</h1>
+  </div>
+
+  <div class="search-card">
+    <div class="search-label">Matricule</div>
+    <div class="search-field">
+      <input
+        type="text"
+        placeholder="Entrez le matricule ou le nom"
+        [(ngModel)]="searchTerm"
+      />
+      <button mat-flat-button class="search-btn" type="button">
+        <mat-icon>search</mat-icon>
+        Rechercher
+      </button>
+    </div>
+  </div>
+
+  <div class="info-card">
+    <div class="info-content">
+      <div class="info-icon">
+        <mat-icon>payments</mat-icon>
+      </div>
+      <div class="info-title">Gestion des paiements</div>
+      <p class="info-text">
+        Entrez le matricule ou le nom d'un étudiant pour accéder à son dossier
+        de paiement et gérer ses frais de scolarité.
+      </p>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,176 @@
+<div class="dashboard">
+  <div class="dashboard-header">
+    <h1 class="dashboard-title">Tableau de Bord</h1>
+  </div>
+
+  <!-- Summary Section -->
+  <div class="summary-section">
+    <div class="academic-year-card">
+      <div class="academic-year-top">
+        <div class="academic-year-icon">
+          <mat-icon>calendar_today</mat-icon>
+        </div>
+        <span class="status-badge">{{ academicYear.status }}</span>
+      </div>
+      <div class="academic-year-content">
+        <div class="academic-year-label">Année Académique</div>
+        <div class="academic-year-year">{{ academicYear.year }}</div>
+        <div class="academic-year-meta">
+          <mat-icon class="meta-icon">schedule</mat-icon>
+          <span>{{ academicYear.semester }} • {{ academicYear.week }}</span>
+        </div>
+      </div>
+    </div>
+
+    <app-stat-card
+      [title]="'Total Étudiants'"
+      [value]="stats.students.count"
+      [change]="stats.students.change"
+      [isPositive]="stats.students.isPositive"
+      [icon]="'person'"
+    ></app-stat-card>
+    <app-stat-card
+      [title]="'Total Professeurs'"
+      [value]="stats.teachers.count"
+      [change]="stats.teachers.change"
+      [isPositive]="stats.teachers.isPositive"
+      [icon]="'school'"
+    ></app-stat-card>
+  </div>
+
+  <!-- School Info -->
+  <div class="school-info-section">
+    <div class="school-info-card">
+      <div class="school-info-header">
+        <div class="school-icon">
+          <mat-icon>school</mat-icon>
+        </div>
+        <div class="school-name">{{ schoolInfo.name }}</div>
+      </div>
+      <div class="school-description">
+        {{ schoolInfo.description }}
+      </div>
+      <div class="school-details">
+        <div class="school-detail">
+          <span class="label">Localisation</span>
+          <span class="value">{{ schoolInfo.location }}</span>
+        </div>
+        <div class="school-detail">
+          <span class="label">Fondée en</span>
+          <span class="value">{{ schoolInfo.founded }}</span>
+        </div>
+        <div class="school-detail">
+          <span class="label">Programmes</span>
+          <span class="value">{{ schoolInfo.programs }}</span>
+        </div>
+        <div class="school-detail">
+          <span class="label">Accréditation</span>
+          <span class="value">{{ schoolInfo.accreditation }}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Events and Courses Section -->
+  <div class="events-courses-grid">
+    <!-- Events Section -->
+    <div class="section-column">
+      <div class="section-header">
+        <h2 class="section-title">Événements à Venir</h2>
+        <a href="#" class="view-all">Voir tout</a>
+      </div>
+      <div class="cards-container">
+        <app-event-card
+          *ngFor="let event of events | slice:0:2"
+          [event]="event"
+        ></app-event-card>
+      </div>
+    </div>
+
+    <!-- Courses Section -->
+    <div class="section-column">
+      <div class="section-header">
+        <h2 class="section-title">Cours à Venir</h2>
+        <span class="section-status">Planning complet</span>
+      </div>
+      <div class="cards-container">
+        <app-course-card
+          *ngFor="let course of courses | slice:0:2"
+          [course]="course"
+        ></app-course-card>
+      </div>
+    </div>
+  </div>
+
+  <!-- Charts Section -->
+  <div class="charts-section">
+    <!-- Inscriptions Chart -->
+    <div class="chart-card">
+      <div class="chart-header">
+        <h3 class="chart-title">Inscriptions par Mois</h3>
+        <div class="chart-tabs">
+          <button class="tab-btn active">Mois</button>
+          <button class="tab-btn">Année</button>
+        </div>
+      </div>
+      <div class="bar-chart">
+        <div class="bar-container" *ngFor="let data of chartData.inscriptions">
+          <div class="bar-wrapper">
+            <div
+              class="bar"
+              [style.height]="getBarHeight(data.value, 200)"
+            ></div>
+          </div>
+          <span class="bar-label">{{ data.month }}</span>
+          <span class="bar-value">{{ data.value }}</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Attendance Chart -->
+    <div class="chart-card">
+      <div class="chart-header">
+        <h3 class="chart-title">Taux de Présence</h3>
+        <div class="chart-tabs">
+          <button
+            [class.active]="selectedAttendanceTab === 0"
+            (click)="selectedAttendanceTab = 0"
+            class="tab-btn"
+          >
+            Mois
+          </button>
+          <button
+            [class.active]="selectedAttendanceTab === 1"
+            (click)="selectedAttendanceTab = 1"
+            class="tab-btn"
+          >
+            Année
+          </button>
+        </div>
+      </div>
+      <div class="line-chart">
+        <div class="chart-line">
+          <svg viewBox="0 0 500 150" preserveAspectRatio="none">
+            <polyline
+              points="0,100 100,50 200,75 300,60 400,35 500,20"
+              fill="none"
+              stroke="#c1361c"
+              stroke-width="2"
+            />
+          </svg>
+        </div>
+        <div class="attendance-points">
+          <div
+            class="attendance-point"
+            *ngFor="let data of chartData.attendance"
+            [style.--color]="getAttendanceColor(data.value)"
+          >
+            <div class="point-dot"></div>
+            <span class="point-label">{{ data.month }}</span>
+            <span class="point-value">{{ data.value }}%</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

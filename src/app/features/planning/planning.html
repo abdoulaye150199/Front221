@@ -1,0 +1,261 @@
+<div class="planning">
+  <div class="planning-header">
+    <h1 class="planning-title">Gestion du Planning</h1>
+    <button class="add-session-btn" type="button" (click)="addSession()">
+      <mat-icon>add</mat-icon>
+      Ajouter une session
+    </button>
+  </div>
+
+  <div class="filters-section">
+    <div class="filters-left">
+      <select [(ngModel)]="selectedClass" class="filter-select">
+        <option *ngFor="let cls of classes" [value]="cls.value">
+          {{ cls.label }}
+        </option>
+      </select>
+      <select [(ngModel)]="selectedModule" class="filter-select">
+        <option *ngFor="let mod of modules" [value]="mod.value">
+          {{ mod.label }}
+        </option>
+      </select>
+    </div>
+    <div class="status-filters">
+      <span class="status-label">Statut :</span>
+      <button
+        *ngFor="let status of statuses"
+        type="button"
+        [class.active]="selectedStatus === status.value"
+        (click)="selectedStatus = status.value"
+        class="status-btn"
+      >
+        {{ status.label }}
+      </button>
+    </div>
+  </div>
+
+  <div class="calendar-toolbar">
+    <div class="month-navigation">
+      <button mat-icon-button class="nav-btn" type="button" (click)="previousMonth()">
+        <mat-icon>chevron_left</mat-icon>
+      </button>
+      <span class="month-year">{{ monthName }} {{ yearNumber }}</span>
+      <button mat-icon-button class="nav-btn" type="button" (click)="nextMonth()">
+        <mat-icon>chevron_right</mat-icon>
+      </button>
+      <button class="today-btn" type="button">Aujourd'hui</button>
+    </div>
+    <div class="view-options">
+      <button
+        type="button"
+        class="view-btn"
+        [class.active]="viewMode === 'mois'"
+        (click)="viewMode = 'mois'"
+      >
+        Mois
+      </button>
+      <button
+        type="button"
+        class="view-btn"
+        [class.active]="viewMode === 'semaine'"
+        (click)="viewMode = 'semaine'"
+      >
+        Semaine
+      </button>
+      <button
+        type="button"
+        class="view-btn"
+        [class.active]="viewMode === 'jour'"
+        (click)="viewMode = 'jour'"
+      >
+        Jour
+      </button>
+    </div>
+  </div>
+
+  <div class="legend-row">
+    <div class="legend-item" *ngFor="let status of sessionStatusOptions">
+      <span class="legend-dot" [style.backgroundColor]="status.color"></span>
+      {{ status.label }}
+    </div>
+    <span class="session-count">{{ sessions.length }} session(s) affichée(s)</span>
+  </div>
+
+  <div class="schedule-board" *ngIf="viewMode === 'semaine'">
+    <div class="schedule-body">
+      <div class="schedule-header">
+        <div class="time-header"></div>
+        <div
+          class="day-header"
+          *ngFor="let day of weekDays"
+          [class.is-next]="day.isNextMonth"
+        >
+          <div class="day-name">{{ day.label }}</div>
+          <div class="day-number">{{ formatDay(day.date) }}</div>
+        </div>
+      </div>
+      <div class="schedule-row" *ngFor="let slot of timeSlots">
+        <div class="time-cell">{{ slot }}</div>
+        <div class="day-cell" *ngFor="let day of weekDays; let dayIndex = index">
+          <ng-container *ngIf="getSession(dayIndex, slot) as session; else emptyCell">
+            <div
+              class="session-card"
+              [ngClass]="session.status"
+              (click)="openModal('details', session)"
+            >
+              <div class="session-title">{{ session.title }}</div>
+              <div class="session-time">{{ session.time }}</div>
+              <div class="session-teacher">
+                <span class="teacher-icon">
+                  <mat-icon>person</mat-icon>
+                </span>
+                <span class="teacher-name">{{ session.teacher }}</span>
+              </div>
+              <div class="session-footer">
+                <span class="session-class">{{ session.classLabel }}</span>
+                <span class="session-status">
+                  <span
+                    class="status-dot"
+                    [style.backgroundColor]="getStatusColor(session.status)"
+                  ></span>
+                  {{ getStatusLabel(session.status) }}
+                </span>
+              </div>
+            </div>
+          </ng-container>
+          <ng-template #emptyCell>
+            <div class="empty-cell" (click)="openModal('create')">
+              <mat-icon>add</mat-icon>
+            </div>
+          </ng-template>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="view-placeholder" *ngIf="viewMode !== 'semaine'">
+    Vue {{ viewMode }} en développement
+  </div>
+
+  <div class="session-modal-backdrop" *ngIf="isModalOpen">
+    <div class="session-modal">
+      <div class="modal-header">
+        <div>
+          <h3>
+            {{ modalMode === 'create' ? 'Nouvelle session' : 'Détails de la session' }}
+          </h3>
+          <p>
+            {{
+              modalMode === 'create'
+                ? 'Planifier une nouvelle session de cours'
+                : 'Modifier ou supprimer cette session'
+            }}
+          </p>
+        </div>
+        <button type="button" class="close-btn" (click)="closeModal()">
+          <mat-icon>close</mat-icon>
+        </button>
+      </div>
+
+      <div class="modal-body">
+        <div class="form-grid">
+          <div class="form-field">
+            <label>Module *</label>
+            <select [(ngModel)]="modalForm.module">
+              <option *ngFor="let item of modalModules" [value]="item.value">
+                {{ item.label }}
+              </option>
+            </select>
+          </div>
+          <div class="form-field">
+            <label>Classe *</label>
+            <select [(ngModel)]="modalForm.class">
+              <option *ngFor="let item of modalClasses" [value]="item.value">
+                {{ item.label }}
+              </option>
+            </select>
+          </div>
+          <div class="form-field">
+            <label>Professeur *</label>
+            <select [(ngModel)]="modalForm.teacher">
+              <option *ngFor="let item of modalTeachers" [value]="item.value">
+                {{ item.label }}
+              </option>
+            </select>
+          </div>
+          <div class="form-field">
+            <label>Salle *</label>
+            <select [(ngModel)]="modalForm.room">
+              <option *ngFor="let item of modalRooms" [value]="item.value">
+                {{ item.label }}
+              </option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-field full">
+          <label>Date *</label>
+          <div class="input-with-icon">
+            <input type="text" [(ngModel)]="modalForm.date" />
+            <mat-icon>calendar_today</mat-icon>
+          </div>
+        </div>
+
+        <div class="form-grid">
+          <div class="form-field">
+            <label>Heure de début *</label>
+            <select [(ngModel)]="modalForm.startTime">
+              <option *ngFor="let item of timeOptions" [value]="item">
+                {{ item }}
+              </option>
+            </select>
+          </div>
+          <div class="form-field">
+            <label>Heure de fin *</label>
+            <select [(ngModel)]="modalForm.endTime">
+              <option *ngFor="let item of timeOptions" [value]="item">
+                {{ item }}
+              </option>
+            </select>
+          </div>
+        </div>
+
+        <div class="status-group">
+          <label>Statut</label>
+          <div class="status-chips">
+            <button
+              type="button"
+              class="status-chip"
+              *ngFor="let status of sessionStatusOptions"
+              [class.active]="modalForm.status === status.value"
+              [style.--status-color]="status.color"
+              (click)="setModalStatus(status.value)"
+            >
+              <span class="chip-dot" [style.backgroundColor]="status.color"></span>
+              {{ status.label }}
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button
+          type="button"
+          class="delete-btn"
+          *ngIf="modalMode === 'details'"
+        >
+          <mat-icon>delete</mat-icon>
+          Supprimer
+        </button>
+        <div class="footer-actions">
+          <button type="button" class="ghost-action" (click)="closeModal()">
+            Annuler
+          </button>
+          <button type="button" class="primary-action">
+            {{ modalMode === 'create' ? 'Ajouter' : 'Enregistrer' }}
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

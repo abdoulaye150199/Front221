@@ -1,0 +1,157 @@
+<div class="referentiel">
+  <div class="page-header">
+    <div>
+      <h1 class="page-title">Gestion Référentiel</h1>
+      <p class="page-subtitle">
+        Gérez les programmes académiques, unités d'enseignement et modules
+      </p>
+    </div>
+    <div class="header-actions">
+      <button mat-stroked-button class="ghost-btn" type="button">
+        <mat-icon>download</mat-icon>
+        Exporter
+      </button>
+      <button mat-flat-button class="primary-btn" type="button">
+        <mat-icon>save</mat-icon>
+        Enregistrer
+      </button>
+    </div>
+  </div>
+
+  <div class="filters-card">
+    <div class="filters-grid">
+      <select [(ngModel)]="selectedDomain">
+        <option *ngFor="let item of domainOptions" [value]="item.value">
+          {{ item.label }}
+        </option>
+      </select>
+      <select [(ngModel)]="selectedSpecialite">
+        <option *ngFor="let item of specialiteOptions" [value]="item.value">
+          {{ item.label }}
+        </option>
+      </select>
+      <select [(ngModel)]="selectedGrade">
+        <option *ngFor="let item of gradeOptions" [value]="item.value">
+          {{ item.label }}
+        </option>
+      </select>
+      <select [(ngModel)]="selectedNiveau">
+        <option *ngFor="let item of niveauOptions" [value]="item.value">
+          {{ item.label }}
+        </option>
+      </select>
+      <select [(ngModel)]="selectedSemestre">
+        <option *ngFor="let item of semestreOptions" [value]="item.value">
+          {{ item.label }}
+        </option>
+      </select>
+    </div>
+    <div class="create-row">
+      <input type="text" placeholder="Nom référentiel" [(ngModel)]="referentielName" />
+      <button mat-flat-button class="primary-btn" type="button">Créer</button>
+    </div>
+  </div>
+
+  <div class="summary-card">
+    <div class="summary-item">
+      Domaine: <span>{{ selectedDomainLabel }}</span>
+    </div>
+    <div class="divider"></div>
+    <div class="summary-item">
+      Spécialité: <span>{{ selectedSpecialiteLabel }}</span>
+    </div>
+    <div class="divider"></div>
+    <div class="summary-item">
+      Mention: <span>{{ selectedMentionLabel }}</span>
+    </div>
+    <div class="divider"></div>
+    <div class="summary-item">
+      Grade:
+      <span class="badge">
+        <mat-icon>workspace_premium</mat-icon>
+        {{ selectedGradeLabel || 'Licence' }}
+      </span>
+    </div>
+  </div>
+
+  <div class="semester-tabs">
+    <button
+      *ngFor="let tab of semesterTabs; let i = index"
+      type="button"
+      class="semester-tab"
+      [class.active]="activeSemestre === i"
+      (click)="setActiveSemestre(i)"
+    >
+      {{ tab }}
+    </button>
+  </div>
+
+  <div class="table-card">
+    <table class="referentiel-table">
+      <thead>
+        <tr>
+          <th rowspan="2" class="ue-head">Unité d'Enseignement</th>
+          <th colspan="3" class="group-head">Éléments constitutifs</th>
+          <th rowspan="2" class="prof-head">Professeur</th>
+          <th colspan="3" class="group-head">Nbre d'heures</th>
+          <th rowspan="2" class="actions-head">
+            <mat-icon>settings</mat-icon>
+          </th>
+        </tr>
+        <tr>
+          <th>Module</th>
+          <th>Coef</th>
+          <th class="credit-head">Crédit</th>
+          <th>VHP</th>
+          <th>TPE</th>
+          <th class="hours-head">VHT</th>
+        </tr>
+      </thead>
+      <tbody>
+        <ng-container *ngFor="let ue of ueList">
+          <tr *ngFor="let mod of ue.modules; let i = index">
+            <td *ngIf="i === 0" [attr.rowspan]="ue.modules.length + 1" class="ue-cell">
+              <span class="ue-code">{{ ue.code }}</span>
+              <span class="ue-title">{{ ue.title }}</span>
+            </td>
+            <td>{{ mod.name }}</td>
+            <td class="coef-cell">{{ mod.coef }}</td>
+            <td *ngIf="i === 0" [attr.rowspan]="ue.modules.length" class="credit-cell">
+              <span class="credit-pill">{{ ue.credit }}</span>
+            </td>
+            <td class="prof-cell">
+              <select [(ngModel)]="mod.professor" class="teacher-select">
+                <option value="">Sélectionner</option>
+                <option *ngFor="let teacher of professors" [value]="teacher.value">
+                  {{ teacher.label }}
+                </option>
+              </select>
+            </td>
+            <td class="hours-cell">{{ mod.vhp }}</td>
+            <td class="hours-cell">{{ mod.tpe }}</td>
+            <td class="hours-cell hours-divider">{{ mod.vht }}</td>
+            <td class="actions-cell">
+              <button class="icon-btn danger" type="button" aria-label="Supprimer">
+                <mat-icon>delete</mat-icon>
+              </button>
+            </td>
+          </tr>
+          <tr class="add-module-row">
+            <td colspan="7">
+              <button class="add-module-btn" type="button">
+                <mat-icon>add_circle_outline</mat-icon>
+                Ajouter un module
+              </button>
+            </td>
+            <td class="actions-cell"></td>
+          </tr>
+        </ng-container>
+      </tbody>
+    </table>
+
+    <button class="add-ue-btn" type="button">
+      <mat-icon>add</mat-icon>
+      Ajouter une UE
+    </button>
+  </div>
+</div>

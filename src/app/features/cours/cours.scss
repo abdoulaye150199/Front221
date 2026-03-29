@@ -1,0 +1,269 @@
+.courses {
+  max-width: 1400px;
+  margin: 0 auto;
+
+  .page-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 1.75rem;
+    gap: 1rem;
+  }
+
+  .page-title {
+    margin: 0;
+    font-size: 2rem;
+    font-weight: 700;
+    color: #1a1a1a;
+  }
+
+  .primary-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    border-radius: 10px;
+    font-weight: 600;
+    text-transform: none;
+    background-color: #c1361c;
+    color: #fff;
+  }
+
+  .filters-card {
+    background: #fff;
+    border-radius: 16px;
+    padding: 1.5rem;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.06);
+    margin-bottom: 1.75rem;
+  }
+
+  .filters-title {
+    font-weight: 700;
+    color: #1f2937;
+    margin-bottom: 1rem;
+  }
+
+  .filters-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 1rem;
+  }
+
+  .filter-field {
+    display: flex;
+    flex-direction: column;
+    gap: 0.45rem;
+    color: #374151;
+    font-weight: 600;
+
+    label {
+      font-size: 0.9rem;
+    }
+
+    select {
+      padding: 0.7rem 0.9rem;
+      border-radius: 10px;
+      border: none;
+      background: #f3f4f6;
+      font-size: 0.95rem;
+      color: #111827;
+      outline: none;
+    }
+  }
+
+  .table-card {
+    background: #fff;
+    border-radius: 16px;
+    padding: 1.5rem;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+  }
+
+  .table-toolbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    flex-wrap: wrap;
+  }
+
+  .search-box {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    background: #f3f4f6;
+    border-radius: 12px;
+    padding: 0.6rem 0.9rem;
+    min-width: 260px;
+    flex: 1;
+    max-width: 420px;
+    color: #6b7280;
+
+    input {
+      border: none;
+      outline: none;
+      background: transparent;
+      width: 100%;
+      font-size: 0.95rem;
+      color: #111827;
+    }
+  }
+
+  .export-btn {
+    border-radius: 10px;
+    text-transform: none;
+    font-weight: 600;
+  }
+
+  .table-wrapper {
+    margin-top: 1.5rem;
+    overflow-x: auto;
+  }
+
+  .courses-table {
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 980px;
+
+    th,
+    td {
+      text-align: left;
+      padding: 0.95rem 0.75rem;
+      white-space: nowrap;
+    }
+
+    thead th {
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: #6b7280;
+      border-bottom: 1px solid #eef0f2;
+    }
+
+    tbody td {
+      font-size: 0.95rem;
+      color: #1f2937;
+      border-bottom: 1px solid #f1f2f4;
+    }
+  }
+
+  .ue-cell {
+    font-weight: 700;
+    color: #111827;
+  }
+
+  .teacher-cell {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+  }
+
+  .teacher-avatar {
+    width: 32px;
+    height: 32px;
+    border-radius: 999px;
+    background: #fdecec;
+    color: #c1361c;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    mat-icon {
+      font-size: 18px;
+      width: 18px;
+      height: 18px;
+    }
+  }
+
+  .credit-pill {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.25rem 0.8rem;
+    border-radius: 999px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    background: #fff7e6;
+    color: #c9831c;
+  }
+
+  .students-cell {
+    font-weight: 600;
+  }
+
+  .actions-header {
+    text-align: right;
+  }
+
+  .actions-cell {
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.5rem;
+  }
+
+  .icon-btn {
+    border: 1px solid #e5e7eb;
+    background: #fff;
+    color: #6b7280;
+    width: 34px;
+    height: 34px;
+    border-radius: 10px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+
+    mat-icon {
+      font-size: 18px;
+      width: 18px;
+      height: 18px;
+    }
+  }
+
+  .icon-btn:hover {
+    border-color: #d1d5db;
+    color: #111827;
+  }
+
+  .icon-btn.danger {
+    color: #c1361c;
+    border-color: #f2c6bb;
+    background: #fff5f4;
+  }
+
+  .table-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 1.5rem;
+    gap: 1rem;
+    flex-wrap: wrap;
+    color: #6b7280;
+    font-size: 0.9rem;
+  }
+
+  .pagination {
+    display: flex;
+    align-items: center;
+    gap: 0.65rem;
+  }
+
+  .page-indicator {
+    min-width: 32px;
+    text-align: center;
+    padding: 0.35rem 0.7rem;
+    background: #c1361c;
+    color: #fff;
+    border-radius: 10px;
+    font-weight: 700;
+  }
+
+  @media (max-width: 900px) {
+    .page-header {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+
+    .filters-card,
+    .table-card {
+      padding: 1.25rem;
+    }
+  }
+}
