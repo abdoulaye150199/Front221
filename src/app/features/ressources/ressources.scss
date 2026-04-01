@@ -199,6 +199,20 @@
       color: #111827;
     }
 
+    .field select {
+      border: none;
+      outline: none;
+      background: transparent;
+      width: 100%;
+      font-size: 0.78rem;
+      color: #111827;
+      cursor: pointer;
+    }
+
+    .field select:invalid {
+      color: #9ca3af;
+    }
+
     .date-field mat-icon {
       color: #9ca3af;
       font-size: 18px;
@@ -304,6 +318,11 @@
     color: #4b5563;
   }
 
+  .status-pill.pending {
+    background: #fef3c7;
+    color: #b45309;
+  }
+
   .actions-header {
     text-align: center;
     width: 90px;
@@ -321,6 +340,7 @@
     width: 90px;
     padding-left: 0.4rem;
     padding-right: 0.4rem;
+    overflow: visible !important;
   }
 
   .icon-btn {
@@ -346,12 +366,6 @@
   .icon-btn:hover {
     border-color: #d1d5db;
     color: #111827;
-  }
-
-  .icon-btn.danger {
-    color: #c1361c;
-    border-color: #f2c6bb;
-    background: #fff5f4;
   }
 
   .icon-btn.menu {
@@ -407,6 +421,17 @@
     align-items: center;
     gap: 0.65rem;
   }
+
+  .number-pagination { gap: 0.45rem; }
+  .page-nav-btn, .page-number-btn { border: 1px solid #e5e7eb; background: #fff; color: #6b7280; min-width: 32px; height: 32px; border-radius: 8px; display: inline-flex; align-items: center; justify-content: center; cursor: pointer; font-size: 0.8rem; transition: all 0.2s ease; }
+  .page-nav-btn mat-icon { font-size: 16px; width: 16px; height: 16px; }
+  .page-number-btn.active { background: #c8a64b; border-color: #c8a64b; color: #fff; font-weight: 700; }
+  .page-nav-btn:disabled, .page-number-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+  .page-size-control { display: flex; align-items: center; gap: 0.7rem; font-weight: 600; }
+  .page-size-select { min-width: 72px; padding: 0.2rem 0.35rem; border: 1px solid #e5e7eb; border-radius: 10px; background: #fff; }
+  .page-size-select select { border: none; outline: none; background: transparent; width: 100%; font-size: 0.8rem; color: #111827; cursor: pointer; }
+  .empty-state { text-align: center !important; color: #6b7280 !important; padding: 1.5rem 0.75rem !important; }
 
   .page-indicator {
     min-width: 32px;
