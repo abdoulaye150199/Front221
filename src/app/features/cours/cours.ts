@@ -1,8 +1,7 @@
 import { Component } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
-import { MatIconModule } from '@angular/material/icon';
-import { MatButtonModule } from '@angular/material/button';
+import { APP_DATA } from '../../shared/data';
+import { FORM_ACTION_IMPORTS } from '../../shared/imports/standalone-imports';
+import { SelectOption } from '../../shared/models';
 
 interface Course {
   id: string;
@@ -18,156 +17,40 @@ interface Course {
   semestre: string;
 }
 
+interface CoursDataSource {
+  pageSize: number;
+  specialites: SelectOption[];
+  niveaux: SelectOption[];
+  classes: SelectOption[];
+  semestres: SelectOption[];
+  courses: Course[];
+}
+
+const coursData = APP_DATA.features.cours as CoursDataSource;
+
 @Component({
   selector: 'app-cours',
   standalone: true,
-  imports: [CommonModule, FormsModule, MatIconModule, MatButtonModule],
+  imports: [...FORM_ACTION_IMPORTS],
   templateUrl: './cours.html',
   styleUrl: './cours.scss',
 })
 export class CoursComponent {
   searchTerm = '';
   page = 1;
-  pageSize = 8;
+  pageSize = coursData.pageSize;
 
-  specialites = [
-    { value: 'toutes', label: 'Toutes les spécialités' },
-    { value: 'informatique', label: 'Informatique' },
-    { value: 'reseaux', label: 'Réseaux' },
-    { value: 'data', label: 'Data' },
-  ];
+  readonly specialites = coursData.specialites;
+  readonly niveaux = coursData.niveaux;
+  readonly classes = coursData.classes;
+  readonly semestres = coursData.semestres;
 
-  niveaux = [
-    { value: 'tous', label: 'Tous les niveaux' },
-    { value: 'L1', label: 'Licence 1' },
-    { value: 'L2', label: 'Licence 2' },
-    { value: 'L3', label: 'Licence 3' },
-  ];
+  selectedSpecialite = this.specialites[0]?.value ?? '';
+  selectedNiveau = this.niveaux[0]?.value ?? '';
+  selectedClasse = this.classes[0]?.value ?? '';
+  selectedSemestre = this.semestres[0]?.value ?? '';
 
-  classes = [
-    { value: 'toutes', label: 'Toutes les classes' },
-    { value: 'A', label: 'Classe A' },
-    { value: 'B', label: 'Classe B' },
-    { value: 'C', label: 'Classe C' },
-  ];
-
-  semestres = [
-    { value: 'tous', label: 'Tous les semestres' },
-    { value: 'S1', label: 'Semestre 1' },
-    { value: 'S2', label: 'Semestre 2' },
-  ];
-
-  selectedSpecialite = 'toutes';
-  selectedNiveau = 'tous';
-  selectedClasse = 'toutes';
-  selectedSemestre = 'tous';
-
-  courses: Course[] = [
-    {
-      id: '1',
-      ue: 'UE1 - Développement',
-      module: 'Développement Web Avancé',
-      professor: 'Dr. Fatou Sall',
-      credits: 6,
-      hours: '48h',
-      students: 45,
-      specialite: 'informatique',
-      niveau: 'L2',
-      classe: 'A',
-      semestre: 'S1',
-    },
-    {
-      id: '2',
-      ue: 'UE2 - Intelligence Artificielle',
-      module: 'Machine Learning',
-      professor: 'Prof. Moussa Ndiaye',
-      credits: 8,
-      hours: '60h',
-      students: 38,
-      specialite: 'data',
-      niveau: 'L3',
-      classe: 'B',
-      semestre: 'S1',
-    },
-    {
-      id: '3',
-      ue: 'UE1 - Bases de Données',
-      module: 'Systèmes de Gestion de BD',
-      professor: 'Dr. Aïssatou Diop',
-      credits: 6,
-      hours: '48h',
-      students: 52,
-      specialite: 'informatique',
-      niveau: 'L2',
-      classe: 'C',
-      semestre: 'S1',
-    },
-    {
-      id: '4',
-      ue: 'UE3 - Sécurité',
-      module: 'Sécurité Informatique',
-      professor: 'Prof. Ibrahima Fall',
-      credits: 7,
-      hours: '54h',
-      students: 41,
-      specialite: 'reseaux',
-      niveau: 'L3',
-      classe: 'A',
-      semestre: 'S2',
-    },
-    {
-      id: '5',
-      ue: 'UE2 - Mobile',
-      module: 'Développement Android',
-      professor: 'Dr. Aminata Sy',
-      credits: 6,
-      hours: '48h',
-      students: 36,
-      specialite: 'informatique',
-      niveau: 'L2',
-      classe: 'B',
-      semestre: 'S2',
-    },
-    {
-      id: '6',
-      ue: 'UE1 - Programmation',
-      module: 'Algorithmes Avancés',
-      professor: 'Prof. Ousmane Ba',
-      credits: 7,
-      hours: '54h',
-      students: 48,
-      specialite: 'informatique',
-      niveau: 'L1',
-      classe: 'A',
-      semestre: 'S1',
-    },
-    {
-      id: '7',
-      ue: 'UE3 - Réseaux',
-      module: 'Architecture Réseaux',
-      professor: 'Dr. Mariama Diallo',
-      credits: 6,
-      hours: '48h',
-      students: 32,
-      specialite: 'reseaux',
-      niveau: 'L2',
-      classe: 'C',
-      semestre: 'S2',
-    },
-    {
-      id: '8',
-      ue: 'UE2 - Data',
-      module: 'Big Data Analytics',
-      professor: 'Prof. Cheikh Ndiaye',
-      credits: 8,
-      hours: '60h',
-      students: 28,
-      specialite: 'data',
-      niveau: 'L3',
-      classe: 'B',
-      semestre: 'S2',
-    },
-  ];
+  readonly courses = coursData.courses;
 
   onSearchChange(value: string) {
     this.searchTerm = value;

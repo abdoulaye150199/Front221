@@ -87,8 +87,8 @@
               class="form-input"
             />
           </div>
-          <span class="error-message" *ngIf="loginForm.get('phoneOrEmail')?.invalid && loginForm.get('phoneOrEmail')?.touched">
-            Veuillez entrer un email ou numéro de téléphone valide
+          <span class="error-message" *ngIf="phoneOrEmailErrorMessage">
+            {{ phoneOrEmailErrorMessage }}
           </span>
         </div>
 
@@ -102,7 +102,7 @@
             </svg>
             <input
               id="password"
-              type="password"
+              [type]="passwordFieldType"
               formControlName="password"
               placeholder="Mot de passe"
               class="form-input"
@@ -112,6 +112,8 @@
               class="password-toggle"
               (click)="togglePasswordVisibility()"
               tabindex="-1"
+              [attr.aria-pressed]="showPassword"
+              [attr.aria-label]="showPassword ? 'Masquer le mot de passe' : 'Afficher le mot de passe'"
             >
               <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z" fill="#999"/>
@@ -119,18 +121,29 @@
             </button>
           </div>
           <a href="#" class="forgot-password-link">Mot de passe oublié ?</a>
-          <span class="error-message" *ngIf="loginForm.get('password')?.invalid && loginForm.get('password')?.touched">
-            Le mot de passe est requis
+          <span class="error-message" *ngIf="passwordErrorMessage">
+            {{ passwordErrorMessage }}
           </span>
+        </div>
+
+        <!-- Login Error Message -->
+        <div class="error-alert" *ngIf="loginError">
+          <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="12" cy="12" r="10" stroke="#D32F2F" stroke-width="2"/>
+            <path d="M12 7V13" stroke="#D32F2F" stroke-width="2" stroke-linecap="round"/>
+            <circle cx="12" cy="17" r="1" fill="#D32F2F"/>
+          </svg>
+          <span>{{ loginError }}</span>
         </div>
 
         <!-- Login Button -->
         <button
           type="submit"
           class="login-button"
-          [disabled]="loginForm.invalid"
+          [disabled]="loginForm.invalid || isLoading"
         >
-          Se connecter
+          <span *ngIf="!isLoading">Se connecter</span>
+          <span *ngIf="isLoading" class="loading-text">Connexion en cours...</span>
         </button>
       </form>
 

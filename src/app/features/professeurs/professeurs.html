@@ -2,7 +2,7 @@
   <div class="page-header">
     <div class="title-block">
       <h1 class="page-title">
-        Liste des professeurs <span>({{ professors.length }})</span>
+        Liste des professeurs <span>({{ totalResults }})</span>
       </h1>
     </div>
     <div class="header-actions">
@@ -21,43 +21,16 @@
     </div>
   </div>
 
-  <div class="filters-card">
-    <div class="filters-left">
-      <div class="filter-group">
-        <label>Professeurs/page</label>
-        <select [ngModel]="pageSize" (ngModelChange)="onPageSizeChange($event)">
-          <option *ngFor="let item of pageSizeOptions" [value]="item.value">
-            {{ item.label }}
-          </option>
-        </select>
-      </div>
-      <div class="filter-group">
-        <label>Classe</label>
-        <select [(ngModel)]="selectedClass">
-          <option *ngFor="let item of classOptions" [value]="item.value">
-            {{ item.label }}
-          </option>
-        </select>
-      </div>
-      <div class="filter-group">
-        <label>Statut</label>
-        <select [(ngModel)]="selectedStatus">
-          <option *ngFor="let item of statusOptions" [value]="item.value">
-            {{ item.label }}
-          </option>
-        </select>
-      </div>
-    </div>
-    <label class="search-box">
-      <mat-icon>search</mat-icon>
-      <input
-        type="text"
-        placeholder="Rechercher..."
-        [(ngModel)]="searchTerm"
-        (ngModelChange)="onSearchChange($event)"
-      />
-    </label>
-  </div>
+  <app-list-filters
+    pageSizeLabel="Professeurs/page"
+    [pageSizeValue]="pageSize.toString()"
+    [pageSizeOptions]="pageSizeOptions"
+    [filters]="filterConfigs"
+    [searchTerm]="searchTerm"
+    (pageSizeChange)="onPageSizeChange($event)"
+    (filterChange)="onFilterChange($event)"
+    (searchTermChange)="onSearchChange($event)"
+  ></app-list-filters>
 
   <div class="table-card">
     <table class="prof-table">
@@ -117,39 +90,17 @@
       <div class="results">
         {{ startIndex }} à {{ endIndex }} professeurs pour {{ totalResults }}
       </div>
-      <div class="pagination">
-        <button
-          mat-stroked-button
-          type="button"
-          class="page-nav"
-          [disabled]="!canPrev"
-          (click)="previousPage()"
-        >
-          <mat-icon>chevron_left</mat-icon>
-        </button>
-        <button
-          *ngFor="let p of pages"
-          type="button"
-          class="page-btn"
-          [class.active]="p === currentPage"
-          (click)="page = p"
-        >
-          {{ p }}
-        </button>
-        <button
-          mat-stroked-button
-          type="button"
-          class="page-nav"
-          [disabled]="!canNext"
-          (click)="nextPage()"
-        >
-          <mat-icon>chevron_right</mat-icon>
-        </button>
-      </div>
+      <app-number-pagination
+        [currentPage]="currentPage"
+        [pages]="pages"
+        [canPrev]="canPrev"
+        [canNext]="canNext"
+        (pageChange)="setPage($event)"
+      ></app-number-pagination>
     </div>
   </div>
 
-  <div class="modal-backdrop" *ngIf="selectedProfessor">
+  <div class="modal-backdrop" *ngIf="selectedProfessor as professor">
     <div class="modal-card">
       <div class="modal-header">
         <h3>Profil du professeur</h3>
@@ -159,48 +110,48 @@
       </div>
       <div class="modal-body">
         <div class="profile-header">
-          <div class="avatar large">{{ getInitials(selectedProfessor?.name || '') }}</div>
+          <div class="avatar large">{{ getInitials(professor.name) }}</div>
           <div>
-            <div class="profile-name">{{ selectedProfessor?.name }}</div>
-            <div class="profile-grade">{{ selectedProfessor?.grade }}</div>
+            <div class="profile-name">{{ professor.name }}</div>
+            <div class="profile-grade">{{ professor.grade }}</div>
             <span
               class="status-pill"
-              [class.inactive]="selectedProfessor?.status === 'Inactif'"
+              [class.inactive]="professor.status === 'Inactif'"
             >
-              {{ selectedProfessor?.status }}
+              {{ professor.status }}
             </span>
           </div>
         </div>
 
         <div class="profile-grid">
           <div class="profile-card">
-            <mat-icon>call</mat-icon>
-            <div>
-              <div class="label">Téléphone</div>
-              <div class="value">{{ selectedProfessor?.phone }}</div>
+              <mat-icon>call</mat-icon>
+              <div>
+                <div class="label">Téléphone</div>
+                <div class="value">{{ professor.phone }}</div>
+              </div>
             </div>
-          </div>
           <div class="profile-card">
-            <mat-icon>mail</mat-icon>
-            <div>
-              <div class="label">Email</div>
-              <div class="value">{{ selectedProfessor?.email }}</div>
+              <mat-icon>mail</mat-icon>
+              <div>
+                <div class="label">Email</div>
+                <div class="value">{{ professor.email }}</div>
+              </div>
             </div>
-          </div>
           <div class="profile-card">
-            <mat-icon>school</mat-icon>
-            <div>
-              <div class="label">Classe</div>
-              <div class="value">{{ selectedProfessor?.classe }}</div>
+              <mat-icon>school</mat-icon>
+              <div>
+                <div class="label">Classe</div>
+                <div class="value">{{ professor.classe }}</div>
+              </div>
             </div>
-          </div>
           <div class="profile-card">
-            <mat-icon>schedule</mat-icon>
-            <div>
-              <div class="label">Heures effectuées</div>
-              <div class="value">{{ selectedProfessor?.hours }} Heures</div>
+              <mat-icon>schedule</mat-icon>
+              <div>
+                <div class="label">Heures effectuées</div>
+                <div class="value">{{ professor.hours }} Heures</div>
+              </div>
             </div>
-          </div>
         </div>
       </div>
       <div class="modal-footer">

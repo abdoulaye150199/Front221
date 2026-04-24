@@ -1,5 +1,14 @@
 import { Component } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormControl, FormGroup, NonNullableFormBuilder, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
+import { AUTH_ERROR_MESSAGES } from '../../../shared/errors';
+import { AUTH_VALIDATION_RULES, phoneOrEmailValidator } from '../../../shared/validation';
+import { AuthService } from '../../../core/services/auth.service';
+
+interface LoginFormModel {
+  phoneOrEmail: FormControl<string>;
+  password: FormControl<string>;
+}
 
 @Component({
   selector: 'app-login',
@@ -8,45 +17,94 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
   styleUrl: './login.scss',
 })
 export class LoginComponent {
-  loginForm: FormGroup;
+  readonly validationMessages = AUTH_ERROR_MESSAGES;
+  loginForm: FormGroup<LoginFormModel>;
   showPassword = false;
+  isLoading = false;
+  loginError: string | null = null;
 
-  constructor(private fb: FormBuilder) {
+  constructor(
+    private fb: NonNullableFormBuilder,
+    private authService: AuthService,
+    private router: Router
+  ) {
     this.loginForm = this.fb.group({
-      phoneOrEmail: ['', [Validators.required, this.phoneOrEmailValidator]],
-      password: ['', [Validators.required, Validators.minLength(6)]],
+      phoneOrEmail: ['', [Validators.required, phoneOrEmailValidator()]],
+      password: ['', [Validators.required, Validators.minLength(AUTH_VALIDATION_RULES.passwordMinLength)]],
     });
   }
 
-  // Custom validator for phone or email
-  private phoneOrEmailValidator(control: any) {
-    if (!control.value) {
-      return null;
+  get phoneOrEmailControl(): FormControl<string> {
+    return this.loginForm.controls.phoneOrEmail;
+  }
+
+  get passwordControl(): FormControl<string> {
+    return this.loginForm.controls.password;
+  }
+
+  get passwordFieldType(): 'password' | 'text' {
+    return this.showPassword ? 'text' : 'password';
+  }
+
+  get phoneOrEmailErrorMessage(): string {
+    if (!this.phoneOrEmailControl.touched || !this.phoneOrEmailControl.errors) {
+      return '';
     }
 
-    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    const phonePattern = /^\d{8,}$/; // At least 8 digits
-
-    if (emailPattern.test(control.value) || phonePattern.test(control.value.replace(/\D/g, ''))) {
-      return null;
+    if (this.phoneOrEmailControl.hasError('required')) {
+      return this.validationMessages.phoneOrEmailRequired;
     }
 
-    return { invalidPhoneOrEmail: true };
+    if (this.phoneOrEmailControl.hasError('invalidPhoneOrEmail')) {
+      return this.validationMessages.phoneOrEmailInvalid;
+    }
+
+    return '';
+  }
+
+  get passwordErrorMessage(): string {
+    if (!this.passwordControl.touched || !this.passwordControl.errors) {
+      return '';
+    }
+
+    if (this.passwordControl.hasError('required')) {
+      return this.validationMessages.passwordRequired;
+    }
+
+    if (this.passwordControl.hasError('minlength')) {
+      return this.validationMessages.passwordMinLength;
+    }
+
+    return '';
   }
 
   togglePasswordVisibility() {
     this.showPassword = !this.showPassword;
-    const passwordInput = document.getElementById('password') as HTMLInputElement;
-    if (passwordInput) {
-      passwordInput.type = this.showPassword ? 'text' : 'password';
-    }
   }
 
   onLogin() {
-    if (this.loginForm.valid) {
-      const { phoneOrEmail, password } = this.loginForm.value;
-      console.log('Login attempt:', { phoneOrEmail, password });
-      // TODO: Implement authentication logic
+    if (this.loginForm.invalid) {
+      this.loginForm.markAllAsTouched();
+      return;
+    }
+
+    this.isLoading = true;
+    this.loginError = null;
+
+    try {
+      const credentials = this.loginForm.getRawValue();
+      const response = this.authService.login(credentials.phoneOrEmail, credentials.password);
+
+      if (response.success) {
+        // Redirect to dashboard on successful login
+        this.router.navigate(['/dashboard']);
+      } else {
+        this.loginError = response.message || 'Erreur de connexion';
+      }
+    } catch (error) {
+      this.loginError = 'Une erreur est survenue lors de la connexion';
+    } finally {
+      this.isLoading = false;
     }
   }
 }

@@ -1,0 +1,62 @@
+.filters-card {
+  background: #fff;
+  border-radius: 14px;
+  padding: 1rem 1.25rem;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.05);
+  margin-bottom: 1.25rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.filters-left {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.filter-group {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-weight: 600;
+  color: #6b7280;
+}
+
+.filter-group label {
+  font-size: 0.85rem;
+}
+
+.filter-group select {
+  padding: 0.55rem 0.8rem;
+  border-radius: 10px;
+  border: none;
+  background: #f3f4f6;
+  font-size: 0.9rem;
+  color: #111827;
+  outline: none;
+}
+
+.search-box {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  background: #fff;
+  border-radius: 12px;
+  padding: 0.55rem 0.8rem;
+  border: 1px solid #e5e7eb;
+  min-width: 240px;
+  flex: 1 1 240px;
+}
+
+.search-box input {
+  border: none;
+  outline: none;
+  background: transparent;
+  width: 100%;
+  font-size: 0.95rem;
+  color: #111827;
+}

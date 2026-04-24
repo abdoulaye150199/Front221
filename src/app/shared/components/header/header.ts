@@ -1,19 +1,32 @@
 import { Component } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { MatIconModule } from '@angular/material/icon';
-import { MatButtonModule } from '@angular/material/button';
-import { MatMenuModule } from '@angular/material/menu';
-import { MatDividerModule } from '@angular/material/divider';
+import { Router } from '@angular/router';
+import { APP_DATA } from '../../data';
+import { HEADER_IMPORTS } from '../../imports/standalone-imports';
+
+interface HeaderData {
+  userInitial: string;
+  userName: string;
+  userRole: string;
+}
+
+const headerData = APP_DATA.shared.header as HeaderData;
 
 @Component({
   selector: 'app-header',
   standalone: true,
-  imports: [CommonModule, MatIconModule, MatButtonModule, MatMenuModule, MatDividerModule],
+  imports: [...HEADER_IMPORTS],
   templateUrl: './header.html',
   styleUrl: './header.scss',
 })
 export class HeaderComponent {
-  userInitial = 'A';
-  userName = 'Amadou Diallo';
-  userRole = 'Administrateur';
+  readonly userInitial = headerData.userInitial;
+  readonly userName = headerData.userName;
+  readonly userRole = headerData.userRole;
+
+  constructor(private readonly router: Router) {}
+
+  logout() {
+    localStorage.clear();
+    this.router.navigate(['/auth/login']);
+  }
 }

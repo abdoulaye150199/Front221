@@ -1,8 +1,6 @@
 import { Component } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { RouterModule } from '@angular/router';
-import { MatIconModule } from '@angular/material/icon';
-import { MatButtonModule } from '@angular/material/button';
+import { APP_DATA } from '../../data';
+import { SIDEBAR_IMPORTS } from '../../imports/standalone-imports';
 
 interface NavItem {
   label: string;
@@ -11,59 +9,26 @@ interface NavItem {
   children?: NavItem[];
 }
 
+interface AcademicYearData {
+  label: string;
+  year: string;
+}
+
+interface SidebarData {
+  navItems: NavItem[];
+  academicYear: AcademicYearData;
+}
+
+const sidebarData = APP_DATA.shared.sidebar as SidebarData;
+
 @Component({
   selector: 'app-sidebar',
   standalone: true,
-  imports: [CommonModule, RouterModule, MatIconModule, MatButtonModule],
+  imports: [...SIDEBAR_IMPORTS],
   templateUrl: './sidebar.html',
   styleUrl: './sidebar.scss',
 })
 export class SidebarComponent {
-  navItems: NavItem[] = [
-    {
-      label: 'Dashboard',
-      icon: 'dashboard',
-      route: '/dashboard',
-    },
-    {
-      label: 'Gestion Ressources',
-      icon: 'folder_open',
-      route: '/ressources',
-    },
-    {
-      label: 'Gestion Cours',
-      icon: 'school',
-      route: '/cours',
-    },
-    {
-      label: 'Gestion Référentiel',
-      icon: 'library_books',
-      route: '/referentiel',
-    },
-    {
-      label: 'Professeurs',
-      icon: 'people',
-      route: '/professeurs',
-    },
-    {
-      label: 'Planning',
-      icon: 'calendar_today',
-      route: '/planning',
-    },
-    {
-      label: 'Inscriptions',
-      icon: 'assignment',
-      route: '/inscriptions',
-    },
-    {
-      label: 'Paiement',
-      icon: 'payment',
-      route: '/paiement',
-    },
-  ];
-
-  academicYear = {
-    label: 'Année Académique',
-    year: '2024-2025',
-  };
+  readonly navItems = sidebarData.navItems;
+  readonly academicYear = sidebarData.academicYear;
 }

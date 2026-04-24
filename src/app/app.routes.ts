@@ -42,8 +42,8 @@ export const routes: Routes = [
         path: 'paiement',
         loadChildren: () => import('./features/paiement/paiement-module').then(m => m.PaiementModule),
       },
-      { path: '', redirectTo: '/dashboard', pathMatch: 'full' },
+      { path: '', redirectTo: '/auth/login', pathMatch: 'full' },
     ],
   },
-  { path: '', redirectTo: '/dashboard', pathMatch: 'full' },
+  { path: '', redirectTo: '/auth/login', pathMatch: 'full' },
 ];

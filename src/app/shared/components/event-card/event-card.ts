@@ -1,24 +1,14 @@
 import { Component, Input } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { MatIconModule } from '@angular/material/icon';
-
-export interface Event {
-  id: string;
-  title: string;
-  date: string;
-  time: string;
-  location: string;
-  icon: string;
-  color: string;
-}
+import { ICON_IMPORTS } from '../../imports/standalone-imports';
+import { EventCardData } from '../../models';
 
 @Component({
   selector: 'app-event-card',
   standalone: true,
-  imports: [CommonModule, MatIconModule],
+  imports: [...ICON_IMPORTS],
   templateUrl: './event-card.html',
   styleUrl: './event-card.scss',
 })
 export class EventCardComponent {
-  @Input() event!: Event;
+  @Input({ required: true }) event!: EventCardData;
 }

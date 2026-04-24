@@ -21,43 +21,16 @@
     </div>
   </div>
 
-  <div class="filters-card">
-    <div class="filters-left">
-      <div class="filter-group">
-        <label>Apprenants/page</label>
-        <select [ngModel]="pageSize" (ngModelChange)="onPageSizeChange($event)">
-          <option *ngFor="let item of pageSizeOptions" [value]="item.value">
-            {{ item.label }}
-          </option>
-        </select>
-      </div>
-      <div class="filter-group">
-        <label>Classe</label>
-        <select [(ngModel)]="selectedClass">
-          <option *ngFor="let item of classOptions" [value]="item.value">
-            {{ item.label }}
-          </option>
-        </select>
-      </div>
-      <div class="filter-group">
-        <label>Statut</label>
-        <select [(ngModel)]="selectedStatus">
-          <option *ngFor="let item of statusOptions" [value]="item.value">
-            {{ item.label }}
-          </option>
-        </select>
-      </div>
-    </div>
-    <label class="search-box">
-      <mat-icon>search</mat-icon>
-      <input
-        type="text"
-        placeholder="Rechercher..."
-        [(ngModel)]="searchTerm"
-        (ngModelChange)="onSearchChange($event)"
-      />
-    </label>
-  </div>
+  <app-list-filters
+    pageSizeLabel="Apprenants/page"
+    [pageSizeValue]="pageSize.toString()"
+    [pageSizeOptions]="pageSizeOptions"
+    [filters]="filterConfigs"
+    [searchTerm]="searchTerm"
+    (pageSizeChange)="onPageSizeChange($event)"
+    (filterChange)="onFilterChange($event)"
+    (searchTermChange)="onSearchChange($event)"
+  ></app-list-filters>
 
   <div class="table-card">
     <table class="students-table">
@@ -117,39 +90,17 @@
       <div class="results">
         {{ startIndex }} à {{ endIndex }} apprenants pour {{ totalResults }}
       </div>
-      <div class="pagination">
-        <button
-          mat-stroked-button
-          type="button"
-          class="page-nav"
-          [disabled]="!canPrev"
-          (click)="previousPage()"
-        >
-          <mat-icon>chevron_left</mat-icon>
-        </button>
-        <button
-          *ngFor="let p of pages"
-          type="button"
-          class="page-btn"
-          [class.active]="p === currentPage"
-          (click)="page = p"
-        >
-          {{ p }}
-        </button>
-        <button
-          mat-stroked-button
-          type="button"
-          class="page-nav"
-          [disabled]="!canNext"
-          (click)="nextPage()"
-        >
-          <mat-icon>chevron_right</mat-icon>
-        </button>
-      </div>
+      <app-number-pagination
+        [currentPage]="currentPage"
+        [pages]="pages"
+        [canPrev]="canPrev"
+        [canNext]="canNext"
+        (pageChange)="setPage($event)"
+      ></app-number-pagination>
     </div>
   </div>
 
-  <div class="modal-backdrop" *ngIf="selectedStudent">
+  <div class="modal-backdrop" *ngIf="selectedStudent as student">
     <div class="modal-card">
       <div class="modal-header">
         <h3>Détails de l'apprenant</h3>
@@ -159,15 +110,15 @@
       </div>
       <div class="modal-body">
         <div class="profile-header">
-          <div class="avatar large">{{ getInitials(selectedStudent?.name || '') }}</div>
+          <div class="avatar large">{{ getInitials(student.name) }}</div>
           <div>
-            <div class="profile-name">{{ selectedStudent?.name }}</div>
-            <div class="profile-meta">Matricule : {{ selectedStudent?.matricule }}</div>
+            <div class="profile-name">{{ student.name }}</div>
+            <div class="profile-meta">Matricule : {{ student.matricule }}</div>
             <span
               class="status-pill"
-              [class.inactive]="selectedStudent?.status === 'Inactif'"
+              [class.inactive]="student.status === 'Inactif'"
             >
-              {{ selectedStudent?.status }}
+              {{ student.status }}
             </span>
           </div>
         </div>
@@ -175,23 +126,23 @@
         <div class="profile-grid">
           <div class="field-card">
             <div class="label">Nom Complet</div>
-            <div class="value">{{ selectedStudent?.name }}</div>
+            <div class="value">{{ student.name }}</div>
           </div>
           <div class="field-card">
             <div class="label">Matricule</div>
-            <div class="value">{{ selectedStudent?.matricule }}</div>
+            <div class="value">{{ student.matricule }}</div>
           </div>
           <div class="field-card full">
             <div class="label">Adresse</div>
-            <div class="value">{{ selectedStudent?.address }}</div>
+            <div class="value">{{ student.address }}</div>
           </div>
           <div class="field-card">
             <div class="label">Téléphone</div>
-            <div class="value">{{ selectedStudent?.phone }}</div>
+            <div class="value">{{ student.phone }}</div>
           </div>
           <div class="field-card">
             <div class="label">Classe</div>
-            <div class="value">{{ selectedStudent?.classe }}</div>
+            <div class="value">{{ student.classe }}</div>
           </div>
         </div>
       </div>

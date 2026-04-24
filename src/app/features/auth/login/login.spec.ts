@@ -1,22 +1,35 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { Login } from './login';
+import { AuthModule } from '../auth-module';
+import { LoginComponent } from './login';
 
-describe('Login', () => {
-  let component: Login;
-  let fixture: ComponentFixture<Login>;
+describe('LoginComponent', () => {
+  let component: LoginComponent;
+  let fixture: ComponentFixture<LoginComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [Login],
+      imports: [AuthModule],
     }).compileComponents();
 
-    fixture = TestBed.createComponent(Login);
+    fixture = TestBed.createComponent(LoginComponent);
     component = fixture.componentInstance;
-    await fixture.whenStable();
+    fixture.detectChanges();
   });
 
   it('should create', () => {
     expect(component).toBeTruthy();
+  });
+
+  it('should initialize the form as invalid', () => {
+    expect(component.loginForm.invalid).toBe(true);
+  });
+
+  it('should toggle the password field type', () => {
+    expect(component.passwordFieldType).toBe('password');
+
+    component.togglePasswordVisibility();
+
+    expect(component.passwordFieldType).toBe('text');
   });
 });

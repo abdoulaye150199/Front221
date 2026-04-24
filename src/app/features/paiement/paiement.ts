@@ -1,13 +1,10 @@
 import { Component } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
-import { MatIconModule } from '@angular/material/icon';
-import { MatButtonModule } from '@angular/material/button';
+import { FORM_ACTION_IMPORTS } from '../../shared/imports/standalone-imports';
 
 @Component({
   selector: 'app-paiement',
   standalone: true,
-  imports: [CommonModule, FormsModule, MatIconModule, MatButtonModule],
+  imports: [...FORM_ACTION_IMPORTS],
   templateUrl: './paiement.html',
   styleUrl: './paiement.scss',
 })

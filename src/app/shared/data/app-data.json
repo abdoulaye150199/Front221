@@ -1,0 +1,1877 @@
+{
+  "validation": {
+    "auth": {
+      "rules": {
+        "passwordMinLength": 6
+      }
+    }
+  },
+  "errors": {
+    "auth": {
+      "phoneOrEmailRequired": "Le numéro de téléphone ou l’email est requis.",
+      "phoneOrEmailInvalid": "Veuillez entrer un email ou numéro de téléphone valide.",
+      "passwordRequired": "Le mot de passe est requis.",
+      "passwordMinLengthTemplate": "Le mot de passe doit contenir au moins {min} caractères.",
+      "invalidCredentials": "Email/téléphone ou mot de passe invalide."
+    }
+  },
+  "shared": {
+    "header": {
+      "userInitial": "A",
+      "userName": "Amadou Diallo",
+      "userRole": "Administrateur"
+    },
+    "sidebar": {
+      "navItems": [
+        {
+          "label": "Dashboard",
+          "icon": "dashboard",
+          "route": "/dashboard"
+        },
+        {
+          "label": "Gestion Ressources",
+          "icon": "folder_open",
+          "route": "/ressources"
+        },
+        {
+          "label": "Gestion Cours",
+          "icon": "school",
+          "route": "/cours"
+        },
+        {
+          "label": "Gestion Référentiel",
+          "icon": "library_books",
+          "route": "/referentiel"
+        },
+        {
+          "label": "Professeurs",
+          "icon": "people",
+          "route": "/professeurs"
+        },
+        {
+          "label": "Planning",
+          "icon": "calendar_today",
+          "route": "/planning"
+        },
+        {
+          "label": "Inscriptions",
+          "icon": "assignment",
+          "route": "/inscriptions"
+        },
+        {
+          "label": "Paiement",
+          "icon": "payment",
+          "route": "/paiement"
+        }
+      ],
+      "academicYear": {
+        "label": "Année Académique",
+        "year": "2024-2025"
+      }
+    }
+  },
+  "features": {
+    "dashboard": {
+      "events": [
+        {
+          "id": "1",
+          "title": "Examen Final - Développement Web",
+          "date": "25 Jan 2025",
+          "time": "09:00 - 12:00",
+          "location": "Salle A101",
+          "icon": "assignment",
+          "color": "#dc2626"
+        },
+        {
+          "id": "2",
+          "title": "Conférence Tech Innovation",
+          "date": "28 Jan 2025",
+          "time": "14:00 - 17:00",
+          "location": "Amphithéâtre",
+          "icon": "school",
+          "color": "#f59e0b"
+        },
+        {
+          "id": "3",
+          "title": "Réunion Pédagogique",
+          "date": "30 Jan 2025",
+          "time": "10:00 - 11:30",
+          "location": "Salle de Réunion",
+          "icon": "group",
+          "color": "#10b981"
+        },
+        {
+          "id": "4",
+          "title": "Journée Portes Ouvertes",
+          "date": "02 Fév 2025",
+          "time": "08:00 - 18:00",
+          "location": "Campus Principal",
+          "icon": "calendar_today",
+          "color": "#8b5cf6"
+        }
+      ],
+      "courses": [
+        {
+          "id": "1",
+          "title": "Développement Web Avancé",
+          "instructor": "Dr. Fatou Sall",
+          "time": "14:00",
+          "dayOfWeek": "Aujourd'hui",
+          "room": "Salle B203",
+          "students": 45,
+          "icon": "book",
+          "color": "#f59e0b"
+        },
+        {
+          "id": "2",
+          "title": "Intelligence Artificielle",
+          "instructor": "Prof. Moussa Ndiaye",
+          "time": "09:00",
+          "dayOfWeek": "Demain",
+          "room": "Salle A105",
+          "students": 38,
+          "icon": "book",
+          "color": "#3b82f6"
+        },
+        {
+          "id": "3",
+          "title": "Base de Données",
+          "instructor": "Dr. Aïssatou Diop",
+          "time": "11:00",
+          "dayOfWeek": "Demain",
+          "room": "Salle C301",
+          "students": 52,
+          "icon": "book",
+          "color": "#10b981"
+        },
+        {
+          "id": "4",
+          "title": "Sécurité Informatique",
+          "instructor": "Prof. Ibrahima Fall",
+          "time": "15:00",
+          "dayOfWeek": "Ven",
+          "room": "Salle B104",
+          "students": 41,
+          "icon": "book",
+          "color": "#8b5cf6"
+        }
+      ],
+      "stats": {
+        "students": {
+          "count": "1,247",
+          "change": "12.5%",
+          "isPositive": true
+        },
+        "teachers": {
+          "count": "87",
+          "change": "5.2%",
+          "isPositive": true
+        }
+      },
+      "schoolInfo": {
+        "name": "Ecole 221",
+        "description": "École Supérieure d'Informatique",
+        "location": "Dakar, Sénégal",
+        "founded": "2015",
+        "programs": "12 Spécialités",
+        "accreditation": "Certifiée"
+      },
+      "academicYear": {
+        "year": "2024-2025",
+        "status": "En cours",
+        "semester": "Semestre 1",
+        "week": "Semaine 12"
+      },
+      "chartData": {
+        "inscriptions": [
+          {
+            "month": "Sep",
+            "value": 85
+          },
+          {
+            "month": "Oct",
+            "value": 120
+          },
+          {
+            "month": "Nov",
+            "value": 95
+          },
+          {
+            "month": "Déc",
+            "value": 140
+          },
+          {
+            "month": "Jan",
+            "value": 165
+          }
+        ],
+        "attendance": [
+          {
+            "month": "Sep",
+            "value": 92
+          },
+          {
+            "month": "Oct",
+            "value": 88
+          },
+          {
+            "month": "Nov",
+            "value": 95
+          },
+          {
+            "month": "Déc",
+            "value": 90
+          },
+          {
+            "month": "Jan",
+            "value": 94
+          }
+        ]
+      }
+    },
+    "cours": {
+      "pageSize": 8,
+      "specialites": [
+        {
+          "value": "toutes",
+          "label": "Toutes les spécialités"
+        },
+        {
+          "value": "informatique",
+          "label": "Informatique"
+        },
+        {
+          "value": "reseaux",
+          "label": "Réseaux"
+        },
+        {
+          "value": "data",
+          "label": "Data"
+        }
+      ],
+      "niveaux": [
+        {
+          "value": "tous",
+          "label": "Tous les niveaux"
+        },
+        {
+          "value": "L1",
+          "label": "Licence 1"
+        },
+        {
+          "value": "L2",
+          "label": "Licence 2"
+        },
+        {
+          "value": "L3",
+          "label": "Licence 3"
+        }
+      ],
+      "classes": [
+        {
+          "value": "toutes",
+          "label": "Toutes les classes"
+        },
+        {
+          "value": "A",
+          "label": "Classe A"
+        },
+        {
+          "value": "B",
+          "label": "Classe B"
+        },
+        {
+          "value": "C",
+          "label": "Classe C"
+        }
+      ],
+      "semestres": [
+        {
+          "value": "tous",
+          "label": "Tous les semestres"
+        },
+        {
+          "value": "S1",
+          "label": "Semestre 1"
+        },
+        {
+          "value": "S2",
+          "label": "Semestre 2"
+        }
+      ],
+      "courses": [
+        {
+          "id": "1",
+          "ue": "UE1 - Développement",
+          "module": "Développement Web Avancé",
+          "professor": "Dr. Fatou Sall",
+          "credits": 6,
+          "hours": "48h",
+          "students": 45,
+          "specialite": "informatique",
+          "niveau": "L2",
+          "classe": "A",
+          "semestre": "S1"
+        },
+        {
+          "id": "2",
+          "ue": "UE2 - Intelligence Artificielle",
+          "module": "Machine Learning",
+          "professor": "Prof. Moussa Ndiaye",
+          "credits": 8,
+          "hours": "60h",
+          "students": 38,
+          "specialite": "data",
+          "niveau": "L3",
+          "classe": "B",
+          "semestre": "S1"
+        },
+        {
+          "id": "3",
+          "ue": "UE1 - Bases de Données",
+          "module": "Systèmes de Gestion de BD",
+          "professor": "Dr. Aïssatou Diop",
+          "credits": 6,
+          "hours": "48h",
+          "students": 52,
+          "specialite": "informatique",
+          "niveau": "L2",
+          "classe": "C",
+          "semestre": "S1"
+        },
+        {
+          "id": "4",
+          "ue": "UE3 - Sécurité",
+          "module": "Sécurité Informatique",
+          "professor": "Prof. Ibrahima Fall",
+          "credits": 7,
+          "hours": "54h",
+          "students": 41,
+          "specialite": "reseaux",
+          "niveau": "L3",
+          "classe": "A",
+          "semestre": "S2"
+        },
+        {
+          "id": "5",
+          "ue": "UE2 - Mobile",
+          "module": "Développement Android",
+          "professor": "Dr. Aminata Sy",
+          "credits": 6,
+          "hours": "48h",
+          "students": 36,
+          "specialite": "informatique",
+          "niveau": "L2",
+          "classe": "B",
+          "semestre": "S2"
+        },
+        {
+          "id": "6",
+          "ue": "UE1 - Programmation",
+          "module": "Algorithmes Avancés",
+          "professor": "Prof. Ousmane Ba",
+          "credits": 7,
+          "hours": "54h",
+          "students": 48,
+          "specialite": "informatique",
+          "niveau": "L1",
+          "classe": "A",
+          "semestre": "S1"
+        },
+        {
+          "id": "7",
+          "ue": "UE3 - Réseaux",
+          "module": "Architecture Réseaux",
+          "professor": "Dr. Mariama Diallo",
+          "credits": 6,
+          "hours": "48h",
+          "students": 32,
+          "specialite": "reseaux",
+          "niveau": "L2",
+          "classe": "C",
+          "semestre": "S2"
+        },
+        {
+          "id": "8",
+          "ue": "UE2 - Data",
+          "module": "Big Data Analytics",
+          "professor": "Prof. Cheikh Ndiaye",
+          "credits": 8,
+          "hours": "60h",
+          "students": 28,
+          "specialite": "data",
+          "niveau": "L3",
+          "classe": "B",
+          "semestre": "S2"
+        }
+      ]
+    },
+    "inscriptions": {
+      "pageSizeOptions": [
+        {
+          "value": "10",
+          "label": "10"
+        },
+        {
+          "value": "20",
+          "label": "20"
+        },
+        {
+          "value": "50",
+          "label": "50"
+        }
+      ],
+      "classOptions": [
+        {
+          "value": "toutes",
+          "label": "Filtre par classe"
+        },
+        {
+          "value": "Dev_Web/Mobile",
+          "label": "Dev_Web/Mobile"
+        },
+        {
+          "value": "Data",
+          "label": "Data"
+        },
+        {
+          "value": "Réseaux",
+          "label": "Réseaux"
+        }
+      ],
+      "statusOptions": [
+        {
+          "value": "tous",
+          "label": "Filtre par statut"
+        },
+        {
+          "value": "Actif",
+          "label": "Actif"
+        },
+        {
+          "value": "Inactif",
+          "label": "Inactif"
+        }
+      ],
+      "students": [
+        {
+          "id": "1",
+          "matricule": "1058215",
+          "name": "Seydina Mouhammad Diop",
+          "address": "Sicap Liberté 6 villa 6059 Dakar, Sénégal",
+          "phone": "785993546",
+          "classe": "Dev_Web/Mobile",
+          "status": "Actif"
+        },
+        {
+          "id": "2",
+          "matricule": "1058216",
+          "name": "Mamadou Gueye",
+          "address": "Keur Mbaye Fall Dakar, Sénégal",
+          "phone": "783116655",
+          "classe": "Dev_Web/Mobile",
+          "status": "Actif"
+        },
+        {
+          "id": "3",
+          "matricule": "1058217",
+          "name": "Ndiaga Lo",
+          "address": "Sicap Derklé Dakar, Sénégal",
+          "phone": "784559930",
+          "classe": "Dev_Web/Mobile",
+          "status": "Actif"
+        },
+        {
+          "id": "4",
+          "matricule": "1058218",
+          "name": "Seydina Mouhammad Diop",
+          "address": "Sicap Liberté 6 villa 6059 Dakar, Sénégal",
+          "phone": "785993546",
+          "classe": "Dev_Web/Mobile",
+          "status": "Actif"
+        },
+        {
+          "id": "5",
+          "matricule": "1058219",
+          "name": "Ibrahima Sarr",
+          "address": "Sicap Liberté 6 villa 6059 Dakar, Sénégal",
+          "phone": "785993546",
+          "classe": "Dev_Web/Mobile",
+          "status": "Actif"
+        },
+        {
+          "id": "6",
+          "matricule": "1058220",
+          "name": "Aminata Diallo",
+          "address": "Sicap Liberté 6 villa 6059 Dakar, Sénégal",
+          "phone": "785993546",
+          "classe": "Dev_Web/Mobile",
+          "status": "Actif"
+        },
+        {
+          "id": "7",
+          "matricule": "1058221",
+          "name": "Oumar Faye",
+          "address": "Sicap Liberté 6 villa 6059 Dakar, Sénégal",
+          "phone": "785993546",
+          "classe": "Dev_Web/Mobile",
+          "status": "Actif"
+        },
+        {
+          "id": "8",
+          "matricule": "1058222",
+          "name": "Fatou Ndiaye",
+          "address": "Sicap Liberté 6 villa 6059 Dakar, Sénégal",
+          "phone": "785993546",
+          "classe": "Dev_Web/Mobile",
+          "status": "Actif"
+        },
+        {
+          "id": "9",
+          "matricule": "1058223",
+          "name": "Cheikh Tidiane Ba",
+          "address": "Sicap Liberté 6 villa 6059 Dakar, Sénégal",
+          "phone": "785993546",
+          "classe": "Dev_Web/Mobile",
+          "status": "Actif"
+        },
+        {
+          "id": "10",
+          "matricule": "1058224",
+          "name": "Moussa Diop",
+          "address": "Sicap Liberté 6 villa 6059 Dakar, Sénégal",
+          "phone": "785993546",
+          "classe": "Dev_Web/Mobile",
+          "status": "Actif"
+        },
+        {
+          "id": "11",
+          "matricule": "1058225",
+          "name": "Awa Fall",
+          "address": "Yoff Dakar, Sénégal",
+          "phone": "786554433",
+          "classe": "Data",
+          "status": "Actif"
+        },
+        {
+          "id": "12",
+          "matricule": "1058226",
+          "name": "Cheikh Ndao",
+          "address": "Parcelles Assainies Dakar, Sénégal",
+          "phone": "770112233",
+          "classe": "Réseaux",
+          "status": "Inactif"
+        },
+        {
+          "id": "13",
+          "matricule": "1058227",
+          "name": "Mariama Diouf",
+          "address": "Hann Maristes Dakar, Sénégal",
+          "phone": "771234980",
+          "classe": "Data",
+          "status": "Actif"
+        },
+        {
+          "id": "14",
+          "matricule": "1058228",
+          "name": "Babacar Seck",
+          "address": "Point E Dakar, Sénégal",
+          "phone": "781001122",
+          "classe": "Réseaux",
+          "status": "Actif"
+        },
+        {
+          "id": "15",
+          "matricule": "1058229",
+          "name": "Khadija Ba",
+          "address": "Sicap Liberté 5 Dakar, Sénégal",
+          "phone": "775554433",
+          "classe": "Dev_Web/Mobile",
+          "status": "Actif"
+        },
+        {
+          "id": "16",
+          "matricule": "1058230",
+          "name": "Ibrahima Kane",
+          "address": "Dakar Plateau, Sénégal",
+          "phone": "780909090",
+          "classe": "Data",
+          "status": "Actif"
+        },
+        {
+          "id": "17",
+          "matricule": "1058231",
+          "name": "Astou Gaye",
+          "address": "Guédiawaye, Sénégal",
+          "phone": "785551122",
+          "classe": "Réseaux",
+          "status": "Actif"
+        },
+        {
+          "id": "18",
+          "matricule": "1058232",
+          "name": "Cheikh Sarr",
+          "address": "Keur Massar, Sénégal",
+          "phone": "782332211",
+          "classe": "Dev_Web/Mobile",
+          "status": "Actif"
+        },
+        {
+          "id": "19",
+          "matricule": "1058233",
+          "name": "Mame Diarra Fall",
+          "address": "Rufisque, Sénégal",
+          "phone": "773330000",
+          "classe": "Data",
+          "status": "Actif"
+        },
+        {
+          "id": "20",
+          "matricule": "1058234",
+          "name": "Aliou Ndiaye",
+          "address": "Pikine, Sénégal",
+          "phone": "776661234",
+          "classe": "Réseaux",
+          "status": "Actif"
+        }
+      ]
+    },
+    "professeurs": {
+      "pageSizeOptions": [
+        {
+          "value": "10",
+          "label": "10"
+        },
+        {
+          "value": "20",
+          "label": "20"
+        },
+        {
+          "value": "50",
+          "label": "50"
+        }
+      ],
+      "classOptions": [
+        {
+          "value": "toutes",
+          "label": "Toutes les classes"
+        },
+        {
+          "value": "L1",
+          "label": "Licence 1"
+        },
+        {
+          "value": "L2",
+          "label": "Licence 2"
+        },
+        {
+          "value": "L3",
+          "label": "Licence 3"
+        }
+      ],
+      "statusOptions": [
+        {
+          "value": "tous",
+          "label": "Tous les statuts"
+        },
+        {
+          "value": "Actif",
+          "label": "Actif"
+        },
+        {
+          "value": "Inactif",
+          "label": "Inactif"
+        }
+      ],
+      "professors": [
+        {
+          "id": "1",
+          "name": "Seydina Mouhammad Diop",
+          "grade": "Professeur universitaire",
+          "phone": "785993546",
+          "email": "mouhaleecr7@gmail.com",
+          "hours": 173,
+          "status": "Actif",
+          "classe": "L3 Informatique"
+        },
+        {
+          "id": "2",
+          "name": "Fatou Sall",
+          "grade": "Maître de conférences",
+          "phone": "771234567",
+          "email": "fatou.sall@ecole221.sn",
+          "hours": 148,
+          "status": "Actif",
+          "classe": "L2 Informatique"
+        },
+        {
+          "id": "3",
+          "name": "Moussa Ndiaye",
+          "grade": "Professeur universitaire",
+          "phone": "769876543",
+          "email": "moussa.ndiaye@ecole221.sn",
+          "hours": 210,
+          "status": "Actif",
+          "classe": "L3 Informatique"
+        },
+        {
+          "id": "4",
+          "name": "Aïssatou Diop",
+          "grade": "Maître assistante",
+          "phone": "783456789",
+          "email": "aissatou.diop@ecole221.sn",
+          "hours": 96,
+          "status": "Actif",
+          "classe": "L2 Informatique"
+        },
+        {
+          "id": "5",
+          "name": "Ibrahima Fall",
+          "grade": "Professeur titulaire",
+          "phone": "776543210",
+          "email": "ibrahima.fall@ecole221.sn",
+          "hours": 185,
+          "status": "Actif",
+          "classe": "L3 Informatique"
+        },
+        {
+          "id": "6",
+          "name": "Aminata Sy",
+          "grade": "Maître de conférences",
+          "phone": "781122334",
+          "email": "aminata.sy@ecole221.sn",
+          "hours": 132,
+          "status": "Actif",
+          "classe": "L2 Mobile"
+        },
+        {
+          "id": "7",
+          "name": "Ousmane Ba",
+          "grade": "Chargé de cours",
+          "phone": "779988776",
+          "email": "ousmane.ba@ecole221.sn",
+          "hours": 64,
+          "status": "Inactif",
+          "classe": "L1 Informatique"
+        },
+        {
+          "id": "8",
+          "name": "Birane B. Wane",
+          "grade": "Professeur universitaire",
+          "phone": "785001122",
+          "email": "birane.wane@ecole221.sn",
+          "hours": 200,
+          "status": "Actif",
+          "classe": "L3 Informatique"
+        },
+        {
+          "id": "9",
+          "name": "Aly T. Niang",
+          "grade": "Maître assistant",
+          "phone": "772334455",
+          "email": "aly.niang@ecole221.sn",
+          "hours": 118,
+          "status": "Actif",
+          "classe": "L2 Informatique"
+        },
+        {
+          "id": "10",
+          "name": "Cheikh Tidiane Mbaye",
+          "grade": "Professeur universitaire",
+          "phone": "786677889",
+          "email": "cheikh.mbaye@ecole221.sn",
+          "hours": 155,
+          "status": "Actif",
+          "classe": "L3 Informatique"
+        },
+        {
+          "id": "11",
+          "name": "Mariama Diallo",
+          "grade": "Maître de conférences",
+          "phone": "773221144",
+          "email": "mariama.diallo@ecole221.sn",
+          "hours": 102,
+          "status": "Actif",
+          "classe": "L2 Réseaux"
+        },
+        {
+          "id": "12",
+          "name": "Cheikh Ndiaye",
+          "grade": "Professeur universitaire",
+          "phone": "784443322",
+          "email": "cheikh.ndiaye@ecole221.sn",
+          "hours": 140,
+          "status": "Actif",
+          "classe": "L3 Data"
+        }
+      ]
+    },
+    "referentiel": {
+      "domainOptions": [
+        {
+          "value": "science-tech",
+          "label": "Sciences et Technologies"
+        },
+        {
+          "value": "gestion",
+          "label": "Sciences de Gestion"
+        },
+        {
+          "value": "sante",
+          "label": "Sciences de la Santé"
+        }
+      ],
+      "specialiteOptions": [
+        {
+          "value": "web-mobile",
+          "label": "Développement Web Mobile"
+        },
+        {
+          "value": "data",
+          "label": "Data & IA"
+        },
+        {
+          "value": "reseaux",
+          "label": "Réseaux & Sécurité"
+        }
+      ],
+      "mentionOptions": [
+        {
+          "value": "informatique",
+          "label": "Informatique"
+        },
+        {
+          "value": "genie-logiciel",
+          "label": "Génie Logiciel"
+        }
+      ],
+      "gradeOptions": [
+        {
+          "value": "licence",
+          "label": "Licence"
+        },
+        {
+          "value": "master",
+          "label": "Master"
+        }
+      ],
+      "niveauOptions": [
+        {
+          "value": "L1",
+          "label": "Licence 1"
+        },
+        {
+          "value": "L2",
+          "label": "Licence 2"
+        },
+        {
+          "value": "L3",
+          "label": "Licence 3"
+        }
+      ],
+      "semestreOptions": [
+        {
+          "value": "S1",
+          "label": "Semestre 1"
+        },
+        {
+          "value": "S2",
+          "label": "Semestre 2"
+        }
+      ],
+      "semesterTabs": [
+        "Semestre 1",
+        "Semestre 2",
+        "Semestre 3",
+        "Semestre 4",
+        "Semestre 5",
+        "Semestre 6"
+      ],
+      "professors": [
+        {
+          "value": "birane",
+          "label": "Birane B. Wane"
+        },
+        {
+          "value": "fatou",
+          "label": "Fatou Sall"
+        },
+        {
+          "value": "moussa",
+          "label": "Moussa Ndiaye"
+        },
+        {
+          "value": "aissatou",
+          "label": "Aïssatou Diop"
+        }
+      ],
+      "ueList": [
+        {
+          "id": "ue-1283",
+          "code": "UE-1283",
+          "title": "Outils mathématiques et algorithmique",
+          "credit": 7,
+          "modules": [
+            {
+              "id": "algo",
+              "name": "Algorithme",
+              "coef": 3,
+              "professor": "birane",
+              "vhp": 48,
+              "tpe": 32,
+              "vht": 80
+            },
+            {
+              "id": "java",
+              "name": "Java",
+              "coef": 2,
+              "professor": "birane",
+              "vhp": 48,
+              "tpe": 32,
+              "vht": 80
+            },
+            {
+              "id": "python",
+              "name": "Python",
+              "coef": 2,
+              "professor": "",
+              "vhp": 48,
+              "tpe": 32,
+              "vht": 80
+            }
+          ]
+        },
+        {
+          "id": "ue-1284",
+          "code": "UE-1284",
+          "title": "Développement Web Fondamentaux",
+          "credit": 6,
+          "modules": [
+            {
+              "id": "html",
+              "name": "HTML & CSS",
+              "coef": 2,
+              "professor": "fatou",
+              "vhp": 32,
+              "tpe": 16,
+              "vht": 48
+            },
+            {
+              "id": "js",
+              "name": "JavaScript",
+              "coef": 3,
+              "professor": "fatou",
+              "vhp": 48,
+              "tpe": 32,
+              "vht": 80
+            },
+            {
+              "id": "php",
+              "name": "PHP",
+              "coef": 1,
+              "professor": "moussa",
+              "vhp": 24,
+              "tpe": 16,
+              "vht": 40
+            }
+          ]
+        },
+        {
+          "id": "ue-1285",
+          "code": "UE-1285",
+          "title": "Bases de Données",
+          "credit": 5,
+          "modules": [
+            {
+              "id": "sql",
+              "name": "SQL",
+              "coef": 3,
+              "professor": "aissatou",
+              "vhp": 40,
+              "tpe": 24,
+              "vht": 64
+            },
+            {
+              "id": "uml",
+              "name": "Modélisation UML",
+              "coef": 2,
+              "professor": "aissatou",
+              "vhp": 32,
+              "tpe": 16,
+              "vht": 48
+            }
+          ]
+        }
+      ]
+    },
+    "planning": {
+      "currentDate": "2025-01-01T00:00:00.000Z",
+      "monthNames": [
+        "Janvier",
+        "Février",
+        "Mars",
+        "Avril",
+        "Mai",
+        "Juin",
+        "Juillet",
+        "Août",
+        "Septembre",
+        "Octobre",
+        "Novembre",
+        "Décembre"
+      ],
+      "classes": [
+        {
+          "value": "toutes",
+          "label": "Toutes les classes"
+        },
+        {
+          "value": "L1",
+          "label": "L1 - Informatique"
+        },
+        {
+          "value": "L2",
+          "label": "L2 - Informatique"
+        },
+        {
+          "value": "L3",
+          "label": "L3 - Informatique"
+        }
+      ],
+      "modules": [
+        {
+          "value": "tous",
+          "label": "Tous les modules"
+        },
+        {
+          "value": "web",
+          "label": "Développement Web"
+        },
+        {
+          "value": "mobile",
+          "label": "Développement Mobile"
+        },
+        {
+          "value": "ai",
+          "label": "Intelligence Artificielle"
+        },
+        {
+          "value": "bd",
+          "label": "Base de Données"
+        }
+      ],
+      "statuses": [
+        {
+          "value": "tous",
+          "label": "Tous statuts",
+          "color": "#111827"
+        },
+        {
+          "value": "en_cours",
+          "label": "En cours",
+          "color": "#10b981"
+        },
+        {
+          "value": "planifie",
+          "label": "Planifié",
+          "color": "#f59e0b"
+        },
+        {
+          "value": "termine",
+          "label": "Terminé",
+          "color": "#9ca3af"
+        },
+        {
+          "value": "annule",
+          "label": "Annulé",
+          "color": "#f87171"
+        }
+      ],
+      "sessionStatusOptions": [
+        {
+          "value": "en_cours",
+          "label": "En cours",
+          "color": "#10b981"
+        },
+        {
+          "value": "planifie",
+          "label": "Planifié",
+          "color": "#f59e0b"
+        },
+        {
+          "value": "termine",
+          "label": "Terminé",
+          "color": "#9ca3af"
+        },
+        {
+          "value": "annule",
+          "label": "Annulé",
+          "color": "#f87171"
+        }
+      ],
+      "weekDays": [
+        {
+          "label": "Lundi",
+          "date": 27,
+          "isNextMonth": false
+        },
+        {
+          "label": "Mardi",
+          "date": 28,
+          "isNextMonth": false
+        },
+        {
+          "label": "Mercredi",
+          "date": 29,
+          "isNextMonth": false
+        },
+        {
+          "label": "Jeudi",
+          "date": 30,
+          "isNextMonth": false
+        },
+        {
+          "label": "Vendredi",
+          "date": 31,
+          "isNextMonth": false
+        },
+        {
+          "label": "Samedi",
+          "date": 1,
+          "isNextMonth": true
+        },
+        {
+          "label": "Dimanche",
+          "date": 2,
+          "isNextMonth": true
+        }
+      ],
+      "timeSlots": [
+        "08:00",
+        "09:00",
+        "10:00"
+      ],
+      "modalModules": [
+        {
+          "value": "",
+          "label": "Sélectionner"
+        },
+        {
+          "value": "Algorithme & programmation",
+          "label": "Algorithme & programmation"
+        },
+        {
+          "value": "Soft Skills",
+          "label": "Soft Skills"
+        },
+        {
+          "value": "Droit public",
+          "label": "Droit public"
+        },
+        {
+          "value": "UI/UX Design",
+          "label": "UI/UX Design"
+        },
+        {
+          "value": "Wordpress",
+          "label": "Wordpress"
+        },
+        {
+          "value": "Gestion de projet agile SCRUM",
+          "label": "Gestion de projet agile SCRUM"
+        }
+      ],
+      "modalClasses": [
+        {
+          "value": "",
+          "label": "Sélectionner"
+        },
+        {
+          "value": "L1 DEV WEB",
+          "label": "L1 DEV WEB"
+        },
+        {
+          "value": "L1 GRH",
+          "label": "L1 GRH"
+        },
+        {
+          "value": "L1 Droit public",
+          "label": "L1 Droit public"
+        },
+        {
+          "value": "L1 Ref Dig",
+          "label": "L1 Ref Dig"
+        },
+        {
+          "value": "L2 Ref Dig",
+          "label": "L2 Ref Dig"
+        }
+      ],
+      "modalTeachers": [
+        {
+          "value": "",
+          "label": "Sélectionner"
+        },
+        {
+          "value": "Birane B. Wane",
+          "label": "Birane B. Wane"
+        },
+        {
+          "value": "Fatou Sall",
+          "label": "Fatou Sall"
+        },
+        {
+          "value": "Moussa Ndiaye",
+          "label": "Moussa Ndiaye"
+        },
+        {
+          "value": "Aïssatou Diop",
+          "label": "Aïssatou Diop"
+        },
+        {
+          "value": "Aminata Sy",
+          "label": "Aminata Sy"
+        },
+        {
+          "value": "Ibrahima Fall",
+          "label": "Ibrahima Fall"
+        }
+      ],
+      "modalRooms": [
+        {
+          "value": "",
+          "label": "Sélectionner"
+        },
+        {
+          "value": "Amphi 1",
+          "label": "Amphi 1"
+        },
+        {
+          "value": "Salle A",
+          "label": "Salle A"
+        },
+        {
+          "value": "Salle B",
+          "label": "Salle B"
+        }
+      ],
+      "timeOptions": [
+        "08:00",
+        "09:00",
+        "10:00",
+        "11:00",
+        "12:00",
+        "14:00"
+      ],
+      "defaultModalForm": {
+        "module": "",
+        "class": "",
+        "teacher": "",
+        "room": "",
+        "date": "01/02/2025",
+        "startTime": "09:00",
+        "endTime": "11:00",
+        "status": "planifie"
+      },
+      "sessionDetailsDefaults": {
+        "room": "Amphi 1",
+        "date": "29/01/2025",
+        "endTime": "12:00"
+      },
+      "sessions": [
+        {
+          "id": "1",
+          "title": "Algorithme & programmation",
+          "time": "08:00 à 12:00",
+          "teacher": "Birane B. Wane",
+          "classLabel": "L1 DEV WEB",
+          "status": "en_cours",
+          "dayIndex": 0,
+          "slot": "08:00"
+        },
+        {
+          "id": "2",
+          "title": "Soft Skills",
+          "time": "08:00 à 12:00",
+          "teacher": "Birane B. Wane",
+          "classLabel": "L1 GRH",
+          "status": "planifie",
+          "dayIndex": 1,
+          "slot": "08:00"
+        },
+        {
+          "id": "3",
+          "title": "Droit public",
+          "time": "08:00 à 12:00",
+          "teacher": "Birane B. Wane",
+          "classLabel": "L1 Droit p...",
+          "status": "planifie",
+          "dayIndex": 2,
+          "slot": "08:00"
+        },
+        {
+          "id": "4",
+          "title": "UI/UX Design",
+          "time": "08:00 à 12:00",
+          "teacher": "Fatou Sall",
+          "classLabel": "L1 Ref Dig",
+          "status": "termine",
+          "dayIndex": 3,
+          "slot": "08:00"
+        },
+        {
+          "id": "5",
+          "title": "Wordpress",
+          "time": "08:00 à 12:00",
+          "teacher": "Moussa Ndiaye",
+          "classLabel": "L2 Ref Dig",
+          "status": "planifie",
+          "dayIndex": 4,
+          "slot": "08:00"
+        },
+        {
+          "id": "6",
+          "title": "Gestion de projet agile SCRUM",
+          "time": "08:00 à 12:00",
+          "teacher": "Ibrahima Fall",
+          "classLabel": "L2 Ref Dig",
+          "status": "planifie",
+          "dayIndex": 5,
+          "slot": "08:00"
+        },
+        {
+          "id": "7",
+          "title": "Algorithme & programmation",
+          "time": "09:00 à 13:00",
+          "teacher": "Birane B. Wane",
+          "classLabel": "L1 DEV WEB",
+          "status": "planifie",
+          "dayIndex": 0,
+          "slot": "09:00"
+        },
+        {
+          "id": "8",
+          "title": "Soft Skills",
+          "time": "09:00 à 13:00",
+          "teacher": "Aminata Sy",
+          "classLabel": "L1 GRH",
+          "status": "planifie",
+          "dayIndex": 1,
+          "slot": "09:00"
+        },
+        {
+          "id": "9",
+          "title": "Droit public",
+          "time": "09:00 à 13:00",
+          "teacher": "Aïssatou Diop",
+          "classLabel": "L1 Droit p...",
+          "status": "annule",
+          "dayIndex": 2,
+          "slot": "09:00"
+        },
+        {
+          "id": "10",
+          "title": "UI/UX Design",
+          "time": "09:00 à 13:00",
+          "teacher": "Fatou Sall",
+          "classLabel": "L1 Ref Dig",
+          "status": "planifie",
+          "dayIndex": 3,
+          "slot": "09:00"
+        },
+        {
+          "id": "11",
+          "title": "Wordpress",
+          "time": "09:00 à 13:00",
+          "teacher": "Moussa Ndiaye",
+          "classLabel": "L2 Ref Dig",
+          "status": "planifie",
+          "dayIndex": 4,
+          "slot": "09:00"
+        },
+        {
+          "id": "12",
+          "title": "Droit public",
+          "time": "10:00 à 14:00",
+          "teacher": "Birane B. Wane",
+          "classLabel": "L1 Droit p...",
+          "status": "termine",
+          "dayIndex": 0,
+          "slot": "10:00"
+        },
+        {
+          "id": "13",
+          "title": "UI/UX Design",
+          "time": "10:00 à 14:00",
+          "teacher": "Fatou Sall",
+          "classLabel": "L1 Ref Dig",
+          "status": "planifie",
+          "dayIndex": 1,
+          "slot": "10:00"
+        },
+        {
+          "id": "14",
+          "title": "Wordpress",
+          "time": "10:00 à 14:00",
+          "teacher": "Moussa Ndiaye",
+          "classLabel": "L2 Ref Dig",
+          "status": "planifie",
+          "dayIndex": 2,
+          "slot": "10:00"
+        }
+      ]
+    },
+    "ressources": {
+      "mainTabs": [
+        {
+          "title": "Année",
+          "subtitle": "Décembre 2020",
+          "icon": "event"
+        },
+        {
+          "title": "Domaines & Spécialités",
+          "icon": "folder"
+        },
+        {
+          "title": "Classes & Sous-classes",
+          "icon": "folder"
+        },
+        {
+          "title": "UE & Modules",
+          "icon": "folder"
+        },
+        {
+          "title": "Paramètre",
+          "icon": "settings"
+        }
+      ],
+      "subTabs": [
+        "Année Scolaire",
+        "Suivi des événements",
+        "Calendrier Général"
+      ],
+      "specialityTabs": [
+        "Domaines",
+        "Mention",
+        "Spécialité",
+        "Cycle",
+        "Niveau",
+        "Semestres"
+      ],
+      "levelOptions": [
+        "Licence",
+        "Master 1",
+        "Master 2"
+      ],
+      "semesterOptions": [
+        "Semestre 1",
+        "Semestre 2",
+        "Session intensive"
+      ],
+      "pageSizeOptions": [
+        5,
+        10,
+        15
+      ],
+      "academicYears": [
+        {
+          "id": "1",
+          "year": "2024-2025",
+          "startDate": "01 Sep 2024",
+          "endDate": "30 Juin 2025",
+          "semester": "Semestre 1",
+          "students": 1247,
+          "courses": 156,
+          "status": "En cours"
+        },
+        {
+          "id": "2",
+          "year": "2023-2024",
+          "startDate": "01 Sep 2023",
+          "endDate": "30 Juin 2024",
+          "semester": "Terminé",
+          "students": 1189,
+          "courses": 148,
+          "status": "Terminé"
+        },
+        {
+          "id": "3",
+          "year": "2022-2023",
+          "startDate": "01 Sep 2022",
+          "endDate": "30 Juin 2023",
+          "semester": "Terminé",
+          "students": 1098,
+          "courses": 142,
+          "status": "Terminé"
+        },
+        {
+          "id": "4",
+          "year": "2021-2022",
+          "startDate": "01 Sep 2021",
+          "endDate": "30 Juin 2022",
+          "semester": "Terminé",
+          "students": 987,
+          "courses": 135,
+          "status": "Terminé"
+        }
+      ],
+      "trackedEvents": [
+        {
+          "id": "1",
+          "level": "Licence",
+          "semester": "Semestre 1",
+          "name": "Enseignements",
+          "startDate": "07/10/2024",
+          "endDate": "10/10/2024",
+          "status": "En cours"
+        },
+        {
+          "id": "2",
+          "level": "Licence",
+          "semester": "Semestre 1",
+          "name": "Évaluations",
+          "startDate": "14/10/2024",
+          "endDate": "18/10/2024",
+          "status": "À venir"
+        },
+        {
+          "id": "3",
+          "level": "Master 1",
+          "semester": "Semestre 1",
+          "name": "Rentrée pédagogique",
+          "startDate": "01/10/2024",
+          "endDate": "03/10/2024",
+          "status": "Terminé"
+        },
+        {
+          "id": "4",
+          "level": "Master 2",
+          "semester": "Semestre 2",
+          "name": "Soutenances",
+          "startDate": "05/03/2025",
+          "endDate": "12/03/2025",
+          "status": "À venir"
+        },
+        {
+          "id": "5",
+          "level": "Licence",
+          "semester": "Semestre 2",
+          "name": "Examens semestriels",
+          "startDate": "17/02/2025",
+          "endDate": "25/02/2025",
+          "status": "À venir"
+        }
+      ],
+      "generalCalendarEntries": [
+        {
+          "id": "1",
+          "level": "Licence",
+          "semester": "Semestre 1",
+          "eventName": "Ouverture des classe",
+          "startDate": "07/10/2024",
+          "endDate": "10/10/2024",
+          "status": "En cours"
+        },
+        {
+          "id": "2",
+          "level": "Licence",
+          "semester": "Semestre 1",
+          "eventName": "Période de devoir surveillé No 1",
+          "startDate": "18/12/2024",
+          "endDate": "23/12/2024",
+          "status": "En attente"
+        },
+        {
+          "id": "3",
+          "level": "Licence",
+          "semester": "Semestre 1",
+          "eventName": "Période de devoir surveillé No 2",
+          "startDate": "11/01/2025",
+          "endDate": "15/01/2025",
+          "status": "En attente"
+        },
+        {
+          "id": "4",
+          "level": "Licence",
+          "semester": "Semestre 2",
+          "eventName": "Reprise des cours",
+          "startDate": "17/02/2025",
+          "endDate": "19/02/2025",
+          "status": "En attente"
+        },
+        {
+          "id": "5",
+          "level": "Licence",
+          "semester": "Semestre 2",
+          "eventName": "Examens blancs",
+          "startDate": "10/03/2025",
+          "endDate": "15/03/2025",
+          "status": "En attente"
+        },
+        {
+          "id": "6",
+          "level": "Master 1",
+          "semester": "Semestre 1",
+          "eventName": "Rentrée pédagogique",
+          "startDate": "01/10/2024",
+          "endDate": "03/10/2024",
+          "status": "Terminé"
+        },
+        {
+          "id": "7",
+          "level": "Master 1",
+          "semester": "Semestre 1",
+          "eventName": "Contrôle continu",
+          "startDate": "20/11/2024",
+          "endDate": "25/11/2024",
+          "status": "Terminé"
+        },
+        {
+          "id": "8",
+          "level": "Master 1",
+          "semester": "Semestre 2",
+          "eventName": "Séminaire de recherche",
+          "startDate": "08/04/2025",
+          "endDate": "09/04/2025",
+          "status": "En attente"
+        },
+        {
+          "id": "9",
+          "level": "Master 2",
+          "semester": "Semestre 1",
+          "eventName": "Lancement mémoire",
+          "startDate": "14/10/2024",
+          "endDate": "18/10/2024",
+          "status": "En cours"
+        },
+        {
+          "id": "10",
+          "level": "Master 2",
+          "semester": "Semestre 1",
+          "eventName": "Atelier méthodologie",
+          "startDate": "04/12/2024",
+          "endDate": "06/12/2024",
+          "status": "Terminé"
+        },
+        {
+          "id": "11",
+          "level": "Master 2",
+          "semester": "Semestre 2",
+          "eventName": "Pré-soutenances",
+          "startDate": "12/05/2025",
+          "endDate": "16/05/2025",
+          "status": "En attente"
+        },
+        {
+          "id": "12",
+          "level": "Licence",
+          "semester": "Session intensive",
+          "eventName": "Session de rattrapage",
+          "startDate": "02/06/2025",
+          "endDate": "06/06/2025",
+          "status": "En attente"
+        },
+        {
+          "id": "13",
+          "level": "Master 1",
+          "semester": "Session intensive",
+          "eventName": "Coaching projet",
+          "startDate": "09/06/2025",
+          "endDate": "12/06/2025",
+          "status": "En attente"
+        },
+        {
+          "id": "14",
+          "level": "Master 2",
+          "semester": "Session intensive",
+          "eventName": "Soutenances finales",
+          "startDate": "23/06/2025",
+          "endDate": "27/06/2025",
+          "status": "En attente"
+        },
+        {
+          "id": "15",
+          "level": "Licence",
+          "semester": "Semestre 2",
+          "eventName": "Délibérations",
+          "startDate": "30/06/2025",
+          "endDate": "01/07/2025",
+          "status": "En attente"
+        },
+        {
+          "id": "16",
+          "level": "Master 1",
+          "semester": "Semestre 2",
+          "eventName": "Remise des notes",
+          "startDate": "03/07/2025",
+          "endDate": "04/07/2025",
+          "status": "En attente"
+        },
+        {
+          "id": "17",
+          "level": "Master 2",
+          "semester": "Semestre 2",
+          "eventName": "Publication résultats",
+          "startDate": "08/07/2025",
+          "endDate": "09/07/2025",
+          "status": "En attente"
+        },
+        {
+          "id": "18",
+          "level": "Licence",
+          "semester": "Semestre 1",
+          "eventName": "Inscription pédagogique",
+          "startDate": "23/09/2024",
+          "endDate": "30/09/2024",
+          "status": "Terminé"
+        },
+        {
+          "id": "19",
+          "level": "Master 1",
+          "semester": "Semestre 1",
+          "eventName": "Journée d’intégration",
+          "startDate": "26/09/2024",
+          "endDate": "27/09/2024",
+          "status": "Terminé"
+        },
+        {
+          "id": "20",
+          "level": "Master 2",
+          "semester": "Semestre 1",
+          "eventName": "Validation sujets",
+          "startDate": "30/10/2024",
+          "endDate": "31/10/2024",
+          "status": "Terminé"
+        }
+      ],
+      "specialityCatalogItems": [
+        {
+          "id": "1",
+          "category": "Domaines",
+          "name": "Sciences et Technologies",
+          "status": "Actif"
+        },
+        {
+          "id": "2",
+          "category": "Domaines",
+          "name": "Sciences et Technologies",
+          "status": "Actif"
+        },
+        {
+          "id": "3",
+          "category": "Domaines",
+          "name": "Sciences et Technologies",
+          "status": "Actif"
+        },
+        {
+          "id": "4",
+          "category": "Mention",
+          "name": "Informatique",
+          "domainName": "Sciences et Technologies",
+          "status": "Actif"
+        },
+        {
+          "id": "5",
+          "category": "Mention",
+          "name": "Mathématiques appliquées",
+          "domainName": "Sciences et Technologies",
+          "status": "Actif"
+        },
+        {
+          "id": "6",
+          "category": "Mention",
+          "name": "Réseaux et télécoms",
+          "domainName": "Sciences et Technologies",
+          "status": "Actif"
+        },
+        {
+          "id": "7",
+          "category": "Spécialité",
+          "name": "Génie logiciel",
+          "status": "Actif"
+        },
+        {
+          "id": "8",
+          "category": "Spécialité",
+          "name": "Data & IA",
+          "status": "Actif"
+        },
+        {
+          "id": "9",
+          "category": "Spécialité",
+          "name": "Cybersécurité",
+          "status": "Actif"
+        },
+        {
+          "id": "10",
+          "category": "Cycle",
+          "name": "Licence",
+          "status": "Actif"
+        },
+        {
+          "id": "11",
+          "category": "Cycle",
+          "name": "Master",
+          "status": "Actif"
+        },
+        {
+          "id": "12",
+          "category": "Cycle",
+          "name": "Doctorat",
+          "status": "Actif"
+        },
+        {
+          "id": "13",
+          "category": "Niveau",
+          "name": "Licence 1",
+          "status": "Actif"
+        },
+        {
+          "id": "14",
+          "category": "Niveau",
+          "name": "Licence 2",
+          "status": "Actif"
+        },
+        {
+          "id": "15",
+          "category": "Niveau",
+          "name": "Master 1",
+          "status": "Actif"
+        },
+        {
+          "id": "16",
+          "category": "Semestres",
+          "name": "Semestre 1",
+          "status": "Actif"
+        },
+        {
+          "id": "17",
+          "category": "Semestres",
+          "name": "Semestre 2",
+          "status": "Actif"
+        },
+        {
+          "id": "18",
+          "category": "Semestres",
+          "name": "Session intensive",
+          "status": "Actif"
+        }
+      ]
+    }
+  },
+  "users": {
+    "admin": [
+      {
+        "id": "admin-001",
+        "firstName": "Amadou",
+        "lastName": "Diallo",
+        "email": "admin@ecole221.sn",
+        "phone": "+221771234567",
+        "password": "Admin@123",
+        "role": "Administrateur",
+        "userInitial": "A",
+        "createdAt": "2024-01-01T00:00:00Z"
+      }
+    ]
+  }
+}

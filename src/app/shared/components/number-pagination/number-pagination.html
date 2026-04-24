@@ -1,0 +1,31 @@
+<div class="pagination">
+  <button
+    mat-stroked-button
+    type="button"
+    class="page-nav"
+    [disabled]="!canPrev"
+    (click)="pageChange.emit(currentPage - 1)"
+  >
+    <mat-icon>chevron_left</mat-icon>
+  </button>
+
+  <button
+    *ngFor="let page of pages"
+    type="button"
+    class="page-btn"
+    [class.active]="page === currentPage"
+    (click)="pageChange.emit(page)"
+  >
+    {{ page }}
+  </button>
+
+  <button
+    mat-stroked-button
+    type="button"
+    class="page-nav"
+    [disabled]="!canNext"
+    (click)="pageChange.emit(currentPage + 1)"
+  >
+    <mat-icon>chevron_right</mat-icon>
+  </button>
+</div>

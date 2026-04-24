@@ -1,11 +1,10 @@
 import { Component, Input } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { MatIconModule } from '@angular/material/icon';
+import { ICON_IMPORTS } from '../../imports/standalone-imports';
 
 @Component({
   selector: 'app-stat-card',
   standalone: true,
-  imports: [CommonModule, MatIconModule],
+  imports: [...ICON_IMPORTS],
   templateUrl: './stat-card.html',
   styleUrl: './stat-card.scss',
 })

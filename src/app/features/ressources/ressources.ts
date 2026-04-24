@@ -1,8 +1,7 @@
 import { Component, HostListener } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
-import { MatIconModule } from '@angular/material/icon';
-import { MatButtonModule } from '@angular/material/button';
+import { APP_DATA } from '../../shared/data';
+import { FORM_ACTION_IMPORTS } from '../../shared/imports/standalone-imports';
+import { hasRequiredTextValues, parseAllowedNumberOption } from '../../shared/validation';
 
 interface AcademicYear {
   id: string;
@@ -69,30 +68,32 @@ interface SpecialityCatalogItem {
   status: 'Actif' | 'Inactif';
 }
 
+interface RessourcesDataSource {
+  mainTabs: ResourceTab[];
+  subTabs: string[];
+  specialityTabs: SpecialitySectionKey[];
+  levelOptions: string[];
+  semesterOptions: string[];
+  pageSizeOptions: number[];
+  academicYears: AcademicYear[];
+  trackedEvents: TrackedEvent[];
+  generalCalendarEntries: GeneralCalendarEntry[];
+  specialityCatalogItems: SpecialityCatalogItem[];
+}
+
+const ressourcesData = APP_DATA.features.ressources as RessourcesDataSource;
+
 @Component({
   selector: 'app-ressources',
   standalone: true,
-  imports: [CommonModule, FormsModule, MatIconModule, MatButtonModule],
+  imports: [...FORM_ACTION_IMPORTS],
   templateUrl: './ressources.html',
   styleUrl: './ressources.scss',
 })
 export class RessourcesComponent {
-  mainTabs: ResourceTab[] = [
-    { title: 'Année', subtitle: 'Décembre 2020', icon: 'event' },
-    { title: 'Domaines & Spécialités', icon: 'folder' },
-    { title: 'Classes & Sous-classes', icon: 'folder' },
-    { title: 'UE & Modules', icon: 'folder' },
-    { title: 'Paramètre', icon: 'settings' },
-  ];
-  subTabs = ['Année Scolaire', 'Suivi des événements', 'Calendrier Général'];
-  specialityTabs: SpecialitySectionKey[] = [
-    'Domaines',
-    'Mention',
-    'Spécialité',
-    'Cycle',
-    'Niveau',
-    'Semestres',
-  ];
+  mainTabs = ressourcesData.mainTabs;
+  subTabs = ressourcesData.subTabs;
+  specialityTabs = ressourcesData.specialityTabs;
   activeMainTab = 0;
   activeSubTab = 0;
   activeSpecialityTab = 0;
@@ -109,15 +110,15 @@ export class RessourcesComponent {
   calendarPageSize = 5;
   specialityPage = 1;
   specialityPageSize = 5;
-  nextTrackedEventId = 6;
+  nextTrackedEventId = ressourcesData.trackedEvents.length + 1;
   editingTrackedEventId: string | null = null;
   editingCalendarEntryId: string | null = null;
   editingSpecialityItemId: string | null = null;
-  nextSpecialityItemId = 19;
+  nextSpecialityItemId = ressourcesData.specialityCatalogItems.length + 1;
 
-  readonly levelOptions: string[] = ['Licence', 'Master 1', 'Master 2'];
-  readonly semesterOptions: string[] = ['Semestre 1', 'Semestre 2', 'Session intensive'];
-  readonly pageSizeOptions: number[] = [5, 10, 15];
+  readonly levelOptions = ressourcesData.levelOptions;
+  readonly semesterOptions = ressourcesData.semesterOptions;
+  readonly pageSizeOptions = ressourcesData.pageSizeOptions;
 
   eventForm: EventFormModel = {
     level: '',
@@ -140,318 +141,14 @@ export class RessourcesComponent {
   specialityItemName = '';
   specialityDomainName = '';
 
-  academicYears: AcademicYear[] = [
-    {
-      id: '1',
-      year: '2024-2025',
-      startDate: '01 Sep 2024',
-      endDate: '30 Juin 2025',
-      semester: 'Semestre 1',
-      students: 1247,
-      courses: 156,
-      status: 'En cours',
-    },
-    {
-      id: '2',
-      year: '2023-2024',
-      startDate: '01 Sep 2023',
-      endDate: '30 Juin 2024',
-      semester: 'Terminé',
-      students: 1189,
-      courses: 148,
-      status: 'Terminé',
-    },
-    {
-      id: '3',
-      year: '2022-2023',
-      startDate: '01 Sep 2022',
-      endDate: '30 Juin 2023',
-      semester: 'Terminé',
-      students: 1098,
-      courses: 142,
-      status: 'Terminé',
-    },
-    {
-      id: '4',
-      year: '2021-2022',
-      startDate: '01 Sep 2021',
-      endDate: '30 Juin 2022',
-      semester: 'Terminé',
-      students: 987,
-      courses: 135,
-      status: 'Terminé',
-    },
-  ];
-
-  trackedEvents: TrackedEvent[] = [
-    {
-      id: '1',
-      level: 'Licence',
-      semester: 'Semestre 1',
-      name: 'Enseignements',
-      startDate: '07/10/2024',
-      endDate: '10/10/2024',
-      status: 'En cours',
-    },
-    {
-      id: '2',
-      level: 'Licence',
-      semester: 'Semestre 1',
-      name: 'Évaluations',
-      startDate: '14/10/2024',
-      endDate: '18/10/2024',
-      status: 'À venir',
-    },
-    {
-      id: '3',
-      level: 'Master 1',
-      semester: 'Semestre 1',
-      name: 'Rentrée pédagogique',
-      startDate: '01/10/2024',
-      endDate: '03/10/2024',
-      status: 'Terminé',
-    },
-    {
-      id: '4',
-      level: 'Master 2',
-      semester: 'Semestre 2',
-      name: 'Soutenances',
-      startDate: '05/03/2025',
-      endDate: '12/03/2025',
-      status: 'À venir',
-    },
-    {
-      id: '5',
-      level: 'Licence',
-      semester: 'Semestre 2',
-      name: 'Examens semestriels',
-      startDate: '17/02/2025',
-      endDate: '25/02/2025',
-      status: 'À venir',
-    },
-  ];
-
-  generalCalendarEntries: GeneralCalendarEntry[] = [
-    {
-      id: '1',
-      level: 'Licence',
-      semester: 'Semestre 1',
-      eventName: 'Ouverture des classe',
-      startDate: '07/10/2024',
-      endDate: '10/10/2024',
-      status: 'En cours',
-    },
-    {
-      id: '2',
-      level: 'Licence',
-      semester: 'Semestre 1',
-      eventName: 'Période de devoir surveillé No 1',
-      startDate: '18/12/2024',
-      endDate: '23/12/2024',
-      status: 'En attente',
-    },
-    {
-      id: '3',
-      level: 'Licence',
-      semester: 'Semestre 1',
-      eventName: 'Période de devoir surveillé No 2',
-      startDate: '11/01/2025',
-      endDate: '15/01/2025',
-      status: 'En attente',
-    },
-    {
-      id: '4',
-      level: 'Licence',
-      semester: 'Semestre 2',
-      eventName: 'Reprise des cours',
-      startDate: '17/02/2025',
-      endDate: '19/02/2025',
-      status: 'En attente',
-    },
-    {
-      id: '5',
-      level: 'Licence',
-      semester: 'Semestre 2',
-      eventName: 'Examens blancs',
-      startDate: '10/03/2025',
-      endDate: '15/03/2025',
-      status: 'En attente',
-    },
-    {
-      id: '6',
-      level: 'Master 1',
-      semester: 'Semestre 1',
-      eventName: 'Rentrée pédagogique',
-      startDate: '01/10/2024',
-      endDate: '03/10/2024',
-      status: 'Terminé',
-    },
-    {
-      id: '7',
-      level: 'Master 1',
-      semester: 'Semestre 1',
-      eventName: 'Contrôle continu',
-      startDate: '20/11/2024',
-      endDate: '25/11/2024',
-      status: 'Terminé',
-    },
-    {
-      id: '8',
-      level: 'Master 1',
-      semester: 'Semestre 2',
-      eventName: 'Séminaire de recherche',
-      startDate: '08/04/2025',
-      endDate: '09/04/2025',
-      status: 'En attente',
-    },
-    {
-      id: '9',
-      level: 'Master 2',
-      semester: 'Semestre 1',
-      eventName: 'Lancement mémoire',
-      startDate: '14/10/2024',
-      endDate: '18/10/2024',
-      status: 'En cours',
-    },
-    {
-      id: '10',
-      level: 'Master 2',
-      semester: 'Semestre 1',
-      eventName: 'Atelier méthodologie',
-      startDate: '04/12/2024',
-      endDate: '06/12/2024',
-      status: 'Terminé',
-    },
-    {
-      id: '11',
-      level: 'Master 2',
-      semester: 'Semestre 2',
-      eventName: 'Pré-soutenances',
-      startDate: '12/05/2025',
-      endDate: '16/05/2025',
-      status: 'En attente',
-    },
-    {
-      id: '12',
-      level: 'Licence',
-      semester: 'Session intensive',
-      eventName: 'Session de rattrapage',
-      startDate: '02/06/2025',
-      endDate: '06/06/2025',
-      status: 'En attente',
-    },
-    {
-      id: '13',
-      level: 'Master 1',
-      semester: 'Session intensive',
-      eventName: 'Coaching projet',
-      startDate: '09/06/2025',
-      endDate: '12/06/2025',
-      status: 'En attente',
-    },
-    {
-      id: '14',
-      level: 'Master 2',
-      semester: 'Session intensive',
-      eventName: 'Soutenances finales',
-      startDate: '23/06/2025',
-      endDate: '27/06/2025',
-      status: 'En attente',
-    },
-    {
-      id: '15',
-      level: 'Licence',
-      semester: 'Semestre 2',
-      eventName: 'Délibérations',
-      startDate: '30/06/2025',
-      endDate: '01/07/2025',
-      status: 'En attente',
-    },
-    {
-      id: '16',
-      level: 'Master 1',
-      semester: 'Semestre 2',
-      eventName: 'Remise des notes',
-      startDate: '03/07/2025',
-      endDate: '04/07/2025',
-      status: 'En attente',
-    },
-    {
-      id: '17',
-      level: 'Master 2',
-      semester: 'Semestre 2',
-      eventName: 'Publication résultats',
-      startDate: '08/07/2025',
-      endDate: '09/07/2025',
-      status: 'En attente',
-    },
-    {
-      id: '18',
-      level: 'Licence',
-      semester: 'Semestre 1',
-      eventName: 'Inscription pédagogique',
-      startDate: '23/09/2024',
-      endDate: '30/09/2024',
-      status: 'Terminé',
-    },
-    {
-      id: '19',
-      level: 'Master 1',
-      semester: 'Semestre 1',
-      eventName: 'Journée d’intégration',
-      startDate: '26/09/2024',
-      endDate: '27/09/2024',
-      status: 'Terminé',
-    },
-    {
-      id: '20',
-      level: 'Master 2',
-      semester: 'Semestre 1',
-      eventName: 'Validation sujets',
-      startDate: '30/10/2024',
-      endDate: '31/10/2024',
-      status: 'Terminé',
-    },
-  ];
-
-  specialityCatalogItems: SpecialityCatalogItem[] = [
-    { id: '1', category: 'Domaines', name: 'Sciences et Technologies', status: 'Actif' },
-    { id: '2', category: 'Domaines', name: 'Sciences et Technologies', status: 'Actif' },
-    { id: '3', category: 'Domaines', name: 'Sciences et Technologies', status: 'Actif' },
-    {
-      id: '4',
-      category: 'Mention',
-      name: 'Informatique',
-      domainName: 'Sciences et Technologies',
-      status: 'Actif',
-    },
-    {
-      id: '5',
-      category: 'Mention',
-      name: 'Mathématiques appliquées',
-      domainName: 'Sciences et Technologies',
-      status: 'Actif',
-    },
-    {
-      id: '6',
-      category: 'Mention',
-      name: 'Réseaux et télécoms',
-      domainName: 'Sciences et Technologies',
-      status: 'Actif',
-    },
-    { id: '7', category: 'Spécialité', name: 'Génie logiciel', status: 'Actif' },
-    { id: '8', category: 'Spécialité', name: 'Data & IA', status: 'Actif' },
-    { id: '9', category: 'Spécialité', name: 'Cybersécurité', status: 'Actif' },
-    { id: '10', category: 'Cycle', name: 'Licence', status: 'Actif' },
-    { id: '11', category: 'Cycle', name: 'Master', status: 'Actif' },
-    { id: '12', category: 'Cycle', name: 'Doctorat', status: 'Actif' },
-    { id: '13', category: 'Niveau', name: 'Licence 1', status: 'Actif' },
-    { id: '14', category: 'Niveau', name: 'Licence 2', status: 'Actif' },
-    { id: '15', category: 'Niveau', name: 'Master 1', status: 'Actif' },
-    { id: '16', category: 'Semestres', name: 'Semestre 1', status: 'Actif' },
-    { id: '17', category: 'Semestres', name: 'Semestre 2', status: 'Actif' },
-    { id: '18', category: 'Semestres', name: 'Session intensive', status: 'Actif' },
-  ];
+  academicYears: AcademicYear[] = structuredClone(ressourcesData.academicYears);
+  trackedEvents: TrackedEvent[] = structuredClone(ressourcesData.trackedEvents);
+  generalCalendarEntries: GeneralCalendarEntry[] = structuredClone(
+    ressourcesData.generalCalendarEntries
+  );
+  specialityCatalogItems: SpecialityCatalogItem[] = structuredClone(
+    ressourcesData.specialityCatalogItems
+  );
 
   setActiveMainTab(index: number) {
     this.activeMainTab = index;
@@ -523,10 +220,10 @@ export class RessourcesComponent {
   }
 
   get isEventFormValid(): boolean {
-    return (
-      this.eventForm.level.trim().length > 0 &&
-      this.eventForm.semester.trim().length > 0 &&
-      this.eventForm.name.trim().length > 0
+    return hasRequiredTextValues(
+      this.eventForm.level,
+      this.eventForm.semester,
+      this.eventForm.name
     );
   }
 
@@ -681,10 +378,10 @@ export class RessourcesComponent {
 
   get isSpecialityFormValid(): boolean {
     if (this.isMentionSpecialityTab) {
-      return this.specialityDomainName.trim().length > 0 && this.specialityItemName.trim().length > 0;
+      return hasRequiredTextValues(this.specialityDomainName, this.specialityItemName);
     }
 
-    return this.specialityItemName.trim().length > 0;
+    return hasRequiredTextValues(this.specialityItemName);
   }
 
   get isEditingSpecialityItem(): boolean {
@@ -748,27 +445,27 @@ export class RessourcesComponent {
   }
 
   setTrackedEventPageSize(value: string) {
-    const pageSize = Number(value);
-    if (!Number.isNaN(pageSize) && this.pageSizeOptions.includes(pageSize)) {
-      this.eventPageSize = pageSize;
-      this.eventPage = 1;
-    }
+    const pageSize = parseAllowedNumberOption(value, this.pageSizeOptions);
+    if (pageSize === null) return;
+
+    this.eventPageSize = pageSize;
+    this.eventPage = 1;
   }
 
   setGeneralCalendarPageSize(value: string) {
-    const pageSize = Number(value);
-    if (!Number.isNaN(pageSize) && this.pageSizeOptions.includes(pageSize)) {
-      this.calendarPageSize = pageSize;
-      this.calendarPage = 1;
-    }
+    const pageSize = parseAllowedNumberOption(value, this.pageSizeOptions);
+    if (pageSize === null) return;
+
+    this.calendarPageSize = pageSize;
+    this.calendarPage = 1;
   }
 
   setSpecialityPageSize(value: string) {
-    const pageSize = Number(value);
-    if (!Number.isNaN(pageSize) && this.pageSizeOptions.includes(pageSize)) {
-      this.specialityPageSize = pageSize;
-      this.specialityPage = 1;
-    }
+    const pageSize = parseAllowedNumberOption(value, this.pageSizeOptions);
+    if (pageSize === null) return;
+
+    this.specialityPageSize = pageSize;
+    this.specialityPage = 1;
   }
 
   setActiveSpecialityTab(index: number) {
