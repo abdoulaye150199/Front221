@@ -26,7 +26,7 @@ const sidebarData = APP_DATA.shared.sidebar as SidebarData;
   standalone: true,
   imports: [...SIDEBAR_IMPORTS],
   templateUrl: './sidebar.html',
-  styleUrl: './sidebar.scss',
+  styleUrls: ['./sidebar.scss'],
 })
 export class SidebarComponent {
   readonly navItems = sidebarData.navItems;

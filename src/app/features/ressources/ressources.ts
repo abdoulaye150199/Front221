@@ -88,7 +88,7 @@ const ressourcesData = APP_DATA.features.ressources as RessourcesDataSource;
   standalone: true,
   imports: [...FORM_ACTION_IMPORTS],
   templateUrl: './ressources.html',
-  styleUrl: './ressources.scss',
+  styleUrls: ['./ressources.scss'],
 })
 export class RessourcesComponent {
   mainTabs = ressourcesData.mainTabs;

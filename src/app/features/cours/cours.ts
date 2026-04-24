@@ -33,7 +33,7 @@ const coursData = APP_DATA.features.cours as CoursDataSource;
   standalone: true,
   imports: [...FORM_ACTION_IMPORTS],
   templateUrl: './cours.html',
-  styleUrl: './cours.scss',
+  styleUrls: ['./cours.scss'],
 })
 export class CoursComponent {
   searchTerm = '';

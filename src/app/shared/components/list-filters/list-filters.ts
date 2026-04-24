@@ -7,7 +7,7 @@ import { ListFilterConfig, SelectOption } from '../../models';
   standalone: true,
   imports: [...LIST_FILTER_IMPORTS],
   templateUrl: './list-filters.html',
-  styleUrl: './list-filters.scss',
+  styleUrls: ['./list-filters.scss'],
 })
 export class ListFiltersComponent {
   @Input({ required: true }) pageSizeLabel = '';

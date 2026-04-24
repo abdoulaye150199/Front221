@@ -6,6 +6,6 @@ import { MAIN_LAYOUT_IMPORTS } from '../imports/page-imports';
   standalone: true,
   imports: [...MAIN_LAYOUT_IMPORTS],
   templateUrl: './main-layout.html',
-  styleUrl: './main-layout.scss',
+  styleUrls: ['./main-layout.scss'],
 })
 export class MainLayoutComponent {}

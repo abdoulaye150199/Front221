@@ -29,7 +29,7 @@ const inscriptionsData = APP_DATA.features.inscriptions as InscriptionsDataSourc
   standalone: true,
   imports: [...LIST_PAGE_IMPORTS],
   templateUrl: './inscriptions.html',
-  styleUrl: './inscriptions.scss',
+  styleUrls: ['./inscriptions.scss'],
 })
 export class InscriptionsComponent {
   readonly getInitials = getInitials;

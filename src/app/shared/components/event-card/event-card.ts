@@ -7,7 +7,7 @@ import { EventCardData } from '../../models';
   standalone: true,
   imports: [...ICON_IMPORTS],
   templateUrl: './event-card.html',
-  styleUrl: './event-card.scss',
+  styleUrls: ['./event-card.scss'],
 })
 export class EventCardComponent {
   @Input({ required: true }) event!: EventCardData;

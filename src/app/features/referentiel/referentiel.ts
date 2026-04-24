@@ -40,7 +40,7 @@ const referentielData = APP_DATA.features.referentiel as ReferentielDataSource;
   standalone: true,
   imports: [...FORM_ACTION_IMPORTS],
   templateUrl: './referentiel.html',
-  styleUrl: './referentiel.scss',
+  styleUrls: ['./referentiel.scss'],
 })
 export class ReferentielComponent {
   readonly domainOptions = referentielData.domainOptions;

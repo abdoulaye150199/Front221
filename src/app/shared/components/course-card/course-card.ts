@@ -7,7 +7,7 @@ import { CourseCardData } from '../../models';
   standalone: true,
   imports: [...ICON_IMPORTS],
   templateUrl: './course-card.html',
-  styleUrl: './course-card.scss',
+  styleUrls: ['./course-card.scss'],
 })
 export class CourseCardComponent {
   @Input({ required: true }) course!: CourseCardData;

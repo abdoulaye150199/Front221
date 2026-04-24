@@ -30,7 +30,7 @@ const professeursData = APP_DATA.features.professeurs as ProfesseursDataSource;
   standalone: true,
   imports: [...LIST_PAGE_IMPORTS],
   templateUrl: './professeurs.html',
-  styleUrl: './professeurs.scss',
+  styleUrls: ['./professeurs.scss'],
 })
 export class ProfesseursComponent {
   readonly getInitials = getInitials;

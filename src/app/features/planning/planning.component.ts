@@ -83,7 +83,7 @@ function createDefaultModalForm(): ModalFormModel {
   standalone: true,
   imports: [...FORM_ACTION_IMPORTS],
   templateUrl: './planning.html',
-  styleUrl: './planning.scss',
+  styleUrls: ['./planning.scss'],
 })
 export class PlanningComponent implements OnInit {
   currentDate: Date = new Date(planningData.currentDate);

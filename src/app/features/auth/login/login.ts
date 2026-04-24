@@ -14,7 +14,7 @@ interface LoginFormModel {
   selector: 'app-login',
   standalone: false,
   templateUrl: './login.html',
-  styleUrl: './login.scss',
+  styleUrls: ['./login.scss'],
 })
 export class LoginComponent {
   readonly validationMessages = AUTH_ERROR_MESSAGES;

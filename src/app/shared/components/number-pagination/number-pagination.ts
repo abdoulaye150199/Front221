@@ -6,7 +6,7 @@ import { PAGINATION_IMPORTS } from '../../imports/standalone-imports';
   standalone: true,
   imports: [...PAGINATION_IMPORTS],
   templateUrl: './number-pagination.html',
-  styleUrl: './number-pagination.scss',
+  styleUrls: ['./number-pagination.scss'],
 })
 export class NumberPaginationComponent {
   @Input() currentPage = 1;

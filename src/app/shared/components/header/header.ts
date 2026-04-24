@@ -16,7 +16,7 @@ const headerData = APP_DATA.shared.header as HeaderData;
   standalone: true,
   imports: [...HEADER_IMPORTS],
   templateUrl: './header.html',
-  styleUrl: './header.scss',
+  styleUrls: ['./header.scss'],
 })
 export class HeaderComponent {
   readonly userInitial = headerData.userInitial;

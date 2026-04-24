@@ -14,7 +14,7 @@ import {
   standalone: true,
   imports: [...DASHBOARD_IMPORTS],
   templateUrl: './dashboard.html',
-  styleUrl: './dashboard.scss',
+  styleUrls: ['./dashboard.scss'],
 })
 export class DashboardComponent implements OnInit {
   events: EventCardData[] = [];

@@ -6,7 +6,7 @@ import { ICON_IMPORTS } from '../../imports/standalone-imports';
   standalone: true,
   imports: [...ICON_IMPORTS],
   templateUrl: './stat-card.html',
-  styleUrl: './stat-card.scss',
+  styleUrls: ['./stat-card.scss'],
 })
 export class StatCardComponent {
   @Input() title: string = '';
