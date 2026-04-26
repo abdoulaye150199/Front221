@@ -1,0 +1,95 @@
+<div class="academic-years">
+  <div class="tab-toolbar">
+    <label class="search-box">
+      <mat-icon>search</mat-icon>
+      <input
+        type="text"
+        placeholder="Rechercher une année..."
+        [(ngModel)]="searchTerm"
+        (ngModelChange)="onSearchChange($event)"
+      />
+    </label>
+    <button mat-flat-button class="secondary-btn" type="button">
+      <mat-icon>add</mat-icon>
+      Ajouter Année
+    </button>
+  </div>
+
+  <div class="table-wrapper">
+    <table class="resources-table">
+      <thead>
+        <tr>
+          <th>Année Académique</th>
+          <th>Date Début</th>
+          <th>Date Fin</th>
+          <th>Semestre</th>
+          <th>Étudiants</th>
+          <th>Cours</th>
+          <th>Statut</th>
+          <th class="actions-header">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let year of pagedAcademicYears">
+          <td class="year-cell">{{ year.year }}</td>
+          <td class="meta-muted">{{ year.startDate }}</td>
+          <td class="meta-muted">{{ year.endDate }}</td>
+          <td class="meta-muted">{{ year.semester }}</td>
+          <td class="metric">{{ year.students }}</td>
+          <td class="metric">{{ year.courses }}</td>
+          <td>
+            <span
+              class="status-pill"
+              [class.active]="year.status === 'En cours'"
+              [class.done]="year.status === 'Terminé'"
+            >
+              {{ year.status }}
+            </span>
+          </td>
+          <td class="actions-cell">
+            <button
+              class="icon-btn menu"
+              type="button"
+              aria-label="Options"
+              (click)="$event.stopPropagation(); toggleActionMenu(year)"
+            >
+              <mat-icon>more_vert</mat-icon>
+            </button>
+            <div
+              class="actions-menu"
+              *ngIf="openActionId === year.id"
+              (click)="$event.stopPropagation()"
+            >
+              <button type="button" (click)="setYearStatus(year, 'En cours'); closeActionMenu()">
+                En cours
+              </button>
+              <button type="button" (click)="setYearStatus(year, 'Terminé'); closeActionMenu()">
+                Clôturer
+              </button>
+            </div>
+          </td>
+        </tr>
+        <tr *ngIf="pagedAcademicYears.length === 0">
+          <td colspan="8" class="empty-state">
+            Aucune année académique disponible.
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="table-footer">
+    <div class="results">
+      Affichage de {{ startIndex }} à {{ endIndex }} sur {{ totalResults }} résultats
+    </div>
+    <div class="pagination">
+      <button mat-stroked-button type="button" [disabled]="!canPrev" (click)="previousPage()">
+        Précédent
+      </button>
+      <span class="page-indicator">{{ currentPage }}</span>
+      <button mat-stroked-button type="button" [disabled]="!canNext" (click)="nextPage()">
+        Suivant
+      </button>
+    </div>
+  </div>
+</div>

@@ -1,13 +1,30 @@
 import { Component } from '@angular/core';
 import { FormControl, FormGroup, NonNullableFormBuilder, Validators } from '@angular/forms';
+import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { Router } from '@angular/router';
+import { finalize } from 'rxjs';
 import { AUTH_ERROR_MESSAGES } from '../../../shared/errors';
-import { AUTH_VALIDATION_RULES, phoneOrEmailValidator } from '../../../shared/validation';
+import { AUTH_VALIDATION_RULES } from '../../../shared/validation';
 import { AuthService } from '../../../core/services/auth.service';
+import { phoneOrEmailValidator } from '../validators/phone-or-email.validator';
+import { LOGIN_ICONS } from './login.icons';
 
 interface LoginFormModel {
   phoneOrEmail: FormControl<string>;
   password: FormControl<string>;
+}
+
+interface LoginIconsViewModel {
+  google: SafeHtml;
+  email: SafeHtml;
+  password: SafeHtml;
+  passwordEye: SafeHtml;
+  error: SafeHtml;
+  features: {
+    secure: SafeHtml;
+    tracking: SafeHtml;
+    dashboard: SafeHtml;
+  };
 }
 
 @Component({
@@ -18,7 +35,8 @@ interface LoginFormModel {
 })
 export class LoginComponent {
   readonly validationMessages = AUTH_ERROR_MESSAGES;
-  loginForm: FormGroup<LoginFormModel>;
+  readonly icons: LoginIconsViewModel;
+  readonly loginForm: FormGroup<LoginFormModel>;
   showPassword = false;
   isLoading = false;
   loginError: string | null = null;
@@ -26,8 +44,10 @@ export class LoginComponent {
   constructor(
     private fb: NonNullableFormBuilder,
     private authService: AuthService,
-    private router: Router
+    private router: Router,
+    private sanitizer: DomSanitizer
   ) {
+    this.icons = this.createSafeIcons();
     this.loginForm = this.fb.group({
       phoneOrEmail: ['', [Validators.required, phoneOrEmailValidator()]],
       password: ['', [Validators.required, Validators.minLength(AUTH_VALIDATION_RULES.passwordMinLength)]],
@@ -78,11 +98,11 @@ export class LoginComponent {
     return '';
   }
 
-  togglePasswordVisibility() {
+  togglePasswordVisibility(): void {
     this.showPassword = !this.showPassword;
   }
 
-  onLogin() {
+  onLogin(): void {
     if (this.loginForm.invalid) {
       this.loginForm.markAllAsTouched();
       return;
@@ -90,21 +110,38 @@ export class LoginComponent {
 
     this.isLoading = true;
     this.loginError = null;
+    const credentials = this.loginForm.getRawValue();
 
-    try {
-      const credentials = this.loginForm.getRawValue();
-      const response = this.authService.login(credentials.phoneOrEmail, credentials.password);
+    this.authService
+      .login(credentials.phoneOrEmail, credentials.password)
+      .pipe(finalize(() => (this.isLoading = false)))
+      .subscribe({
+        next: (response) => {
+          if (response.success) {
+            void this.router.navigate(['/dashboard']);
+            return;
+          }
 
-      if (response.success) {
-        // Redirect to dashboard on successful login
-        this.router.navigate(['/dashboard']);
-      } else {
-        this.loginError = response.message || 'Erreur de connexion';
-      }
-    } catch (error) {
-      this.loginError = 'Une erreur est survenue lors de la connexion';
-    } finally {
-      this.isLoading = false;
-    }
+          this.loginError = response.message ?? 'Erreur de connexion';
+        },
+        error: () => {
+          this.loginError = 'Une erreur est survenue lors de la connexion';
+        },
+      });
+  }
+
+  private createSafeIcons(): LoginIconsViewModel {
+    return {
+      google: this.sanitizer.bypassSecurityTrustHtml(LOGIN_ICONS.google),
+      email: this.sanitizer.bypassSecurityTrustHtml(LOGIN_ICONS.email),
+      password: this.sanitizer.bypassSecurityTrustHtml(LOGIN_ICONS.password),
+      passwordEye: this.sanitizer.bypassSecurityTrustHtml(LOGIN_ICONS.passwordEye),
+      error: this.sanitizer.bypassSecurityTrustHtml(LOGIN_ICONS.error),
+      features: {
+        secure: this.sanitizer.bypassSecurityTrustHtml(LOGIN_ICONS.features.secure),
+        tracking: this.sanitizer.bypassSecurityTrustHtml(LOGIN_ICONS.features.tracking),
+        dashboard: this.sanitizer.bypassSecurityTrustHtml(LOGIN_ICONS.features.dashboard),
+      },
+    };
   }
 }

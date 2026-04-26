@@ -1,29 +1,9 @@
 import { Component } from '@angular/core';
-import { APP_DATA } from '../../shared/data';
 import { LIST_PAGE_IMPORTS } from '../../shared/imports/page-imports';
-import { ListFilterConfig, SelectOption } from '../../shared/models';
 import { getInitials } from '../../shared/utils';
 import { parseAllowedNumberOption } from '../../shared/validation';
-
-interface Professor {
-  id: string;
-  name: string;
-  grade: string;
-  phone: string;
-  email: string;
-  hours: number;
-  status: 'Actif' | 'Inactif';
-  classe: string;
-}
-
-interface ProfesseursDataSource {
-  pageSizeOptions: SelectOption[];
-  classOptions: SelectOption[];
-  statusOptions: SelectOption[];
-  professors: Professor[];
-}
-
-const professeursData = APP_DATA.features.professeurs as ProfesseursDataSource;
+import { SelectOption } from '../../shared/models';
+import { Professor, ProfessorService } from './services/professor.service';
 
 @Component({
   selector: 'app-professeurs',
@@ -36,52 +16,66 @@ export class ProfesseursComponent {
   readonly getInitials = getInitials;
   searchTerm = '';
   page = 1;
-  readonly pageSizeOptions = professeursData.pageSizeOptions;
-  readonly classOptions = professeursData.classOptions;
-  readonly statusOptions = professeursData.statusOptions;
-  pageSize = Number(this.pageSizeOptions[0]?.value ?? 10);
+  pageSize = 10;
+  pageSizeOptions: SelectOption[] = [];
 
-  selectedClass = this.classOptions[0]?.value ?? '';
-  selectedStatus = this.statusOptions[0]?.value ?? '';
+  specialites: SelectOption[] = [];
+  niveaux: SelectOption[] = [];
+  classes: SelectOption[] = [];
+  semestres: SelectOption[] = [];
+
+  selectedSpecialite = 'toutes';
+  selectedNiveau = 'tous';
+  selectedClasse = 'toutes';
+  selectedSemestre = 'tous';
 
   openMenuId: string | null = null;
   selectedProfessor: Professor | null = null;
 
-  readonly professors = professeursData.professors;
+  private allProfessors: Professor[] = [];
 
-  onSearchChange(value: string) {
+  constructor(private professorService: ProfessorService) {
+    const options = this.professorService.getFilterOptions();
+    this.pageSizeOptions = options.pageSizeOptions;
+    this.pageSize = Number(this.pageSizeOptions[0]?.value ?? 10);
+    this.specialites = options.pageSizeOptions;
+    this.niveaux = options.classOptions;
+    this.classes = options.statusOptions;
+    this.allProfessors = this.professorService.getProfessors();
+
+    this.selectedSpecialite = this.specialites[0]?.value ?? 'toutes';
+    this.selectedNiveau = this.niveaux[0]?.value ?? 'tous';
+    this.selectedClasse = this.classes[0]?.value ?? 'toutes';
+  }
+
+  onSearchChange(value: string): void {
     this.searchTerm = value;
     this.page = 1;
   }
 
-  onPageSizeChange(value: string) {
-    const pageSize = parseAllowedNumberOption(value, this.pageSizeOptions.map(option => Number(option.value)));
+  onPageSizeChange(value: string): void {
+    const pageSize = parseAllowedNumberOption(value, [10, 20, 50]);
     if (pageSize === null) {
       return;
     }
-
     this.pageSize = pageSize;
     this.page = 1;
   }
 
-  get filterConfigs(): ListFilterConfig[] {
+  get filterConfigs(): { id: string; label: string; value: string; options: SelectOption[] }[] {
     return [
-      { id: 'class', label: 'Classe', value: this.selectedClass, options: this.classOptions },
-      { id: 'status', label: 'Statut', value: this.selectedStatus, options: this.statusOptions },
+      { id: 'class', label: 'Classe', value: this.selectedClasse, options: this.classes },
+      { id: 'status', label: 'Statut', value: this.selectedSemestre, options: this.semestres },
     ];
   }
 
   get filteredProfessors(): Professor[] {
-    const term = this.searchTerm.trim().toLowerCase();
-    return this.professors.filter(prof => {
-      const matchesSearch = term
-        ? `${prof.name} ${prof.grade} ${prof.email}`.toLowerCase().includes(term)
-        : true;
-      const matchesClass =
-        this.selectedClass === 'toutes' || prof.classe.startsWith(this.selectedClass);
-      const matchesStatus = this.selectedStatus === 'tous' || prof.status === this.selectedStatus;
-      return matchesSearch && matchesClass && matchesStatus;
-    });
+    return this.professorService.filterProfessors(
+      this.allProfessors,
+      this.searchTerm,
+      this.selectedClasse,
+      this.selectedSemestre
+    );
   }
 
   get totalResults(): number {
@@ -102,13 +96,13 @@ export class ProfesseursComponent {
   }
 
   get startIndex(): number {
-    if (this.totalResults === 0) return 0;
-    return (this.currentPage - 1) * this.pageSize + 1;
+    return this.totalResults === 0 ? 0 : (this.currentPage - 1) * this.pageSize + 1;
   }
 
   get endIndex(): number {
-    if (this.totalResults === 0) return 0;
-    return Math.min(this.currentPage * this.pageSize, this.totalResults);
+    return this.totalResults === 0
+      ? 0
+      : Math.min(this.currentPage * this.pageSize, this.totalResults);
   }
 
   get canPrev(): boolean {
@@ -123,12 +117,16 @@ export class ProfesseursComponent {
     return Array.from({ length: this.totalPages }, (_, index) => index + 1);
   }
 
-  previousPage() {
-    if (this.canPrev) this.page -= 1;
+  previousPage(): void {
+    if (this.canPrev) {
+      this.page -= 1;
+    }
   }
 
-  nextPage() {
-    if (this.canNext) this.page += 1;
+  nextPage(): void {
+    if (this.canNext) {
+      this.page += 1;
+    }
   }
 
   setPage(page: number): void {
@@ -139,26 +137,24 @@ export class ProfesseursComponent {
 
   onFilterChange(filter: { id: string; value: string }): void {
     if (filter.id === 'class') {
-      this.selectedClass = filter.value;
+      this.selectedClasse = filter.value;
     }
-
     if (filter.id === 'status') {
-      this.selectedStatus = filter.value;
+      this.selectedSemestre = filter.value;
     }
-
     this.page = 1;
   }
 
-  toggleMenu(id: string) {
+  toggleMenu(id: string): void {
     this.openMenuId = this.openMenuId === id ? null : id;
   }
 
-  openProfile(professor: Professor) {
+  openProfile(professor: Professor): void {
     this.selectedProfessor = professor;
     this.openMenuId = null;
   }
 
-  closeProfile() {
+  closeProfile(): void {
     this.selectedProfessor = null;
   }
 }

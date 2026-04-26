@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { BehaviorSubject, Observable, of } from 'rxjs';
 import { APP_DATA } from '../../shared/data';
 
 export interface User {
@@ -18,48 +18,54 @@ export interface AuthResponse {
   user?: User;
 }
 
+interface StoredUser extends User {
+  password: string;
+}
+
+interface AppUsersData {
+  admin?: StoredUser[];
+}
+
 @Injectable({
   providedIn: 'root',
 })
 export class AuthService {
-  private currentUserSubject = new BehaviorSubject<User | null>(this.getUserFromStorage());
-  public currentUser$ = this.currentUserSubject.asObservable();
-
-  constructor() {}
+  private readonly storageKey = 'currentUser';
+  private readonly currentUserSubject = new BehaviorSubject<User | null>(this.getUserFromStorage());
+  readonly currentUser$ = this.currentUserSubject.asObservable();
 
   /**
    * Login with phone, email or password
    */
-  login(phoneOrEmail: string, password: string): AuthResponse {
+  login(phoneOrEmail: string, password: string): Observable<AuthResponse> {
     try {
+      const normalizedIdentifier = phoneOrEmail.trim().toLowerCase();
       const users = this.getAllUsers();
       const user = users.find(
         (u) =>
-          (u.email === phoneOrEmail || u.phone === phoneOrEmail) &&
+          (u.email.toLowerCase() === normalizedIdentifier || u.phone === phoneOrEmail.trim()) &&
           u.password === password
       );
 
       if (user) {
-        // Store user in localStorage (excluding password)
-        const { password: _, ...userWithoutPassword } = user as any;
-        localStorage.setItem('currentUser', JSON.stringify(userWithoutPassword));
-        this.currentUserSubject.next(userWithoutPassword);
+        const userWithoutPassword = this.toUser(user);
+        this.persistUser(userWithoutPassword);
 
-        return {
+        return of({
           success: true,
           user: userWithoutPassword,
-        };
+        });
       }
 
-      return {
+      return of({
         success: false,
         message: APP_DATA.errors.auth.invalidCredentials,
-      };
-    } catch (error) {
-      return {
+      });
+    } catch {
+      return of({
         success: false,
         message: 'Une erreur est survenue lors de la connexion',
-      };
+      });
     }
   }
 
@@ -67,7 +73,9 @@ export class AuthService {
    * Logout user
    */
   logout(): void {
-    localStorage.removeItem('currentUser');
+    if (this.hasStorage()) {
+      localStorage.removeItem(this.storageKey);
+    }
     this.currentUserSubject.next(null);
   }
 
@@ -88,26 +96,69 @@ export class AuthService {
   /**
    * Get all users from app-data
    */
-  private getAllUsers(): any[] {
-    const allUsers: any[] = [];
-    const usersData = APP_DATA.users as any;
-
-    if (usersData && usersData.admin) {
-      allUsers.push(...usersData.admin);
-    }
-
-    return allUsers;
+  private getAllUsers(): StoredUser[] {
+    const usersData = APP_DATA.users as AppUsersData | undefined;
+    return usersData?.admin ? [...usersData.admin] : [];
   }
 
   /**
    * Get user from localStorage
    */
   private getUserFromStorage(): User | null {
-    try {
-      const user = localStorage.getItem('currentUser');
-      return user ? JSON.parse(user) : null;
-    } catch (error) {
+    if (!this.hasStorage()) {
       return null;
     }
+
+    try {
+      const user = localStorage.getItem(this.storageKey);
+      if (!user) {
+        return null;
+      }
+
+      const parsedUser: unknown = JSON.parse(user);
+      return this.isUser(parsedUser) ? parsedUser : null;
+    } catch {
+      return null;
+    }
+  }
+
+  private persistUser(user: User): void {
+    if (this.hasStorage()) {
+      localStorage.setItem(this.storageKey, JSON.stringify(user));
+    }
+    this.currentUserSubject.next(user);
+  }
+
+  private toUser(user: StoredUser): User {
+    return {
+      id: user.id,
+      firstName: user.firstName,
+      lastName: user.lastName,
+      email: user.email,
+      phone: user.phone,
+      role: user.role,
+      userInitial: user.userInitial,
+    };
+  }
+
+  private hasStorage(): boolean {
+    return typeof localStorage !== 'undefined';
+  }
+
+  private isUser(value: unknown): value is User {
+    if (!value || typeof value !== 'object') {
+      return false;
+    }
+
+    const candidate = value as Record<string, unknown>;
+    return (
+      typeof candidate['id'] === 'string' &&
+      typeof candidate['firstName'] === 'string' &&
+      typeof candidate['lastName'] === 'string' &&
+      typeof candidate['email'] === 'string' &&
+      typeof candidate['phone'] === 'string' &&
+      typeof candidate['role'] === 'string' &&
+      typeof candidate['userInitial'] === 'string'
+    );
   }
 }

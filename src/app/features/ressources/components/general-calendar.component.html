@@ -1,0 +1,141 @@
+<div class="general-calendar">
+  <div class="subtab-form">
+    <label class="field select-field">
+      <select [(ngModel)]="calendarFilters.level">
+        <option value="">Choisir le niveau</option>
+        <option *ngFor="let level of levelOptions" [value]="level">{{ level }}</option>
+      </select>
+    </label>
+
+    <label class="field select-field">
+      <select [(ngModel)]="calendarFilters.semester">
+        <option value="">Choisir le semestre</option>
+        <option *ngFor="let semester of semesterOptions" [value]="semester">
+          {{ semester }}
+        </option>
+      </select>
+    </label>
+
+    <label class="field select-field">
+      <select [(ngModel)]="calendarFilters.eventName">
+        <option value="">Choisir les événements</option>
+        <option *ngFor="let eventName of calendarEventOptions" [value]="eventName">
+          {{ eventName }}
+        </option>
+      </select>
+    </label>
+
+    <button
+      mat-flat-button
+      class="primary-btn"
+      type="button"
+      (click)="submitGeneralCalendarFilters()"
+    >
+      Valider
+    </button>
+  </div>
+
+  <div class="table-wrapper">
+    <table class="resources-table event-table">
+      <thead>
+        <tr>
+          <th>Niveau</th>
+          <th>Semestre</th>
+          <th>Événements</th>
+          <th>Date de début</th>
+          <th>Date de fin</th>
+          <th>État</th>
+          <th class="actions-header event-actions-header">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let entry of pagedGeneralCalendarEntries">
+          <td class="year-cell">{{ entry.level }}</td>
+          <td class="meta-muted">{{ entry.semester }}</td>
+          <td>{{ entry.eventName }}</td>
+          <td class="meta-muted">{{ entry.startDate }}</td>
+          <td class="meta-muted">{{ entry.endDate }}</td>
+          <td>
+            <span
+              class="status-pill"
+              [class.active]="entry.status === 'En cours'"
+              [class.pending]="entry.status === 'En attente'"
+              [class.done]="entry.status === 'Terminé'"
+            >
+              {{ entry.status }}
+            </span>
+          </td>
+          <td class="actions-cell event-actions-cell">
+            <button
+              class="icon-btn menu"
+              type="button"
+              aria-label="Options"
+              (click)="$event.stopPropagation(); toggleGeneralCalendarActionMenu(entry.id)"
+            >
+              <mat-icon>more_vert</mat-icon>
+            </button>
+            <div
+              class="actions-menu"
+              *ngIf="openCalendarActionId === entry.id"
+              (click)="$event.stopPropagation()"
+            >
+              <button type="button" (click)="editGeneralCalendarEntry(entry)">Modifier</button>
+              <button type="button" (click)="deleteGeneralCalendarEntry(entry.id)">
+                Supprimer
+              </button>
+            </div>
+          </td>
+        </tr>
+        <tr *ngIf="pagedGeneralCalendarEntries.length === 0">
+          <td colspan="7" class="empty-state">
+            Aucun élément trouvé pour les filtres sélectionnés.
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="table-footer">
+    <div class="page-size-control">
+      <span>Éléments / page</span>
+      <label class="page-size-select">
+        <select
+          [ngModel]="calendarPageSize"
+          (ngModelChange)="setGeneralCalendarPageSize($event)"
+        >
+          <option *ngFor="let size of [5, 10, 15]" [value]="size">{{ size }}</option>
+        </select>
+      </label>
+    </div>
+
+    <div class="pagination number-pagination">
+      <button
+        class="page-nav-btn"
+        type="button"
+        [disabled]="!generalCalendarCanPrev"
+        (click)="previousGeneralCalendarPage()"
+      >
+        <mat-icon>chevron_left</mat-icon>
+      </button>
+
+      <button
+        class="page-number-btn"
+        type="button"
+        *ngFor="let pageNumber of generalCalendarPages"
+        [class.active]="pageNumber === currentGeneralCalendarPage"
+        (click)="setGeneralCalendarPage(pageNumber)"
+      >
+        {{ pageNumber }}
+      </button>
+
+      <button
+        class="page-nav-btn"
+        type="button"
+        [disabled]="!generalCalendarCanNext"
+        (click)="nextGeneralCalendarPage()"
+      >
+        <mat-icon>chevron_right</mat-icon>
+      </button>
+    </div>
+  </div>
+</div>

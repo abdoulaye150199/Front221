@@ -1,32 +1,7 @@
 import { Component } from '@angular/core';
-import { APP_DATA } from '../../shared/data';
 import { FORM_ACTION_IMPORTS } from '../../shared/imports/standalone-imports';
-import { SelectOption } from '../../shared/models';
-
-interface Course {
-  id: string;
-  ue: string;
-  module: string;
-  professor: string;
-  credits: number;
-  hours: string;
-  students: number;
-  specialite: string;
-  niveau: string;
-  classe: string;
-  semestre: string;
-}
-
-interface CoursDataSource {
-  pageSize: number;
-  specialites: SelectOption[];
-  niveaux: SelectOption[];
-  classes: SelectOption[];
-  semestres: SelectOption[];
-  courses: Course[];
-}
-
-const coursData = APP_DATA.features.cours as CoursDataSource;
+import { CourseService, Course, CourseFilters } from './services/course.service';
+import { calculateTotalPages, calculateStartIndex, calculateEndIndex } from '../../shared/utils';
 
 @Component({
   selector: 'app-cours',
@@ -38,39 +13,52 @@ const coursData = APP_DATA.features.cours as CoursDataSource;
 export class CoursComponent {
   searchTerm = '';
   page = 1;
-  pageSize = coursData.pageSize;
+  pageSize: number;
 
-  readonly specialites = coursData.specialites;
-  readonly niveaux = coursData.niveaux;
-  readonly classes = coursData.classes;
-  readonly semestres = coursData.semestres;
+  specialites: { value: string; label: string }[] = [];
+  niveaux: { value: string; label: string }[] = [];
+  classes: { value: string; label: string }[] = [];
+  semestres: { value: string; label: string }[] = [];
 
-  selectedSpecialite = this.specialites[0]?.value ?? '';
-  selectedNiveau = this.niveaux[0]?.value ?? '';
-  selectedClasse = this.classes[0]?.value ?? '';
-  selectedSemestre = this.semestres[0]?.value ?? '';
+  selectedSpecialite = 'toutes';
+  selectedNiveau = 'tous';
+  selectedClasse = 'toutes';
+  selectedSemestre = 'tous';
 
-  readonly courses = coursData.courses;
+  private allCourses: Course[] = [];
 
-  onSearchChange(value: string) {
+  constructor(private courseService: CourseService) {
+    const options = this.courseService.getFilterOptions();
+    this.pageSize = options.pageSize;
+    this.specialites = options.specialites;
+    this.niveaux = options.niveaux;
+    this.classes = options.classes;
+    this.semestres = options.semestres;
+    this.allCourses = this.courseService.getCourses();
+
+    this.selectedSpecialite = this.specialites[0]?.value ?? 'toutes';
+    this.selectedNiveau = this.niveaux[0]?.value ?? 'tous';
+    this.selectedClasse = this.classes[0]?.value ?? 'toutes';
+    this.selectedSemestre = this.semestres[0]?.value ?? 'tous';
+  }
+
+  onSearchChange(value: string): void {
     this.searchTerm = value;
     this.page = 1;
   }
 
   get filteredCourses(): Course[] {
-    const term = this.searchTerm.trim().toLowerCase();
-    return this.courses.filter(course => {
-      const matchesSearch = term
-        ? `${course.ue} ${course.module} ${course.professor}`.toLowerCase().includes(term)
-        : true;
-      const matchesSpecialite =
-        this.selectedSpecialite === 'toutes' || course.specialite === this.selectedSpecialite;
-      const matchesNiveau = this.selectedNiveau === 'tous' || course.niveau === this.selectedNiveau;
-      const matchesClasse = this.selectedClasse === 'toutes' || course.classe === this.selectedClasse;
-      const matchesSemestre =
-        this.selectedSemestre === 'tous' || course.semestre === this.selectedSemestre;
-      return matchesSearch && matchesSpecialite && matchesNiveau && matchesClasse && matchesSemestre;
-    });
+    return this.courseService.filterCourses(this.allCourses, this.courseFilters);
+  }
+
+  private get courseFilters(): CourseFilters {
+    return {
+      searchTerm: this.searchTerm,
+      specialite: this.selectedSpecialite,
+      niveau: this.selectedNiveau,
+      classe: this.selectedClasse,
+      semestre: this.selectedSemestre,
+    };
   }
 
   get totalResults(): number {
@@ -78,7 +66,7 @@ export class CoursComponent {
   }
 
   get totalPages(): number {
-    return Math.max(1, Math.ceil(this.totalResults / this.pageSize));
+    return calculateTotalPages(this.totalResults, this.pageSize);
   }
 
   get currentPage(): number {
@@ -91,13 +79,11 @@ export class CoursComponent {
   }
 
   get startIndex(): number {
-    if (this.totalResults === 0) return 0;
-    return (this.currentPage - 1) * this.pageSize + 1;
+    return calculateStartIndex(this.totalResults, this.currentPage, this.pageSize);
   }
 
   get endIndex(): number {
-    if (this.totalResults === 0) return 0;
-    return Math.min(this.currentPage * this.pageSize, this.totalResults);
+    return calculateEndIndex(this.currentPage, this.pageSize, this.totalResults);
   }
 
   get canPrev(): boolean {
@@ -108,11 +94,15 @@ export class CoursComponent {
     return this.currentPage < this.totalPages;
   }
 
-  previousPage() {
-    if (this.canPrev) this.page -= 1;
+  previousPage(): void {
+    if (this.canPrev) {
+      this.page -= 1;
+    }
   }
 
-  nextPage() {
-    if (this.canNext) this.page += 1;
+  nextPage(): void {
+    if (this.canNext) {
+      this.page += 1;
+    }
   }
 }

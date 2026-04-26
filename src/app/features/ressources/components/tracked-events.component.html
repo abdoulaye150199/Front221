@@ -1,0 +1,138 @@
+<div class="tracked-events">
+  <div class="subtab-form">
+    <label class="field select-field">
+      <select [(ngModel)]="eventForm.level">
+        <option value="" disabled>Choisir le niveau</option>
+        <option *ngFor="let level of levelOptions" [value]="level">{{ level }}</option>
+      </select>
+    </label>
+
+    <label class="field select-field">
+      <select [(ngModel)]="eventForm.semester">
+        <option value="" disabled>Choisir le semestre</option>
+        <option *ngFor="let semester of semesterOptions" [value]="semester">
+          {{ semester }}
+        </option>
+      </select>
+    </label>
+
+    <label class="field">
+      <input
+        type="text"
+        placeholder="Événement"
+        [(ngModel)]="eventForm.name"
+      />
+    </label>
+
+    <button
+      mat-flat-button
+      class="primary-btn"
+      type="button"
+      [disabled]="!isEventFormValid"
+      (click)="submitTrackedEvent()"
+    >
+      {{ isEditingTrackedEvent ? 'Modifier' : 'Créer' }}
+    </button>
+
+    <button
+      *ngIf="isEditingTrackedEvent"
+      mat-stroked-button
+      type="button"
+      (click)="cancelTrackedEventEdition()"
+    >
+      Annuler
+    </button>
+  </div>
+
+  <div class="table-wrapper">
+    <table class="resources-table event-table">
+      <thead>
+        <tr>
+          <th>Niveau</th>
+          <th>Semestre</th>
+          <th>Événements</th>
+          <th>Date de début</th>
+          <th>Date de fin</th>
+          <th>État</th>
+          <th class="actions-header event-actions-header">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let event of pagedTrackedEvents">
+          <td class="year-cell">{{ event.level }}</td>
+          <td class="meta-muted">{{ event.semester }}</td>
+          <td>{{ event.name }}</td>
+          <td class="meta-muted">{{ event.startDate }}</td>
+          <td class="meta-muted">{{ event.endDate }}</td>
+          <td>
+            <span
+              class="status-pill"
+              [class.active]="event.status === 'En cours'"
+              [class.pending]="event.status === 'À venir'"
+              [class.done]="event.status === 'Terminé'"
+            >
+              {{ event.status }}
+            </span>
+          </td>
+          <td class="actions-cell event-actions-cell">
+            <button
+              class="icon-btn menu"
+              type="button"
+              aria-label="Options"
+              (click)="$event.stopPropagation(); toggleTrackedEventActionMenu(event.id)"
+            >
+              <mat-icon>more_vert</mat-icon>
+            </button>
+            <div
+              class="actions-menu"
+              *ngIf="openTrackedEventActionId === event.id"
+              (click)="$event.stopPropagation()"
+            >
+              <button type="button" (click)="editTrackedEvent(event)">Modifier</button>
+              <button type="button" (click)="deleteTrackedEvent(event.id)">Supprimer</button>
+            </div>
+          </td>
+        </tr>
+        <tr *ngIf="pagedTrackedEvents.length === 0">
+          <td colspan="7" class="empty-state">
+            Aucun événement disponible pour le moment.
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="table-footer event-footer">
+    <div class="page-size-control">
+      <span>Éléments / page</span>
+      <label class="page-size-select">
+        <select
+          [ngModel]="eventPageSize"
+          (ngModelChange)="setTrackedEventPageSize($event)"
+        >
+          <option *ngFor="let size of [5, 10, 15]" [value]="size">{{ size }}</option>
+        </select>
+      </label>
+    </div>
+
+    <div class="pagination">
+      <button
+        mat-stroked-button
+        type="button"
+        [disabled]="!trackedEventCanPrev"
+        (click)="previousTrackedEventPage()"
+      >
+        Précédent
+      </button>
+      <span class="page-indicator">{{ currentTrackedEventPage }}</span>
+      <button
+        mat-stroked-button
+        type="button"
+        [disabled]="!trackedEventCanNext"
+        (click)="nextTrackedEventPage()"
+      >
+        Suivant
+      </button>
+    </div>
+  </div>
+</div>

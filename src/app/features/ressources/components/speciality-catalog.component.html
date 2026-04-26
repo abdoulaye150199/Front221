@@ -1,0 +1,132 @@
+<div class="speciality-catalog">
+  <div class="subtab-form">
+    <label class="field select-field" *ngIf="isMentionSpecialityTab">
+      <select [(ngModel)]="specialityDomainName">
+        <option value="">Choisir le domaine</option>
+        <option *ngFor="let domain of domainOptions" [value]="domain">{{ domain }}</option>
+      </select>
+    </label>
+
+    <label class="field">
+      <input
+        type="text"
+        [placeholder]="currentSpecialityPlaceholder"
+        [(ngModel)]="specialityItemName"
+      />
+    </label>
+
+    <button
+      mat-flat-button
+      class="primary-btn"
+      type="button"
+      [disabled]="!isSpecialityFormValid"
+      (click)="submitSpecialityItem()"
+    >
+      {{ isEditingSpecialityItem ? 'Modifier' : 'Créer' }}
+    </button>
+
+    <button
+      *ngIf="isEditingSpecialityItem"
+      mat-stroked-button
+      type="button"
+      (click)="cancelSpecialityEdition()"
+    >
+      Annuler
+    </button>
+  </div>
+
+  <div class="table-wrapper">
+    <table class="resources-table simple-resource-table">
+      <thead>
+        <tr>
+          <th *ngIf="isMentionSpecialityTab">Domaine</th>
+          <th>{{ currentSpecialityPlaceholder }}</th>
+          <th>État</th>
+          <th class="actions-header">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let item of pagedSpecialityCatalogItems">
+          <td *ngIf="isMentionSpecialityTab" class="meta-muted">{{ item.domainName }}</td>
+          <td class="year-cell">{{ item.name }}</td>
+          <td>
+            <span
+              class="status-pill"
+              [class.active]="item.status === 'Actif'"
+              [class.done]="item.status === 'Inactif'"
+            >
+              {{ item.status }}
+            </span>
+          </td>
+          <td class="actions-cell">
+            <button
+              class="icon-btn menu"
+              type="button"
+              aria-label="Options"
+              (click)="$event.stopPropagation(); toggleSpecialityActionMenu(item.id)"
+            >
+              <mat-icon>more_vert</mat-icon>
+            </button>
+            <div
+              class="actions-menu"
+              *ngIf="openSpecialityActionId === item.id"
+              (click)="$event.stopPropagation()"
+            >
+              <button type="button" (click)="editSpecialityItem(item)">Modifier</button>
+              <button type="button" (click)="deleteSpecialityItem(item.id)">Supprimer</button>
+            </div>
+          </td>
+        </tr>
+        <tr *ngIf="pagedSpecialityCatalogItems.length === 0">
+          <td [attr.colspan]="isMentionSpecialityTab ? 4 : 3" class="empty-state">
+            Aucun élément disponible dans cette section.
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="table-footer">
+    <div class="page-size-control">
+      <span>Éléments / page</span>
+      <label class="page-size-select">
+        <select
+          [ngModel]="specialityPageSize"
+          (ngModelChange)="setSpecialityPageSize($event)"
+        >
+          <option *ngFor="let size of [5, 10, 15]" [value]="size">{{ size }}</option>
+        </select>
+      </label>
+    </div>
+
+    <div class="pagination number-pagination">
+      <button
+        class="page-nav-btn"
+        type="button"
+        [disabled]="!specialityCanPrev"
+        (click)="previousSpecialityPage()"
+      >
+        <mat-icon>chevron_left</mat-icon>
+      </button>
+
+      <button
+        class="page-number-btn"
+        type="button"
+        *ngFor="let pageNumber of specialityPages"
+        [class.active]="pageNumber === currentSpecialityPage"
+        (click)="setSpecialityPage(pageNumber)"
+      >
+        {{ pageNumber }}
+      </button>
+
+      <button
+        class="page-nav-btn"
+        type="button"
+        [disabled]="!specialityCanNext"
+        (click)="nextSpecialityPage()"
+      >
+        <mat-icon>chevron_right</mat-icon>
+      </button>
+    </div>
+  </div>
+</div>

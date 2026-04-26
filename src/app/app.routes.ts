@@ -1,4 +1,5 @@
 import { Routes } from '@angular/router';
+import { authGuard } from './core/guards/auth.guard';
 import { MainLayoutComponent } from './shared/layouts/main-layout';
 
 export const routes: Routes = [
@@ -9,6 +10,7 @@ export const routes: Routes = [
   {
     path: '',
     component: MainLayoutComponent,
+    canActivateChild: [authGuard],
     children: [
       {
         path: 'dashboard',
@@ -42,8 +44,8 @@ export const routes: Routes = [
         path: 'paiement',
         loadChildren: () => import('./features/paiement/paiement-module').then(m => m.PaiementModule),
       },
-      { path: '', redirectTo: '/auth/login', pathMatch: 'full' },
+      { path: '', redirectTo: '/dashboard', pathMatch: 'full' },
     ],
   },
-  { path: '', redirectTo: '/auth/login', pathMatch: 'full' },
+  { path: '**', redirectTo: '/auth/login' },
 ];
