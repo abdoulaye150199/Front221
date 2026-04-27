@@ -13,7 +13,7 @@ export interface AcademicYear {
   semester: string;
   students: number;
   courses: number;
-  status: 'En cours' | 'Terminé';
+  status: 'En cours' | 'Clôturé';
 }
 
 /**

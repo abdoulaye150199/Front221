@@ -1477,42 +1477,32 @@
         {
           "id": "1",
           "year": "2024-2025",
-          "startDate": "01 Sep 2024",
-          "endDate": "30 Juin 2025",
+          "startDate": "07/10/2024",
+          "endDate": "31/07/2025",
           "semester": "Semestre 1",
-          "students": 1247,
-          "courses": 156,
+          "students": 0,
+          "courses": 0,
           "status": "En cours"
         },
         {
           "id": "2",
           "year": "2023-2024",
-          "startDate": "01 Sep 2023",
-          "endDate": "30 Juin 2024",
-          "semester": "Terminé",
-          "students": 1189,
-          "courses": 148,
-          "status": "Terminé"
+          "startDate": "07/10/2023",
+          "endDate": "31/07/2024",
+          "semester": "Semestre 1",
+          "students": 0,
+          "courses": 0,
+          "status": "Clôturé"
         },
         {
           "id": "3",
           "year": "2022-2023",
-          "startDate": "01 Sep 2022",
-          "endDate": "30 Juin 2023",
-          "semester": "Terminé",
-          "students": 1098,
-          "courses": 142,
-          "status": "Terminé"
-        },
-        {
-          "id": "4",
-          "year": "2021-2022",
-          "startDate": "01 Sep 2021",
-          "endDate": "30 Juin 2022",
-          "semester": "Terminé",
-          "students": 987,
-          "courses": 135,
-          "status": "Terminé"
+          "startDate": "07/10/2022",
+          "endDate": "31/07/2023",
+          "semester": "Semestre 1",
+          "students": 0,
+          "courses": 0,
+          "status": "Clôturé"
         }
       ],
       "trackedEvents": [

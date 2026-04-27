@@ -1,9 +1,8 @@
 <div class="ressources">
   <div class="page-header">
-    <h1 class="page-title">Gestion des Ressources</h1>
     <button mat-flat-button class="primary-btn" type="button">
       <mat-icon>add</mat-icon>
-      Nouvelle Ressource
+      Nouvelle ressource
     </button>
   </div>
 
@@ -21,7 +20,7 @@
         </span>
         <span class="tab-text">
           <span class="tab-title">{{ tab.title }}</span>
-          <span class="tab-subtitle" *ngIf="tab.subtitle">{{ tab.subtitle }}</span>
+          <span class="tab-subtitle">{{ tab.subtitle }}</span>
         </span>
         <mat-icon class="tab-more">more_vert</mat-icon>
       </button>
@@ -38,10 +37,19 @@
         >
           {{ tab }}
         </button>
+
+        <label class="sub-tabs-search" *ngIf="activeSubTab === 0">
+          <mat-icon>search</mat-icon>
+          <input
+            type="text"
+            placeholder="Rechercher..."
+            [(ngModel)]="academicYearSearchTerm"
+          />
+        </label>
       </div>
 
       <div class="subtab-content" *ngIf="activeSubTab === 0">
-        <app-academic-years></app-academic-years>
+        <app-academic-years [externalSearchTerm]="academicYearSearchTerm"></app-academic-years>
       </div>
 
       <div class="subtab-content" *ngIf="activeSubTab === 1">

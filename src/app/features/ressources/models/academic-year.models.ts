@@ -6,7 +6,13 @@ export interface AcademicYear {
   semester: string;
   students: number;
   courses: number;
-  status: 'En cours' | 'Terminé';
+  status: 'En cours' | 'Clôturé';
+}
+
+export interface AcademicYearForm {
+  year: string;
+  startDate: string;
+  endDate: string;
 }
 
 export interface AcademicYearsState {
@@ -14,6 +20,7 @@ export interface AcademicYearsState {
   page: number;
   pageSize: number;
   searchTerm: string;
+  form: AcademicYearForm;
 }
 
 export type AcademicYearStatus = AcademicYear['status'];

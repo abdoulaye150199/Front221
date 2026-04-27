@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { APP_DATA } from '../../../shared/data';
-import { AcademicYear } from '../models';
+import { formatAcademicYearDate, formatAcademicYearLabel } from '../../../shared/validation';
+import { AcademicYear, AcademicYearForm } from '../models';
 
 const RESSOURCES_DATA = APP_DATA.features.ressources as {
   academicYears: AcademicYear[];
@@ -24,6 +25,22 @@ export class AcademicYearService {
     return this.academicYears.find(year => year.id === id);
   }
 
+  create(form: AcademicYearForm): AcademicYear {
+    const createdAcademicYear: AcademicYear = {
+      id: this.generateId(),
+      year: formatAcademicYearLabel(form.year),
+      startDate: formatAcademicYearDate(form.startDate),
+      endDate: formatAcademicYearDate(form.endDate),
+      semester: 'Semestre 1',
+      students: 0,
+      courses: 0,
+      status: 'En cours',
+    };
+
+    this.academicYears.unshift(createdAcademicYear);
+    return createdAcademicYear;
+  }
+
   updateStatus(id: string, status: AcademicYear['status']): void {
     const index = this.academicYears.findIndex(year => year.id === id);
     if (index !== -1) {
@@ -41,5 +58,14 @@ export class AcademicYearService {
         .toLowerCase()
         .includes(lowerTerm)
     );
+  }
+
+  private generateId(): string {
+    const highestId = this.academicYears.reduce((maxId, year) => {
+      const parsedId = Number(year.id);
+      return Number.isNaN(parsedId) ? maxId : Math.max(maxId, parsedId);
+    }, 0);
+
+    return String(highestId + 1);
   }
 }

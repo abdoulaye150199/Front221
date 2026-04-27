@@ -7,16 +7,42 @@ import { SpecialityCatalogComponent } from './components/speciality-catalog.comp
 
 interface ResourceTab {
   title: string;
-  subtitle?: string;
+  subtitle: string;
+  description: string;
   icon: string;
 }
 
 const mainTabs: ResourceTab[] = [
-  { title: 'Année', subtitle: 'Décembre 2020', icon: 'event' },
-  { title: 'Domaines & Spécialités', icon: 'folder' },
-  { title: 'Classes & Sous-classes', icon: 'folder' },
-  { title: 'UE & Modules', icon: 'folder' },
-  { title: 'Paramètre', icon: 'settings' },
+  {
+    title: 'Années académiques',
+    subtitle: 'Calendrier et cycles',
+    description: 'Pilotez les années scolaires, les événements structurants et le calendrier général.',
+    icon: 'calendar_month'
+  },
+  {
+    title: 'Domaines & spécialités',
+    subtitle: 'Catalogue pédagogique',
+    description: 'Organisez l’offre de formation, les mentions, cycles, niveaux et semestres.',
+    icon: 'account_tree'
+  },
+  {
+    title: 'Classes & sous-classes',
+    subtitle: 'Organisation des cohortes',
+    description: 'Préparez la structuration des promotions, groupes et sous-ensembles académiques.',
+    icon: 'groups_2'
+  },
+  {
+    title: 'UE & modules',
+    subtitle: 'Maquettes d’enseignement',
+    description: 'Centralisez les unités d’enseignement et la construction des modules par niveau.',
+    icon: 'library_books'
+  },
+  {
+    title: 'Paramètres',
+    subtitle: 'Configuration métier',
+    description: 'Réglez les préférences globales qui alimentent l’ensemble du référentiel ressources.',
+    icon: 'tune'
+  },
 ];
 
 @Component({
@@ -30,10 +56,12 @@ export class RessourcesComponent {
   readonly mainTabs = mainTabs;
   activeMainTab = 0;
   activeSubTab = 0;
+  academicYearSearchTerm = '';
 
   setActiveMainTab(index: number): void {
     this.activeMainTab = index;
     this.activeSubTab = 0;
+    this.academicYearSearchTerm = '';
   }
 
   setActiveSubTab(index: number): void {

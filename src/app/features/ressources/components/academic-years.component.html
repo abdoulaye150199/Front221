@@ -1,30 +1,78 @@
 <div class="academic-years">
-  <div class="tab-toolbar">
-    <label class="search-box">
-      <mat-icon>search</mat-icon>
-      <input
-        type="text"
-        placeholder="Rechercher une année..."
-        [(ngModel)]="searchTerm"
-        (ngModelChange)="onSearchChange($event)"
-      />
-    </label>
-    <button mat-flat-button class="secondary-btn" type="button">
-      <mat-icon>add</mat-icon>
-      Ajouter Année
+  <form class="subtab-form" (ngSubmit)="submitAcademicYear()">
+    <div class="field-group">
+      <label class="field" [class.invalid]="academicYearFormSubmitted && academicYearErrors.year">
+        <input
+          type="text"
+          name="academicYear"
+          placeholder="Année scolaire"
+          maxlength="9"
+          [(ngModel)]="academicYearForm.year"
+        />
+      </label>
+      <p class="field-error" *ngIf="academicYearFormSubmitted && academicYearErrors.year">
+        {{ academicYearErrors.year }}
+      </p>
+    </div>
+
+    <div class="field-group">
+      <label
+        class="field date-field"
+        [class.invalid]="academicYearFormSubmitted && academicYearErrors.startDate"
+      >
+        <mat-icon>calendar_today</mat-icon>
+        <input
+          type="text"
+          name="openingDate"
+          aria-label="Date d'ouverture"
+          inputmode="numeric"
+          autocomplete="off"
+          maxlength="10"
+          placeholder="jj/mm/aaaa"
+          [ngModel]="academicYearForm.startDate"
+          (ngModelChange)="updateAcademicDate('startDate', $event)"
+        />
+      </label>
+      <p class="field-error" *ngIf="academicYearFormSubmitted && academicYearErrors.startDate">
+        {{ academicYearErrors.startDate }}
+      </p>
+    </div>
+
+    <div class="field-group">
+      <label
+        class="field date-field"
+        [class.invalid]="academicYearFormSubmitted && academicYearErrors.endDate"
+      >
+        <mat-icon>calendar_today</mat-icon>
+        <input
+          type="text"
+          name="closingDate"
+          aria-label="Date de fermeture"
+          inputmode="numeric"
+          autocomplete="off"
+          maxlength="10"
+          placeholder="jj/mm/aaaa"
+          [ngModel]="academicYearForm.endDate"
+          (ngModelChange)="updateAcademicDate('endDate', $event)"
+        />
+      </label>
+      <p class="field-error" *ngIf="academicYearFormSubmitted && academicYearErrors.endDate">
+        {{ academicYearErrors.endDate }}
+      </p>
+    </div>
+
+    <button mat-flat-button class="primary-btn subtab-submit" type="submit">
+      Créer
     </button>
-  </div>
+  </form>
 
   <div class="table-wrapper">
     <table class="resources-table">
       <thead>
         <tr>
-          <th>Année Académique</th>
-          <th>Date Début</th>
-          <th>Date Fin</th>
-          <th>Semestre</th>
-          <th>Étudiants</th>
-          <th>Cours</th>
+          <th>Année scolaire</th>
+          <th>Ouverture</th>
+          <th>Fermeture</th>
           <th>Statut</th>
           <th class="actions-header">Actions</th>
         </tr>
@@ -34,14 +82,11 @@
           <td class="year-cell">{{ year.year }}</td>
           <td class="meta-muted">{{ year.startDate }}</td>
           <td class="meta-muted">{{ year.endDate }}</td>
-          <td class="meta-muted">{{ year.semester }}</td>
-          <td class="metric">{{ year.students }}</td>
-          <td class="metric">{{ year.courses }}</td>
           <td>
             <span
               class="status-pill"
               [class.active]="year.status === 'En cours'"
-              [class.done]="year.status === 'Terminé'"
+              [class.done]="year.status === 'Clôturé'"
             >
               {{ year.status }}
             </span>
@@ -63,14 +108,14 @@
               <button type="button" (click)="setYearStatus(year, 'En cours'); closeActionMenu()">
                 En cours
               </button>
-              <button type="button" (click)="setYearStatus(year, 'Terminé'); closeActionMenu()">
+              <button type="button" (click)="setYearStatus(year, 'Clôturé'); closeActionMenu()">
                 Clôturer
               </button>
             </div>
           </td>
         </tr>
         <tr *ngIf="pagedAcademicYears.length === 0">
-          <td colspan="8" class="empty-state">
+          <td colspan="5" class="empty-state">
             Aucune année académique disponible.
           </td>
         </tr>
