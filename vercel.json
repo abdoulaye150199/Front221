@@ -1,0 +1,13 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "installCommand": "npm ci --prefer-offline --no-audit --fund=false --progress=false",
+  "buildCommand": "npm run build:vercel",
+  "outputDirectory": "dist/ecole-221/browser",
+  "cleanUrls": true,
+  "rewrites": [
+    {
+      "source": "/(.*)",
+      "destination": "/"
+    }
+  ]
+}

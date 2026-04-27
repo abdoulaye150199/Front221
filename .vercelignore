@@ -1,0 +1,7 @@
+.angular
+dist
+coverage
+.vscode
+README.md
+REFACTORING_SUMMARY.md
+src/**/*.spec.ts

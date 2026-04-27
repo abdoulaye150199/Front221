@@ -3,7 +3,12 @@
   "version": 1,
   "cli": {
     "packageManager": "npm",
-    "analytics": "2f6d94b6-18e4-4bbd-a8e0-f63d22b51f01"
+    "analytics": "2f6d94b6-18e4-4bbd-a8e0-f63d22b51f01",
+    "cache": {
+      "enabled": true,
+      "environment": "all",
+      "path": ".angular/cache"
+    }
   },
   "newProjectRoot": "projects",
   "projects": {
@@ -23,6 +28,9 @@
           "options": {
             "browser": "src/main.ts",
             "tsConfig": "tsconfig.app.json",
+            "outputPath": {
+              "base": "dist/ecole-221"
+            },
             "inlineStyleLanguage": "scss",
             "assets": [
               {
@@ -56,7 +64,47 @@
                   "maximumError": "12kB"
                 }
               ],
+              "sourceMap": false,
+              "extractLicenses": false,
+              "namedChunks": false,
               "optimization": {
+                "scripts": true,
+                "styles": {
+                  "minify": true,
+                  "inlineCritical": true,
+                  "removeSpecialComments": true
+                },
+                "fonts": {
+                  "inline": false
+                }
+              },
+              "outputHashing": "all"
+            },
+            "vercel": {
+              "budgets": [
+                {
+                  "type": "initial",
+                  "maximumWarning": "500kB",
+                  "maximumError": "1MB"
+                },
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "8kB",
+                  "maximumError": "12kB"
+                }
+              ],
+              "outputMode": "static",
+              "ssr": false,
+              "sourceMap": false,
+              "extractLicenses": false,
+              "namedChunks": false,
+              "optimization": {
+                "scripts": true,
+                "styles": {
+                  "minify": true,
+                  "inlineCritical": true,
+                  "removeSpecialComments": true
+                },
                 "fonts": {
                   "inline": false
                 }
