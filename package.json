@@ -5,8 +5,8 @@
     "ng": "ng",
     "start": "ng serve",
     "build": "ng build --configuration production",
-    "build:vercel": "ng build --configuration vercel",
-    "build:analyze": "ng build --configuration vercel --stats-json",
+    "build:vercel": "ng run ecole-221:build-client:production",
+    "build:analyze": "ng run ecole-221:build-client:production --stats-json",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
     "serve:ssr:ecole-221": "node dist/ecole-221/server/server.mjs"
