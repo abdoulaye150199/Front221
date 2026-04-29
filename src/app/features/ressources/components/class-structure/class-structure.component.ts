@@ -9,6 +9,7 @@ import {
   SubClassCatalogItem,
 } from '../../models';
 import { ClassStructureService } from '../../services/class-structure.service';
+import { PaginatedFormState } from './helpers/paginated-form-state';
 
 @Component({
   selector: 'app-class-structure',
@@ -21,27 +22,19 @@ export class ClassStructureComponent {
   private readonly classStructureService = inject(ClassStructureService);
 
   readonly tabs: ClassStructureTabKey[] = ['Classes', 'Sous-classes'];
-
-  classItems: ClassCatalogItem[] = [];
-  subClassItems: SubClassCatalogItem[] = [];
   activeTabIndex = 0;
 
-  classPage = 1;
-  classPageSize = 3;
-  subClassPage = 1;
-  subClassPageSize = 5;
+  readonly classState = new PaginatedFormState<ClassCatalogItem>(3);
+  readonly subClassState = new PaginatedFormState<SubClassCatalogItem>(5);
 
-  openClassActionId: string | null = null;
-  openSubClassActionId: string | null = null;
-  editingClassId: string | null = null;
-  editingSubClassId: string | null = null;
-
+  // Class form state
   selectedDomainName = '';
   selectedSpecialityName = '';
   selectedLevelName = '';
   classCode = '';
   className = '';
 
+  // SubClass form state
   selectedClassId = '';
   subClassName = '';
   selectedSemester = '';
@@ -83,84 +76,51 @@ export class ClassStructureComponent {
   }
 
   get filteredClassItems(): ClassCatalogItem[] {
-    return this.classItems;
+    return this.classState.items;
   }
 
   get filteredSubClassItems(): SubClassCatalogItem[] {
-    return this.subClassItems;
+    return this.subClassState.items;
   }
 
   get pagedClassItems(): ClassCatalogItem[] {
-    return this.getPagedItems(this.filteredClassItems, this.currentClassPage, this.classPageSize);
+    return this.classState.pagedItems;
   }
 
   get pagedSubClassItems(): SubClassCatalogItem[] {
-    return this.getPagedItems(this.filteredSubClassItems, this.currentSubClassPage, this.subClassPageSize);
-  }
-
-  get currentClassPage(): number {
-    return this.getCurrentPage(this.classPage, this.totalClassPages);
-  }
-
-  get currentSubClassPage(): number {
-    return this.getCurrentPage(this.subClassPage, this.totalSubClassPages);
-  }
-
-  get totalClassPages(): number {
-    return this.getTotalPages(this.filteredClassItems.length, this.classPageSize);
-  }
-
-  get totalSubClassPages(): number {
-    return this.getTotalPages(this.filteredSubClassItems.length, this.subClassPageSize);
+    return this.subClassState.pagedItems;
   }
 
   get classPages(): number[] {
-    return this.getPages(this.totalClassPages);
+    return this.classState.pages;
   }
 
   get subClassPages(): number[] {
-    return this.getPages(this.totalSubClassPages);
+    return this.subClassState.pages;
   }
 
   get canPrevClassPage(): boolean {
-    return this.canPrev(this.currentClassPage);
+    return this.classState.canPrev;
   }
 
   get canNextClassPage(): boolean {
-    return this.canNext(this.currentClassPage, this.totalClassPages);
+    return this.classState.canNext;
   }
 
   get canPrevSubClassPage(): boolean {
-    return this.canPrev(this.currentSubClassPage);
+    return this.subClassState.canPrev;
   }
 
   get canNextSubClassPage(): boolean {
-    return this.canNext(this.currentSubClassPage, this.totalSubClassPages);
+    return this.subClassState.canNext;
   }
 
-  private getPagedItems<T>(items: T[], currentPage: number, pageSize: number): T[] {
-    const start = (currentPage - 1) * pageSize;
-    return items.slice(start, start + pageSize);
+  get totalClassPages(): number {
+    return this.classState.totalPages;
   }
 
-  private getCurrentPage(page: number, totalPages: number): number {
-    return Math.min(page, totalPages);
-  }
-
-  private getTotalPages(itemCount: number, pageSize: number): number {
-    return Math.max(1, Math.ceil(itemCount / pageSize));
-  }
-
-  private getPages(totalPages: number): number[] {
-    return Array.from({ length: totalPages }, (_, index) => index + 1);
-  }
-
-  private canPrev(page: number): boolean {
-    return page > 1;
-  }
-
-  private canNext(page: number, totalPages: number): boolean {
-    return page < totalPages;
+  get totalSubClassPages(): number {
+    return this.subClassState.totalPages;
   }
 
   get isClassFormValid(): boolean {
@@ -178,11 +138,11 @@ export class ClassStructureComponent {
   }
 
   get isEditingClass(): boolean {
-    return this.editingClassId !== null;
+    return this.classState.editingItemId !== null;
   }
 
   get isEditingSubClass(): boolean {
-    return this.editingSubClassId !== null;
+    return this.subClassState.editingItemId !== null;
   }
 
   setActiveTab(index: number, skipIfUnchanged = false): void {
@@ -192,8 +152,8 @@ export class ClassStructureComponent {
     }
 
     this.activeTabIndex = nextTabIndex;
-    this.openClassActionId = null;
-    this.openSubClassActionId = null;
+    this.classState.reset();
+    this.subClassState.reset();
     this.resetForms();
   }
 
@@ -218,13 +178,13 @@ export class ClassStructureComponent {
       status: 'Actif',
     };
 
-    if (this.editingClassId) {
-      this.classStructureService.updateClass(this.editingClassId, form);
+    if (this.classState.editingItemId) {
+      this.classStructureService.updateClass(this.classState.editingItemId, form);
     } else {
       this.classStructureService.createClass(form);
     }
 
-    this.classPage = 1;
+    this.classState.reset();
     this.resetClassForm();
     this.loadData();
   }
@@ -241,20 +201,19 @@ export class ClassStructureComponent {
       status: 'Actif',
     };
 
-    if (this.editingSubClassId) {
-      this.classStructureService.updateSubClass(this.editingSubClassId, form);
+    if (this.subClassState.editingItemId) {
+      this.classStructureService.updateSubClass(this.subClassState.editingItemId, form);
     } else {
       this.classStructureService.createSubClass(form);
     }
 
-    this.subClassPage = 1;
+    this.subClassState.reset();
     this.resetSubClassForm();
     this.loadData();
   }
 
   editClass(item: ClassCatalogItem): void {
-    this.openClassActionId = null;
-    this.editingClassId = item.id;
+    this.classState.startEditing(item.id);
     this.selectedDomainName = item.domainName;
     this.selectedSpecialityName = item.specialityName;
     this.selectedLevelName = item.levelName;
@@ -263,125 +222,81 @@ export class ClassStructureComponent {
   }
 
   deleteClass(itemId: string): void {
-    this.openClassActionId = null;
+    this.classState.closeActionMenu();
     this.classStructureService.deleteClass(itemId);
-    if (this.editingClassId === itemId) {
+    if (this.classState.editingItemId === itemId) {
       this.resetClassForm();
+      this.classState.stopEditing();
     }
     this.loadData();
   }
 
   editSubClass(item: SubClassCatalogItem): void {
-    this.openSubClassActionId = null;
-    this.editingSubClassId = item.id;
+    this.subClassState.startEditing(item.id);
     this.selectedClassId = item.classId;
     this.subClassName = item.subClassName;
     this.selectedSemester = item.currentSemesterLabel;
   }
 
   deleteSubClass(itemId: string): void {
-    this.openSubClassActionId = null;
+    this.subClassState.closeActionMenu();
     this.classStructureService.deleteSubClass(itemId);
-    if (this.editingSubClassId === itemId) {
+    if (this.subClassState.editingItemId === itemId) {
       this.resetSubClassForm();
+      this.subClassState.stopEditing();
     }
     this.loadData();
   }
 
   cancelEdition(): void {
     this.resetForms();
+    this.classState.stopEditing();
+    this.subClassState.stopEditing();
   }
 
   toggleClassActionMenu(itemId: string): void {
-    this.openClassActionId = this.openClassActionId === itemId ? null : itemId;
+    this.classState.toggleActionMenu(itemId);
   }
 
   toggleSubClassActionMenu(itemId: string): void {
-    this.openSubClassActionId = this.openSubClassActionId === itemId ? null : itemId;
+    this.subClassState.toggleActionMenu(itemId);
   }
 
   setClassPage(page: number): void {
-    this.changePage(page, this.totalClassPages, nextPage => {
-      this.classPage = nextPage;
-    });
+    this.classState.setPage(page);
   }
 
   setSubClassPage(page: number): void {
-    this.changePage(page, this.totalSubClassPages, nextPage => {
-      this.subClassPage = nextPage;
-    });
+    this.subClassState.setPage(page);
   }
 
   previousClassPage(): void {
-    this.changePageDelta(this.currentClassPage, this.totalClassPages, nextPage => {
-      this.classPage = nextPage;
-    }, -1);
+    this.classState.previousPage();
   }
 
   nextClassPage(): void {
-    this.changePageDelta(this.currentClassPage, this.totalClassPages, nextPage => {
-      this.classPage = nextPage;
-    }, 1);
+    this.classState.nextPage();
   }
 
   previousSubClassPage(): void {
-    this.changePageDelta(this.currentSubClassPage, this.totalSubClassPages, nextPage => {
-      this.subClassPage = nextPage;
-    }, -1);
+    this.subClassState.previousPage();
   }
 
   nextSubClassPage(): void {
-    this.changePageDelta(this.currentSubClassPage, this.totalSubClassPages, nextPage => {
-      this.subClassPage = nextPage;
-    }, 1);
+    this.subClassState.nextPage();
   }
 
   setClassPageSize(value: string): void {
-    const pageSize = this.parsePageSize(value);
-    if (pageSize === null) {
-      return;
-    }
-
-    this.classPageSize = pageSize;
-    this.classPage = 1;
+    this.classState.setPageSize(value);
   }
 
   setSubClassPageSize(value: string): void {
-    const pageSize = this.parsePageSize(value);
-    if (pageSize === null) {
-      return;
-    }
-
-    this.subClassPageSize = pageSize;
-    this.subClassPage = 1;
-  }
-
-  private changePage(page: number, totalPages: number, apply: (page: number) => void): void {
-    if (page >= 1 && page <= totalPages) {
-      apply(page);
-    }
-  }
-
-  private changePageDelta(
-    currentPage: number,
-    totalPages: number,
-    apply: (page: number) => void,
-    delta: number
-  ): void {
-    const nextPage = currentPage + delta;
-    if (nextPage >= 1 && nextPage <= totalPages) {
-      apply(nextPage);
-    }
-  }
-
-  private parsePageSize(value: string): number | null {
-    const pageSize = Number(value);
-    return Number.isNaN(pageSize) || pageSize <= 0 ? null : pageSize;
+    this.subClassState.setPageSize(value);
   }
 
   private loadData(): void {
-    this.classItems = this.classStructureService.getClassItems();
-    this.subClassItems = this.classStructureService.getSubClassItems();
+    this.classState.items = this.classStructureService.getClassItems();
+    this.subClassState.items = this.classStructureService.getSubClassItems();
   }
 
   private resetForms(): void {
@@ -390,7 +305,6 @@ export class ClassStructureComponent {
   }
 
   private resetClassForm(): void {
-    this.editingClassId = null;
     this.selectedDomainName = '';
     this.selectedSpecialityName = '';
     this.selectedLevelName = '';
@@ -399,7 +313,6 @@ export class ClassStructureComponent {
   }
 
   private resetSubClassForm(): void {
-    this.editingSubClassId = null;
     this.selectedClassId = '';
     this.subClassName = '';
     this.selectedSemester = '';
