@@ -26,7 +26,7 @@
       </button>
     </div>
 
-    <div class="tab-content" *ngIf="activeMainTab === 0">
+    <div class="tab-content" *ngIf="isAcademicMainTab">
       <div class="sub-tabs">
         <button
           class="sub-tab"
@@ -61,7 +61,7 @@
       </div>
     </div>
 
-    <div class="tab-content" *ngIf="activeMainTab === 1">
+    <div class="tab-content" *ngIf="isSpecialityMainTab">
       <div class="sub-tabs">
         <button
           class="sub-tab"
@@ -75,11 +75,23 @@
       </div>
 
       <div class="subtab-content">
-        <app-speciality-catalog></app-speciality-catalog>
+        <app-speciality-catalog [activeTabIndex]="activeSubTab"></app-speciality-catalog>
       </div>
     </div>
 
-    <div class="tab-content placeholder" *ngIf="activeMainTab > 1">
+    <div class="tab-content" *ngIf="isClassStructureMainTab">
+      <div class="subtab-content">
+        <app-class-structure [activeTab]="activeSubTab"></app-class-structure>
+      </div>
+    </div>
+
+    <div class="tab-content" *ngIf="isUeModuleMainTab">
+      <div class="subtab-content">
+        <app-ue-module [activeTab]="activeSubTab"></app-ue-module>
+      </div>
+    </div>
+
+    <div class="tab-content placeholder" *ngIf="isPlaceholderMainTab">
       <div class="placeholder-card">
         <div class="placeholder-icon">
           <mat-icon>insert_drive_file</mat-icon>

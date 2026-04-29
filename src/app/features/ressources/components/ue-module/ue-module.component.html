@@ -1,0 +1,283 @@
+<div class="ue-module">
+  <div class="sub-tabs ue-tabs">
+    <button
+      class="sub-tab"
+      type="button"
+      *ngFor="let tab of tabs; let i = index"
+      [class.active]="activeTabIndex === i"
+      (click)="setActiveTab(i)"
+    >
+      {{ tab }}
+    </button>
+  </div>
+
+  <div class="subtab-content">
+    <div class="subtab-form">
+      <ng-container *ngIf="isUeTypeTab">
+        <label class="field wide-field">
+          <input
+            type="text"
+            placeholder="Unité d'enseignement (U.E)"
+            [(ngModel)]="ueTypeTitle"
+          />
+        </label>
+      </ng-container>
+
+      <ng-container *ngIf="isUeTab">
+        <label class="field select-field">
+          <select [(ngModel)]="selectedMentionName">
+            <option value="">Choisir la mention</option>
+            <option *ngFor="let mention of mentionOptions" [value]="mention">{{ mention }}</option>
+          </select>
+        </label>
+
+        <label class="field compact-field">
+          <input type="text" placeholder="Code" [(ngModel)]="ueCode" />
+        </label>
+
+        <label class="field wide-field">
+          <input
+            type="text"
+            placeholder="Unité d'enseignement (U.E)"
+            [(ngModel)]="ueTitle"
+          />
+        </label>
+      </ng-container>
+
+      <ng-container *ngIf="isModuleTab">
+        <label class="field select-field">
+          <select [(ngModel)]="selectedUeId">
+            <option value="">Choisir l'U.E</option>
+            <option *ngFor="let ue of ueOptions" [value]="ue.id">{{ ue.label }}</option>
+          </select>
+        </label>
+
+        <label class="field compact-field">
+          <input type="text" placeholder="Code" [(ngModel)]="moduleCode" />
+        </label>
+
+        <label class="field wide-field">
+          <input type="text" placeholder="Module" [(ngModel)]="moduleName" />
+        </label>
+      </ng-container>
+
+      <button
+        mat-flat-button
+        class="primary-btn"
+        type="button"
+        [disabled]="isUeTypeTab ? !isTypeFormValid : isUeTab ? !isUeFormValid : !isModuleFormValid"
+        (click)="submit()"
+      >
+        {{ isEditing ? 'Modifier' : 'Créer' }}
+      </button>
+
+      <button
+        *ngIf="isEditing"
+        mat-stroked-button
+        type="button"
+        (click)="cancelEdition()"
+      >
+        Annuler
+      </button>
+    </div>
+
+    <div class="table-wrapper">
+      <table class="resources-table ue-table">
+        <thead>
+          <tr *ngIf="isUeTypeTab">
+            <th>Code</th>
+            <th>Unité d'enseignement (U.E)</th>
+            <th>Mentions</th>
+            <th>Modules</th>
+            <th>État</th>
+            <th class="actions-header">Actions</th>
+          </tr>
+          <tr *ngIf="isUeTab">
+            <th>Code</th>
+            <th>Unité d'enseignement (U.E)</th>
+            <th>Mention</th>
+            <th>État</th>
+            <th class="actions-header">Actions</th>
+          </tr>
+          <tr *ngIf="isModuleTab">
+            <th>Code</th>
+            <th>Module</th>
+            <th>Unité d'enseignement (U.E)</th>
+            <th>État</th>
+            <th class="actions-header">Actions</th>
+          </tr>
+        </thead>
+
+        <tbody *ngIf="isUeTypeTab">
+          <tr *ngFor="let item of pagedItems">
+            <td class="meta-muted">{{ $any(item).code }}</td>
+            <td class="year-cell">{{ $any(item).title }}</td>
+            <td>
+              <div class="chip-list">
+                <span
+                  class="catalog-chip"
+                  [ngClass]="'tone-' + getChipTone(i)"
+                  *ngFor="let mention of $any(item).mentionNames; let i = index"
+                >
+                  {{ mention }}
+                </span>
+              </div>
+            </td>
+            <td>
+              <div class="chip-list">
+                <span
+                  class="catalog-chip"
+                  [ngClass]="'tone-' + getChipTone(i)"
+                  *ngFor="let module of $any(item).moduleNames; let i = index"
+                >
+                  {{ module }}
+                </span>
+              </div>
+            </td>
+            <td><span class="status-pill active">{{ $any(item).status }}</span></td>
+            <td class="actions-cell">
+              <button
+                class="icon-btn menu"
+                type="button"
+                aria-label="Options"
+                (click)="$event.stopPropagation(); toggleTypeActionMenu($any(item).id)"
+              >
+                <mat-icon>more_vert</mat-icon>
+              </button>
+              <div
+                class="actions-menu"
+                *ngIf="openTypeActionId === $any(item).id"
+                (click)="$event.stopPropagation()"
+              >
+                <button type="button" (click)="editType($any(item))">Modifier</button>
+                <button type="button" (click)="deleteType($any(item).id)">Supprimer</button>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+
+        <tbody *ngIf="isUeTab">
+          <tr *ngFor="let item of pagedItems">
+            <td class="meta-muted">{{ $any(item).code }}</td>
+            <td class="year-cell">{{ $any(item).title }}</td>
+            <td>
+              <div class="chip-list">
+                <span
+                  class="catalog-chip"
+                  [ngClass]="'tone-' + getChipTone(i)"
+                  *ngFor="let mention of $any(item).mentionNames; let i = index"
+                >
+                  {{ mention }}
+                </span>
+              </div>
+            </td>
+            <td><span class="status-pill active">{{ $any(item).status }}</span></td>
+            <td class="actions-cell">
+              <button
+                class="icon-btn menu"
+                type="button"
+                aria-label="Options"
+                (click)="$event.stopPropagation(); toggleUeActionMenu($any(item).id)"
+              >
+                <mat-icon>more_vert</mat-icon>
+              </button>
+              <div
+                class="actions-menu"
+                *ngIf="openUeActionId === $any(item).id"
+                (click)="$event.stopPropagation()"
+              >
+                <button type="button" (click)="editUe($any(item))">Modifier</button>
+                <button type="button" (click)="deleteUe($any(item).id)">Supprimer</button>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+
+        <tbody *ngIf="isModuleTab">
+          <tr *ngFor="let item of pagedItems">
+            <td class="meta-muted">{{ $any(item).code }}</td>
+            <td class="year-cell">{{ $any(item).name }}</td>
+            <td>
+              <div class="chip-list">
+                <span
+                  class="catalog-chip tone-blue"
+                  *ngFor="let ueTitle of $any(item).ueTitles"
+                >
+                  {{ ueTitle }}
+                </span>
+              </div>
+            </td>
+            <td><span class="status-pill active">{{ $any(item).status }}</span></td>
+            <td class="actions-cell">
+              <button
+                class="icon-btn menu"
+                type="button"
+                aria-label="Options"
+                (click)="$event.stopPropagation(); toggleModuleActionMenu($any(item).id)"
+              >
+                <mat-icon>more_vert</mat-icon>
+              </button>
+              <div
+                class="actions-menu"
+                *ngIf="openModuleActionId === $any(item).id"
+                (click)="$event.stopPropagation()"
+              >
+                <button type="button" (click)="editModule($any(item))">Modifier</button>
+                <button type="button" (click)="deleteModule($any(item).id)">Supprimer</button>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+
+        <tbody *ngIf="pagedItems.length === 0">
+          <tr>
+            <td [attr.colspan]="isUeTypeTab ? 6 : 5" class="empty-state">
+              Aucun élément disponible dans cette section.
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="table-footer">
+      <div class="page-size-control">
+        <span>Éléments / page</span>
+        <label class="page-size-select">
+          <select [ngModel]="pageSize" (ngModelChange)="setPageSize($event)">
+            <option *ngFor="let size of [5, 10, 15]" [value]="size">{{ size }}</option>
+          </select>
+        </label>
+      </div>
+
+      <div class="pagination number-pagination">
+        <button
+          class="page-nav-btn"
+          type="button"
+          [disabled]="!canPrev"
+          (click)="previousPage()"
+        >
+          <mat-icon>chevron_left</mat-icon>
+        </button>
+
+        <button
+          class="page-number-btn"
+          type="button"
+          *ngFor="let pageNumber of pages"
+          [class.active]="pageNumber === currentPage"
+          (click)="setPage(pageNumber)"
+        >
+          {{ pageNumber }}
+        </button>
+
+        <button
+          class="page-nav-btn"
+          type="button"
+          [disabled]="!canNext"
+          (click)="nextPage()"
+        >
+          <mat-icon>chevron_right</mat-icon>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1304,7 +1304,7 @@
           "title": "Droit public",
           "time": "08:00 à 12:00",
           "teacher": "Birane B. Wane",
-          "classLabel": "L1 Droit p...",
+          "classLabel": "L1 Droit public",
           "status": "planifie",
           "dayIndex": 2,
           "slot": "08:00"
@@ -1364,7 +1364,7 @@
           "title": "Droit public",
           "time": "09:00 à 13:00",
           "teacher": "Aïssatou Diop",
-          "classLabel": "L1 Droit p...",
+          "classLabel": "L1 Droit public",
           "status": "annule",
           "dayIndex": 2,
           "slot": "09:00"
@@ -1557,7 +1557,7 @@
           "id": "1",
           "level": "Licence",
           "semester": "Semestre 1",
-          "eventName": "Ouverture des classe",
+          "eventName": "Ouverture des classes",
           "startDate": "07/10/2024",
           "endDate": "10/10/2024",
           "status": "En cours"
@@ -1575,7 +1575,7 @@
           "id": "3",
           "level": "Licence",
           "semester": "Semestre 1",
-          "eventName": "Période de devoir surveillé No 2",
+          "eventName": "Période de devoir surveillé N° 2",
           "startDate": "11/01/2025",
           "endDate": "15/01/2025",
           "status": "En attente"
@@ -1865,3 +1865,4 @@
     ]
   }
 }
+

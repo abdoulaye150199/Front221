@@ -1,0 +1,96 @@
+@import '../_resource-shared';
+
+.ue-module {
+  display: block;
+}
+
+.ue-tabs {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  flex-wrap: wrap;
+  padding: 0.45rem;
+  border-radius: 999px;
+  background: #f7f9fc;
+  border: 1px solid #e8edf4;
+  margin-bottom: 1rem;
+}
+
+.ue-tabs .sub-tab {
+  border: none;
+  min-height: 40px;
+  min-width: 220px;
+  padding: 0.65rem 1rem;
+  border-radius: 999px;
+  background: transparent;
+  color: #475467;
+  font-size: 0.84rem;
+  font-weight: 700;
+  text-align: left;
+  justify-content: flex-start;
+  cursor: pointer;
+  transition: all 0.18s ease;
+}
+
+.ue-tabs .sub-tab:hover {
+  background: #eef2f7;
+  color: #344054;
+}
+
+.ue-tabs .sub-tab.active {
+  background: #c84521;
+  color: #fff;
+  box-shadow: 0 10px 20px rgba(168, 45, 20, 0.18);
+}
+
+.compact-field {
+  flex: 0 0 120px;
+}
+
+.wide-field {
+  flex: 1.25 1 280px;
+}
+
+.ue-table {
+  min-width: 960px;
+}
+
+.chip-list {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  flex-wrap: wrap;
+}
+
+.catalog-chip {
+  display: inline-flex;
+  align-items: center;
+  min-height: 26px;
+  padding: 0.22rem 0.68rem;
+  border-radius: 8px;
+  font-size: 0.74rem;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.tone-blue {
+  background: #c7d2fe;
+  color: #3747a5;
+}
+
+.tone-green {
+  background: #bbf7d0;
+  color: #15803d;
+}
+
+.tone-yellow {
+  background: #fde68a;
+  color: #a16207;
+}
+
+@media (max-width: 900px) {
+  .ue-tabs .sub-tab {
+    min-width: 0;
+    flex: 1 1 100%;
+  }
+}

@@ -14,7 +14,12 @@
     "importHelpers": true,
     "resolveJsonModule": true,
     "target": "ES2022",
-    "module": "preserve"
+    "module": "preserve",
+    "baseUrl": "./src",
+    "paths": {
+      "@shared/*": ["app/shared/*"],
+      "@features/*": ["app/features/*"]
+    }
   },
   "angularCompilerOptions": {
     "enableI18nLegacyMessageIdFormat": false,

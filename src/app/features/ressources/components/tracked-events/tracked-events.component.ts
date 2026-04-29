@@ -1,8 +1,8 @@
 import { Component } from '@angular/core';
-import { FORM_ACTION_IMPORTS } from '../../../shared/imports/standalone-imports';
-import { hasRequiredTextValues } from '../../../shared/validation';
-import { TrackedEvent, TrackedEventForm, TrackedEventStatus } from '../models';
-import { TrackedEventService } from '../services';
+import { FORM_ACTION_IMPORTS } from '@shared/imports/standalone-imports';
+import { hasRequiredTextValues } from '@shared/validation';
+import { TrackedEvent, TrackedEventForm, TrackedEventStatus } from '../../models';
+import { TrackedEventService } from '../../services';
 
 @Component({
   selector: 'app-tracked-events',

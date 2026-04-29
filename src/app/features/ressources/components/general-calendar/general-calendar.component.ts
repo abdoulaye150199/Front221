@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
-import { FORM_ACTION_IMPORTS } from '../../../shared/imports/standalone-imports';
-import { GeneralCalendarEntry, GeneralCalendarFilter } from '../models';
-import { GeneralCalendarService } from '../services';
+import { FORM_ACTION_IMPORTS } from '@shared/imports/standalone-imports';
+import { GeneralCalendarEntry, GeneralCalendarFilter } from '../../models';
+import { GeneralCalendarService } from '../../services';
 
 @Component({
   selector: 'app-general-calendar',

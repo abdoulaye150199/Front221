@@ -11,6 +11,15 @@ export interface SpecialityCatalogItem {
   category: SpecialitySectionKey;
   name: string;
   domainName?: string;
+  mentionName?: string;
+  cycleName?: string;
+  semesterLevelName?: string;
+  levelNames?: string[];
+  durationLabel?: string;
+  hourlyRateLabel?: string;
+  documentItemsToProvide?: string[];
+  documentItemsToWithdraw?: string[];
+  currentSemesterLabel?: string;
   status: 'Actif' | 'Inactif';
 }
 
@@ -27,5 +36,14 @@ export interface SpecialityCatalogForm {
   category: SpecialitySectionKey;
   name: string;
   domainName?: string;
+  mentionName?: string;
+  cycleName?: string;
+  semesterLevelName?: string;
+  levelNames?: string[];
+  durationLabel?: string;
+  hourlyRateLabel?: string;
+  documentItemsToProvide?: string[];
+  documentItemsToWithdraw?: string[];
+  currentSemesterLabel?: string;
   status: 'Actif' | 'Inactif';
 }

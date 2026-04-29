@@ -10,9 +10,9 @@
           [(ngModel)]="academicYearForm.year"
         />
       </label>
-      <p class="field-error" *ngIf="academicYearFormSubmitted && academicYearErrors.year">
+      <span class="field-error" *ngIf="academicYearFormSubmitted && academicYearErrors.year">
         {{ academicYearErrors.year }}
-      </p>
+      </span>
     </div>
 
     <div class="field-group">
@@ -33,9 +33,9 @@
           (ngModelChange)="updateAcademicDate('startDate', $event)"
         />
       </label>
-      <p class="field-error" *ngIf="academicYearFormSubmitted && academicYearErrors.startDate">
+      <span class="field-error" *ngIf="academicYearFormSubmitted && academicYearErrors.startDate">
         {{ academicYearErrors.startDate }}
-      </p>
+      </span>
     </div>
 
     <div class="field-group">
@@ -56,9 +56,9 @@
           (ngModelChange)="updateAcademicDate('endDate', $event)"
         />
       </label>
-      <p class="field-error" *ngIf="academicYearFormSubmitted && academicYearErrors.endDate">
+      <span class="field-error" *ngIf="academicYearFormSubmitted && academicYearErrors.endDate">
         {{ academicYearErrors.endDate }}
-      </p>
+      </span>
     </div>
 
     <button mat-flat-button class="primary-btn subtab-submit" type="submit">

@@ -1,0 +1,277 @@
+<div class="speciality-catalog">
+  <div class="subtab-form">
+    <label class="field select-field" *ngIf="isMentionSpecialityTab || isSpecialityTab">
+      <select
+        [ngModel]="specialityDomainName"
+        (ngModelChange)="onSpecialityDomainChange($event)"
+      >
+        <option value="">Choisir le domaine</option>
+         <option *ngFor="let domain of domainOptions; trackBy: trackById" [value]="domain">{{ domain }}</option>
+      </select>
+    </label>
+
+    <label class="field select-field" *ngIf="isSpecialityTab">
+      <select [(ngModel)]="specialityMentionName" [disabled]="mentionOptions.length === 0">
+        <option value="">Choisir la mention</option>
+         <option *ngFor="let mention of mentionOptions; trackBy: trackById" [value]="mention">{{ mention }}</option>
+      </select>
+    </label>
+
+     <label class="field select-field" *ngIf="isSpecialityTab">
+       <select [(ngModel)]="specialityLevelName">
+         <option value="">Choisir le niveau</option>
+         <option *ngFor="let level of levelOptions; trackBy: trackById" [value]="level">{{ level }}</option>
+       </select>
+     </label>
+
+    <label class="field" *ngIf="isCycleTab">
+      <input
+        type="text"
+        [placeholder]="currentSpecialityPlaceholder"
+        [(ngModel)]="specialityItemName"
+      />
+    </label>
+
+    <label class="field select-field" *ngIf="isCycleTab">
+      <select [(ngModel)]="specialityDurationLabel">
+        <option value="">Durée (années)</option>
+        <option *ngFor="let duration of cycleDurationOptions" [value]="duration">{{ duration }}</option>
+      </select>
+    </label>
+
+    <label class="field select-field" *ngIf="isCycleTab">
+      <select [(ngModel)]="specialityHourlyRateLabel">
+        <option value="">Taux horaire</option>
+         <option *ngFor="let hourlyRate of hourlyRateOptions; trackBy: trackById" [value]="hourlyRate">{{ hourlyRate }}</option>
+      </select>
+    </label>
+
+    <label class="field select-field" *ngIf="isLevelTab">
+      <select [(ngModel)]="specialityCycleName">
+        <option value="">Cycle...</option>
+         <option *ngFor="let cycle of cycleOptions; trackBy: trackById" [value]="cycle">{{ cycle }}</option>
+      </select>
+    </label>
+
+     <label class="field select-field" *ngIf="isSemesterTab">
+       <select [(ngModel)]="specialityLevelName">
+         <option value="">Niveau</option>
+         <option *ngFor="let level of levelOptions; trackBy: trackById" [value]="level">{{ level }}</option>
+       </select>
+     </label>
+
+    <label class="field select-field" *ngIf="isSemesterTab">
+      <select [(ngModel)]="specialityItemName">
+        <option value="">Semestre</option>
+         <option *ngFor="let semester of semesterOptions; trackBy: trackById" [value]="semester">{{ semester }}</option>
+      </select>
+    </label>
+
+    <label class="field select-field" *ngIf="isSemesterTab">
+      <select [(ngModel)]="specialityDurationLabel">
+        <option value="">Durée (mois)</option>
+        <option *ngFor="let duration of semesterDurationOptions" [value]="duration">{{ duration }}</option>
+      </select>
+    </label>
+
+    <label class="field" *ngIf="!isCycleTab && !isSemesterTab">
+      <input
+        type="text"
+        [placeholder]="currentSpecialityPlaceholder"
+        [(ngModel)]="specialityItemName"
+      />
+    </label>
+
+    <button
+      mat-flat-button
+      class="primary-btn"
+      type="button"
+      [disabled]="!isSpecialityFormValid"
+      (click)="submitSpecialityItem()"
+    >
+      {{ isEditingSpecialityItem ? 'Modifier' : 'Créer' }}
+    </button>
+
+    <button
+      *ngIf="isEditingSpecialityItem"
+      mat-stroked-button
+      type="button"
+      (click)="cancelSpecialityEdition()"
+    >
+      Annuler
+    </button>
+  </div>
+
+  <div class="table-wrapper">
+    <table class="resources-table simple-resource-table">
+      <thead>
+        <tr>
+          <ng-container *ngIf="isSpecialityTab; else nonSpecialityHeader">
+            <th>Spécialité</th>
+            <th>Mention</th>
+            <th>Domaine</th>
+            <th>Niveau</th>
+          </ng-container>
+          <ng-template #nonSpecialityHeader>
+            <ng-container *ngIf="isCycleTab; else maybeLevelHeader">
+              <th>Cycle</th>
+              <th>Durée</th>
+              <th>Taux horaire / heure</th>
+            </ng-container>
+          </ng-template>
+          <ng-template #maybeLevelHeader>
+            <ng-container *ngIf="isLevelTab; else maybeSemesterHeader">
+              <th>Niveau</th>
+              <th>Cycle</th>
+              <th>Documents à ramener</th>
+              <th>Documents à retirer</th>
+              <th>Semestre en cours</th>
+            </ng-container>
+          </ng-template>
+          <ng-template #maybeSemesterHeader>
+            <ng-container *ngIf="isSemesterTab; else defaultHeader">
+              <th>Semestre</th>
+              <th>Durée</th>
+            </ng-container>
+          </ng-template>
+          <ng-template #defaultHeader>
+            <th *ngIf="isMentionSpecialityTab">Domaine</th>
+            <th>{{ currentSpecialityPlaceholder }}</th>
+          </ng-template>
+          <th>État</th>
+          <th class="actions-header">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let item of pagedSpecialityCatalogItems">
+          <ng-container *ngIf="isSpecialityTab; else nonSpecialityRow">
+            <td class="year-cell">{{ item.name }}</td>
+            <td class="meta-muted">{{ item.mentionName || 'Non défini' }}</td>
+            <td class="meta-muted">{{ item.domainName || 'Non défini' }}</td>
+            <td>
+              <div class="level-tags">
+                <span class="level-tag" *ngFor="let level of item.levelNames || []">{{ level }}</span>
+              </div>
+            </td>
+          </ng-container>
+          <ng-template #nonSpecialityRow>
+            <ng-container *ngIf="isCycleTab; else maybeLevelRow">
+              <td class="year-cell">{{ item.name }}</td>
+              <td class="meta-muted">{{ item.durationLabel || 'Non défini' }}</td>
+              <td class="metric">{{ item.hourlyRateLabel || 'Non défini' }}</td>
+            </ng-container>
+          </ng-template>
+          <ng-template #maybeLevelRow>
+            <ng-container *ngIf="isLevelTab; else maybeSemesterRow">
+              <td class="year-cell">{{ item.name }}</td>
+              <td class="meta-muted">{{ item.cycleName || 'Non défini' }}</td>
+              <td>
+                <div class="document-tags">
+                  <span class="document-tag document-tag--provide" *ngFor="let document of item.documentItemsToProvide || []">
+                    {{ document }}
+                  </span>
+                </div>
+              </td>
+              <td>
+                <div class="document-tags">
+                  <span class="document-tag document-tag--withdraw" *ngFor="let document of item.documentItemsToWithdraw || []">
+                    {{ document }}
+                  </span>
+                </div>
+              </td>
+              <td>
+                <span class="semester-badge">{{ item.currentSemesterLabel || 'Non défini' }}</span>
+              </td>
+            </ng-container>
+          </ng-template>
+          <ng-template #maybeSemesterRow>
+            <ng-container *ngIf="isSemesterTab; else defaultRow">
+              <td class="year-cell">{{ item.name }}</td>
+              <td class="meta-muted">{{ item.durationLabel || 'Non défini' }}</td>
+            </ng-container>
+          </ng-template>
+          <ng-template #defaultRow>
+            <td *ngIf="isMentionSpecialityTab" class="meta-muted">{{ item.domainName }}</td>
+            <td class="year-cell">{{ item.name }}</td>
+          </ng-template>
+          <td>
+            <span
+              class="status-pill"
+              [class.active]="item.status === 'Actif'"
+              [class.done]="item.status === 'Inactif'"
+            >
+              {{ item.status }}
+            </span>
+          </td>
+          <td class="actions-cell">
+            <button
+              class="icon-btn menu"
+              type="button"
+              aria-label="Options"
+              (click)="$event.stopPropagation(); toggleSpecialityActionMenu(item.id)"
+            >
+              <mat-icon>more_vert</mat-icon>
+            </button>
+            <div
+              class="actions-menu"
+              *ngIf="openSpecialityActionId === item.id"
+              (click)="$event.stopPropagation()"
+            >
+              <button type="button" (click)="editSpecialityItem(item)">Modifier</button>
+              <button type="button" (click)="deleteSpecialityItem(item.id)">Supprimer</button>
+            </div>
+          </td>
+        </tr>
+        <tr *ngIf="pagedSpecialityCatalogItems.length === 0">
+          <td [attr.colspan]="isSpecialityTab ? 6 : isLevelTab ? 7 : isCycleTab ? 5 : isSemesterTab ? 4 : isMentionSpecialityTab ? 4 : 3" class="empty-state">
+            Aucun élément disponible dans cette section.
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="table-footer">
+    <div class="page-size-control">
+      <span>Éléments / page</span>
+      <label class="page-size-select">
+        <select
+          [ngModel]="specialityPageSize"
+          (ngModelChange)="setSpecialityPageSize($event)"
+        >
+          <option *ngFor="let size of [5, 10, 15]" [value]="size">{{ size }}</option>
+        </select>
+      </label>
+    </div>
+
+    <div class="pagination number-pagination">
+      <button
+        class="page-nav-btn"
+        type="button"
+        [disabled]="!specialityCanPrev"
+        (click)="previousSpecialityPage()"
+      >
+        <mat-icon>chevron_left</mat-icon>
+      </button>
+
+      <button
+        class="page-number-btn"
+        type="button"
+        *ngFor="let pageNumber of specialityPages"
+        [class.active]="pageNumber === currentSpecialityPage"
+        (click)="setSpecialityPage(pageNumber)"
+      >
+        {{ pageNumber }}
+      </button>
+
+      <button
+        class="page-nav-btn"
+        type="button"
+        [disabled]="!specialityCanNext"
+        (click)="nextSpecialityPage()"
+      >
+        <mat-icon>chevron_right</mat-icon>
+      </button>
+    </div>
+  </div>
+</div>

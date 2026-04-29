@@ -1,0 +1,288 @@
+<div class="class-structure">
+  <div class="sub-tabs structure-tabs">
+    <button
+      class="sub-tab"
+      type="button"
+      *ngFor="let tab of tabs; let i = index"
+      [class.active]="activeTabIndex === i"
+      (click)="setActiveTab(i)"
+    >
+      {{ tab }}
+    </button>
+  </div>
+
+  <div class="subtab-content" *ngIf="isClassTab; else subClassesView">
+    <div class="subtab-form">
+      <label class="field select-field">
+        <select [ngModel]="selectedDomainName" (ngModelChange)="onDomainChange($event)">
+          <option value="">Choisir le domaine</option>
+          <option *ngFor="let domain of domainOptions" [value]="domain">{{ domain }}</option>
+        </select>
+      </label>
+
+      <label class="field select-field">
+        <select [(ngModel)]="selectedSpecialityName" [disabled]="specialityOptions.length === 0">
+          <option value="">Choisir la spécialité</option>
+          <option *ngFor="let speciality of specialityOptions" [value]="speciality">
+            {{ speciality }}
+          </option>
+        </select>
+      </label>
+
+      <label class="field select-field">
+        <select [(ngModel)]="selectedLevelName">
+          <option value="">Choisir le niveau</option>
+          <option *ngFor="let level of levelOptions" [value]="level">{{ level }}</option>
+        </select>
+      </label>
+
+      <label class="field compact-field">
+        <input type="text" placeholder="Code" [(ngModel)]="classCode" />
+      </label>
+
+      <label class="field wide-field">
+        <input type="text" placeholder="Classe" [(ngModel)]="className" />
+      </label>
+
+      <button
+        mat-flat-button
+        class="primary-btn"
+        type="button"
+        [disabled]="!isClassFormValid"
+        (click)="submitClass()"
+      >
+        {{ isEditingClass ? 'Modifier' : 'Créer' }}
+      </button>
+
+      <button
+        *ngIf="isEditingClass"
+        mat-stroked-button
+        type="button"
+        (click)="cancelEdition()"
+      >
+        Annuler
+      </button>
+    </div>
+
+    <div class="table-wrapper">
+      <table class="resources-table classes-table">
+        <thead>
+          <tr>
+            <th>Code</th>
+            <th>Classes</th>
+            <th>Sous-classes</th>
+            <th>État</th>
+            <th class="actions-header">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let item of pagedClassItems">
+            <td class="meta-muted">{{ item.code }}</td>
+            <td class="year-cell">{{ item.className }}</td>
+            <td>
+              <div class="subclass-tags" *ngIf="item.subClassNames.length > 0; else noSubClass">
+                <span class="subclass-tag" *ngFor="let subClass of item.subClassNames">
+                  {{ subClass }}
+                </span>
+              </div>
+              <ng-template #noSubClass>
+                <span class="subclass-tag empty">Néant</span>
+              </ng-template>
+            </td>
+            <td>
+              <span class="status-pill active">{{ item.status }}</span>
+            </td>
+            <td class="actions-cell">
+              <button
+                class="icon-btn menu"
+                type="button"
+                aria-label="Options"
+                (click)="$event.stopPropagation(); toggleClassActionMenu(item.id)"
+              >
+                <mat-icon>more_vert</mat-icon>
+              </button>
+              <div
+                class="actions-menu"
+                *ngIf="openClassActionId === item.id"
+                (click)="$event.stopPropagation()"
+              >
+                <button type="button" (click)="editClass(item)">Modifier</button>
+                <button type="button" (click)="deleteClass(item.id)">Supprimer</button>
+              </div>
+            </td>
+          </tr>
+          <tr *ngIf="pagedClassItems.length === 0">
+            <td colspan="5" class="empty-state">Aucune classe disponible.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="table-footer">
+      <div class="page-size-control">
+        <span>Éléments / page</span>
+        <label class="page-size-select">
+          <select [ngModel]="classPageSize" (ngModelChange)="setClassPageSize($event)">
+            <option *ngFor="let size of [3, 5, 10]" [value]="size">{{ size }}</option>
+          </select>
+        </label>
+      </div>
+
+      <div class="pagination number-pagination">
+        <button
+          class="page-nav-btn"
+          type="button"
+          [disabled]="!canPrevClassPage"
+          (click)="previousClassPage()"
+        >
+          <mat-icon>chevron_left</mat-icon>
+        </button>
+
+        <button
+          class="page-number-btn"
+          type="button"
+          *ngFor="let pageNumber of classPages"
+          [class.active]="pageNumber === currentClassPage"
+          (click)="setClassPage(pageNumber)"
+        >
+          {{ pageNumber }}
+        </button>
+
+        <button
+          class="page-nav-btn"
+          type="button"
+          [disabled]="!canNextClassPage"
+          (click)="nextClassPage()"
+        >
+          <mat-icon>chevron_right</mat-icon>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <ng-template #subClassesView>
+    <div class="subtab-content">
+      <div class="subtab-form">
+        <label class="field select-field">
+          <select [(ngModel)]="selectedClassId">
+            <option value="">Choisir la classe</option>
+            <option *ngFor="let classOption of classOptions" [value]="classOption.id">
+              {{ classOption.label }}
+            </option>
+          </select>
+        </label>
+
+        <label class="field wide-field">
+          <input type="text" placeholder="Sous-classe" [(ngModel)]="subClassName" />
+        </label>
+
+        <button
+          mat-flat-button
+          class="primary-btn"
+          type="button"
+          [disabled]="!isSubClassFormValid"
+          (click)="submitSubClass()"
+        >
+          {{ isEditingSubClass ? 'Modifier' : 'Créer' }}
+        </button>
+
+        <button
+          *ngIf="isEditingSubClass"
+          mat-stroked-button
+          type="button"
+          (click)="cancelEdition()"
+        >
+          Annuler
+        </button>
+      </div>
+
+      <div class="table-wrapper">
+        <table class="resources-table subclasses-table">
+          <thead>
+            <tr>
+              <th>Sous-classes</th>
+              <th>Classes</th>
+              <th>Semestre en cours</th>
+              <th>État</th>
+              <th class="actions-header">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let item of pagedSubClassItems">
+              <td class="year-cell">{{ item.subClassName }}</td>
+              <td class="meta-muted">{{ item.className }}</td>
+              <td>
+                <span class="semester-badge">{{ item.currentSemesterLabel }}</span>
+              </td>
+              <td>
+                <span class="status-pill active">{{ item.status }}</span>
+              </td>
+              <td class="actions-cell">
+                <button
+                  class="icon-btn menu"
+                  type="button"
+                  aria-label="Options"
+                  (click)="$event.stopPropagation(); toggleSubClassActionMenu(item.id)"
+                >
+                  <mat-icon>more_vert</mat-icon>
+                </button>
+                <div
+                  class="actions-menu"
+                  *ngIf="openSubClassActionId === item.id"
+                  (click)="$event.stopPropagation()"
+                >
+                  <button type="button" (click)="editSubClass(item)">Modifier</button>
+                  <button type="button" (click)="deleteSubClass(item.id)">Supprimer</button>
+                </div>
+              </td>
+            </tr>
+            <tr *ngIf="pagedSubClassItems.length === 0">
+              <td colspan="5" class="empty-state">Aucune sous-classe disponible.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="table-footer">
+        <div class="page-size-control">
+          <span>Éléments / page</span>
+          <label class="page-size-select">
+            <select [ngModel]="subClassPageSize" (ngModelChange)="setSubClassPageSize($event)">
+              <option *ngFor="let size of [5, 10, 15]" [value]="size">{{ size }}</option>
+            </select>
+          </label>
+        </div>
+
+        <div class="pagination number-pagination">
+          <button
+            class="page-nav-btn"
+            type="button"
+            [disabled]="!canPrevSubClassPage"
+            (click)="previousSubClassPage()"
+          >
+            <mat-icon>chevron_left</mat-icon>
+          </button>
+
+          <button
+            class="page-number-btn"
+            type="button"
+            *ngFor="let pageNumber of subClassPages"
+            [class.active]="pageNumber === currentSubClassPage"
+            (click)="setSubClassPage(pageNumber)"
+          >
+            {{ pageNumber }}
+          </button>
+
+          <button
+            class="page-nav-btn"
+            type="button"
+            [disabled]="!canNextSubClassPage"
+            (click)="nextSubClassPage()"
+          >
+            <mat-icon>chevron_right</mat-icon>
+          </button>
+        </div>
+      </div>
+    </div>
+  </ng-template>
+</div>

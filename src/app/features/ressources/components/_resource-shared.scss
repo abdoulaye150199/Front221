@@ -53,7 +53,7 @@
   align-items: center;
   gap: 1rem;
   flex-wrap: wrap;
-  padding: 0.75rem 0.85rem;
+  padding: 0.85rem 1rem;
   border: 1px solid #e6ebf1;
   border-radius: 18px;
   background: #fbfcfe;
@@ -73,23 +73,27 @@
   display: flex;
   align-items: center;
   gap: 0.75rem;
-  min-height: 44px;
-  padding: 0 0.85rem;
+  min-height: 46px;
+  padding: 0 0.95rem;
   border: 1px solid #e3e8ef;
   border-radius: 14px;
   background: #fff;
   box-shadow: 0 6px 16px rgba(15, 23, 42, 0.03);
+  transition: border-color 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+  min-width: 0;
+  width: 100%;
 }
 
 .field {
-  flex: 1 1 220px;
+  flex: 1 1 240px;
   min-width: 180px;
+  max-width: 100%;
 }
 
 .search-box {
-  flex: 1 1 300px;
-  min-width: 240px;
-  max-width: 460px;
+  flex: 1 1 280px;
+  min-width: 220px;
+  max-width: 100%;
   color: #7a8190;
 }
 
@@ -97,12 +101,12 @@
 .field select,
 .search-box input {
   width: 100%;
+  min-width: 0;
   border: none;
   outline: none;
   background: transparent;
   color: #182230;
-  font-size: 0.88rem;
-  font-weight: 500;
+  font-size: 0.95rem;
 }
 
 .field input::placeholder,

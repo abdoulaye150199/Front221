@@ -1,0 +1,101 @@
+@import '../_resource-shared';
+
+// Override the flex layout from shared styles with a proper grid
+:host .subtab-form {
+  display: grid !important;
+  grid-template-columns: 1fr 1fr 1fr auto;
+  grid-auto-rows: auto;
+  gap: 0 1rem;
+  align-items: start;
+  flex-wrap: unset !important;
+  flex-direction: unset !important;
+}
+
+// Field groups should not expand vertically
+.field-group {
+  display: grid;
+  gap: 0.35rem;
+}
+
+// Style the input fields
+.field-group .field {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  height: 44px;
+  padding: 0 1rem 0 0.85rem;
+  border: 1px solid #e3e8ef;
+  border-radius: 14px;
+  background: #fff;
+  box-shadow: 0 6px 16px rgba(15, 23, 42, 0.03);
+}
+
+.field-group .field input {
+  flex: 1 1 auto;
+  width: 100%;
+  min-width: 0;
+  border: none;
+  outline: none;
+  background: transparent;
+  color: #182230;
+  font-size: 0.88rem;
+  font-weight: 500;
+  padding-right: 0;
+}
+
+.field-group .field input::placeholder {
+  color: #98a1b3;
+}
+
+.field-group .field-error {
+  margin: 0;
+  color: #b42318;
+  font-size: 0.76rem;
+  font-weight: 600;
+}
+
+
+// Button styling
+:host .subtab-form .subtab-submit {
+  grid-column: 4;
+  grid-row: 1;
+  min-width: 112px;
+  height: 44px;
+  align-self: center;
+}
+
+.field.invalid {
+  border-color: #f04438;
+  box-shadow: 0 0 0 3px rgba(240, 68, 56, 0.08);
+}
+
+.date-field mat-icon {
+  flex: 0 0 auto;
+  color: #9aa3b2;
+  font-size: 18px;
+  width: 18px;
+  height: 18px;
+}
+
+.date-field input {
+  flex: 1 1 auto;
+  color: #182230;
+}
+
+.date-field input::placeholder {
+  letter-spacing: 0.02em;
+}
+
+@media (max-width: 900px) {
+  :host .subtab-form {
+    grid-template-columns: 1fr;
+    gap: 0.8rem;
+    padding: 0.85rem !important;
+  }
+
+  :host .subtab-form .subtab-submit {
+    width: 100%;
+    justify-self: stretch;
+    margin-left: 0;
+  }
+}

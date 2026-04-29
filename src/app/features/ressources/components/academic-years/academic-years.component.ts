@@ -1,14 +1,14 @@
 import { Component, Input } from '@angular/core';
-import { FORM_ACTION_IMPORTS } from '../../../shared/imports/standalone-imports';
-import { ListPageBase } from '../../../shared/components/base/list-page.base';
+import { FORM_ACTION_IMPORTS } from '@shared/imports/standalone-imports';
+import { ListPageBase } from '@shared/components/base/list-page.base';
 import {
   isAcademicYearFormValid,
   normalizeAcademicDateInput,
   type AcademicYearValidationErrors,
   validateAcademicYearForm,
-} from '../../../shared/validation';
-import { AcademicYear, AcademicYearForm, AcademicYearStatus } from '../models';
-import { AcademicYearService } from '../services';
+} from '@shared/validation';
+import { AcademicYear, AcademicYearForm, AcademicYearStatus } from '../../models';
+import { AcademicYearService } from '../../services';
 
 @Component({
   selector: 'app-academic-years',

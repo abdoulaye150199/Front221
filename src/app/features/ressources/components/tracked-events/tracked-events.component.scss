@@ -1,0 +1,38 @@
+@import '../_resource-shared';
+
+:host .subtab-form .field,
+:host .subtab-form .search-box {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 0.75rem !important;
+  min-height: 46px !important;
+  padding: 0 0.95rem !important;
+  border: 1px solid #e3e8ef !important;
+  border-radius: 14px !important;
+  background: #fff !important;
+  box-shadow: 0 6px 16px rgba(15, 23, 42, 0.03) !important;
+  min-width: 0 !important;
+  width: 100% !important;
+}
+
+:host .subtab-form .field input,
+:host .subtab-form .field select,
+:host .subtab-form .search-box input {
+  width: 100% !important;
+  min-width: 0 !important;
+  border: none !important;
+  outline: none !important;
+  background: transparent !important;
+  color: #182230 !important;
+  font-size: 0.95rem !important;
+}
+
+:host .subtab-form .field.select-field::after {
+  content: 'expand_more' !important;
+  font-family: 'Material Icons' !important;
+  font-size: 1.15rem !important;
+  color: #8a93a3 !important;
+  position: absolute !important;
+  right: 1rem !important;
+  pointer-events: none !important;
+}
