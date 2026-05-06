@@ -5,6 +5,7 @@ import { provideHttpClient, withFetch, withInterceptors } from '@angular/common/
 import { routes } from './app.routes';
 import { provideClientHydration, withEventReplay } from '@angular/platform-browser';
 import { errorInterceptor } from './core/interceptors/error-interceptor';
+import { jwtHttpInterceptor } from './core/interceptors/jwt-http.interceptor';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -12,7 +13,7 @@ export const appConfig: ApplicationConfig = {
     provideRouter(routes),
     provideHttpClient(
       withFetch(),
-      withInterceptors([errorInterceptor])
+      withInterceptors([jwtHttpInterceptor, errorInterceptor])
     ),
     provideClientHydration(withEventReplay())
   ]

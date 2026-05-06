@@ -1,8 +1,8 @@
-import { Component } from '@angular/core';
+import { Component, OnDestroy } from '@angular/core';
 import { FormControl, FormGroup, NonNullableFormBuilder, Validators } from '@angular/forms';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { Router } from '@angular/router';
-import { finalize } from 'rxjs';
+import { Subject, finalize, takeUntil } from 'rxjs';
 import { AUTH_ERROR_MESSAGES } from '../../../shared/errors';
 import { AUTH_VALIDATION_RULES } from '../../../shared/validation';
 import { AuthService } from '../../../core/services/auth.service';
@@ -33,7 +33,8 @@ interface LoginIconsViewModel {
   templateUrl: './login.html',
   styleUrls: ['./login.scss'],
 })
-export class LoginComponent {
+export class LoginComponent implements OnDestroy {
+  private readonly destroy$ = new Subject<void>();
   readonly validationMessages = AUTH_ERROR_MESSAGES;
   readonly icons: LoginIconsViewModel;
   readonly loginForm: FormGroup<LoginFormModel>;
@@ -114,7 +115,10 @@ export class LoginComponent {
 
     this.authService
       .login(credentials.phoneOrEmail, credentials.password)
-      .pipe(finalize(() => (this.isLoading = false)))
+      .pipe(
+        finalize(() => (this.isLoading = false)),
+        takeUntil(this.destroy$)
+      )
       .subscribe({
         next: (response) => {
           if (response.success) {
@@ -130,17 +134,24 @@ export class LoginComponent {
       });
   }
 
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
+
   private createSafeIcons(): LoginIconsViewModel {
+    const createSafeIcon = (svg: string) => this.sanitizer.bypassSecurityTrustHtml(svg);
+
     return {
-      google: this.sanitizer.bypassSecurityTrustHtml(LOGIN_ICONS.google),
-      email: this.sanitizer.bypassSecurityTrustHtml(LOGIN_ICONS.email),
-      password: this.sanitizer.bypassSecurityTrustHtml(LOGIN_ICONS.password),
-      passwordEye: this.sanitizer.bypassSecurityTrustHtml(LOGIN_ICONS.passwordEye),
-      error: this.sanitizer.bypassSecurityTrustHtml(LOGIN_ICONS.error),
+      google: createSafeIcon(LOGIN_ICONS.google),
+      email: createSafeIcon(LOGIN_ICONS.email),
+      password: createSafeIcon(LOGIN_ICONS.password),
+      passwordEye: createSafeIcon(LOGIN_ICONS.passwordEye),
+      error: createSafeIcon(LOGIN_ICONS.error),
       features: {
-        secure: this.sanitizer.bypassSecurityTrustHtml(LOGIN_ICONS.features.secure),
-        tracking: this.sanitizer.bypassSecurityTrustHtml(LOGIN_ICONS.features.tracking),
-        dashboard: this.sanitizer.bypassSecurityTrustHtml(LOGIN_ICONS.features.dashboard),
+        secure: createSafeIcon(LOGIN_ICONS.features.secure),
+        tracking: createSafeIcon(LOGIN_ICONS.features.tracking),
+        dashboard: createSafeIcon(LOGIN_ICONS.features.dashboard),
       },
     };
   }

@@ -1989,7 +1989,8 @@
         "lastName": "Diallo",
         "email": "admin@ecole221.sn",
         "phone": "+221771234567",
-        "password": "Admin@123",
+        "passwordHash": "QWRtaW5AMTIzZWNvbGUyMjE=",
+        "salt": "ecole221",
         "role": "Administrateur",
         "userInitial": "A",
         "createdAt": "2024-01-01T00:00:00Z"

@@ -9,6 +9,7 @@ import {
   SubClassCatalogItem,
 } from '../../models';
 import { ClassStructureService } from '../../services/class-structure.service';
+import { ClassFormService } from '../../services/class-form.service';
 import { PaginatedFormState } from '@shared/utils/pagination.utils';
 
 @Component({
@@ -330,3 +331,4 @@ export class ClassStructureComponent {
     return index;
   }
 }
+
