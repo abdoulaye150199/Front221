@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { FORM_ACTION_IMPORTS } from '../../shared/imports/standalone-imports';
 import { CourseService, Course, CourseFilters } from './services/course.service';
-import { calculateTotalPages, calculateStartIndex, calculateEndIndex } from '../../shared/utils';
+import { createPaginationHandler } from '../../shared/utils';
 
 @Component({
   selector: 'app-cours',
@@ -26,6 +26,13 @@ export class CoursComponent {
   selectedSemestre = 'tous';
 
   private allCourses: Course[] = [];
+
+  private pagination = createPaginationHandler(
+    () => this.filteredCourses.length,
+    () => this.pageSize,
+    () => this.page,
+    (page) => { this.page = page; }
+  );
 
   constructor(private courseService: CourseService) {
     const options = this.courseService.getFilterOptions();
@@ -66,11 +73,11 @@ export class CoursComponent {
   }
 
   get totalPages(): number {
-    return calculateTotalPages(this.totalResults, this.pageSize);
+    return this.pagination.totalPages;
   }
 
   get currentPage(): number {
-    return Math.min(this.page, this.totalPages);
+    return this.page;
   }
 
   get pagedCourses(): Course[] {
@@ -79,30 +86,30 @@ export class CoursComponent {
   }
 
   get startIndex(): number {
-    return calculateStartIndex(this.totalResults, this.currentPage, this.pageSize);
+    return this.totalResults === 0 ? 0 : (this.currentPage - 1) * this.pageSize + 1;
   }
 
   get endIndex(): number {
-    return calculateEndIndex(this.currentPage, this.pageSize, this.totalResults);
+    return this.totalResults === 0 ? 0 : Math.min(this.currentPage * this.pageSize, this.totalResults);
   }
 
   get canPrev(): boolean {
-    return this.currentPage > 1;
+    return this.pagination.canPrev;
   }
 
   get canNext(): boolean {
-    return this.currentPage < this.totalPages;
+    return this.pagination.canNext;
   }
 
   previousPage(): void {
-    if (this.canPrev) {
-      this.page -= 1;
-    }
+    this.pagination.previousPage();
   }
 
   nextPage(): void {
-    if (this.canNext) {
-      this.page += 1;
-    }
+    this.pagination.nextPage();
+  }
+
+  setPage(page: number): void {
+    this.pagination.setPage(page);
   }
 }

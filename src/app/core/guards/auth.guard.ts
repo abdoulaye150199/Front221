@@ -8,7 +8,6 @@ export const authGuard: CanActivateFn = () => {
   const router = inject(Router);
   const platformId = inject(PLATFORM_ID);
 
-  // During SSR, localStorage is unavailable, so auth state cannot be restored yet.
   if (!isPlatformBrowser(platformId)) {
     return true;
   }

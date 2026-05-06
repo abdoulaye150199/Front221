@@ -1468,6 +1468,36 @@
         "Semestre 2",
         "Session intensive"
       ],
+      "parameterTabs": [
+        "Événements",
+        "Civilité",
+        "Salles",
+        "Documents",
+        "Horaires"
+      ],
+      "parameterLevelOptions": [
+        "Licence",
+        "Licence 1",
+        "Licence 2",
+        "Licence 3",
+        "Master 1",
+        "Master 2"
+      ],
+      "parameterSemesterOptions": [
+        "Semestre 1",
+        "Semestre 2"
+      ],
+      "parameterRoomCapacityOptions": [
+        20,
+        30,
+        40,
+        50,
+        60
+      ],
+      "parameterDocumentTypeOptions": [
+        "A ramener",
+        "A retirer"
+      ],
       "pageSizeOptions": [
         5,
         10,
@@ -1734,6 +1764,108 @@
           "status": "Terminé"
         }
       ],
+      "parameterEventItems": [
+        {
+          "id": "1",
+          "level": "Licence",
+          "semester": "Semestre 1",
+          "name": "Ouverture des classe",
+          "status": "En cours"
+        },
+        {
+          "id": "2",
+          "level": "Licence",
+          "semester": "Semestre 1",
+          "name": "Période de devoir surveillé No 1",
+          "status": "En attente"
+        },
+        {
+          "id": "3",
+          "level": "Licence",
+          "semester": "Semestre 1",
+          "name": "Période de devoir surveillé No 2",
+          "status": "En attente"
+        }
+      ],
+      "parameterCivilities": [
+        {
+          "id": "1",
+          "label": "Mme",
+          "status": "Actif"
+        },
+        {
+          "id": "2",
+          "label": "Mlle",
+          "status": "Actif"
+        },
+        {
+          "id": "3",
+          "label": "Mr",
+          "status": "Actif"
+        }
+      ],
+      "parameterRooms": [
+        {
+          "id": "1",
+          "code": "S-NM3",
+          "name": "Salle Nelson Mandela",
+          "capacity": 30,
+          "status": "Disponible"
+        },
+        {
+          "id": "2",
+          "code": "S-AE3",
+          "name": "Salle Albert Einstein",
+          "capacity": 50,
+          "status": "Indisponible"
+        }
+      ],
+      "parameterDocuments": [
+        {
+          "id": "1",
+          "label": "Extrait de naissance",
+          "levelNames": [
+            "Licence 1",
+            "Master 1",
+            "Master 2"
+          ],
+          "type": "A ramener",
+          "status": "Disponible"
+        },
+        {
+          "id": "2",
+          "label": "Relevé de notes",
+          "levelNames": [
+            "Licence 3",
+            "Master 1",
+            "Master 2"
+          ],
+          "type": "A retirer",
+          "status": "Indisponible"
+        }
+      ],
+      "parameterSchedules": [
+        {
+          "id": "1",
+          "label": "En Présentiel",
+          "levelNames": [
+            "Licence 1",
+            "Master 1",
+            "Master 2"
+          ],
+          "status": "Disponible"
+        },
+        {
+          "id": "2",
+          "label": "En Ligne",
+          "levelNames": [
+            "Licence 3",
+            "Master 1",
+            "Master 2"
+          ],
+          "status": "Indisponible"
+        }
+      ],
       "specialityCatalogItems": [
         {
           "id": "1",
@@ -1865,4 +1997,3 @@
     ]
   }
 }
-

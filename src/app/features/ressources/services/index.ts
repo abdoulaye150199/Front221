@@ -4,3 +4,4 @@ export * from './tracked-event.service';
 export * from './general-calendar.service';
 export * from './speciality-catalog.service';
 export * from './ue-module.service';
+export * from './parameter-settings.service';

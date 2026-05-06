@@ -91,6 +91,12 @@
       </div>
     </div>
 
+    <div class="tab-content" *ngIf="isParameterMainTab">
+      <div class="subtab-content">
+        <app-parameter-settings></app-parameter-settings>
+      </div>
+    </div>
+
     <div class="tab-content placeholder" *ngIf="isPlaceholderMainTab">
       <div class="placeholder-card">
         <div class="placeholder-icon">

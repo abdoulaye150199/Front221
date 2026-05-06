@@ -1,0 +1,202 @@
+@use '../resource-shared' as *;
+
+.parameter-settings {
+  display: block;
+}
+
+// Tabs styling - cohérent avec les autres composants
+.parameter-tabs {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  flex-wrap: wrap;
+  padding: 0.45rem;
+  border-radius: 999px;
+  background: #f7f9fc;
+  border: 1px solid #e8edf4;
+  margin-bottom: 1rem;
+}
+
+.parameter-tabs .sub-tab {
+  border: none;
+  min-height: 40px;
+  min-width: 140px;
+  padding: 0.65rem 1rem;
+  border-radius: 999px;
+  background: transparent;
+  color: #475467;
+  font-size: 0.84rem;
+  font-weight: 700;
+  text-align: left;
+  justify-content: flex-start;
+  cursor: pointer;
+  transition: all 0.18s ease;
+
+  &:hover {
+    background: #eef2f7;
+    color: #344054;
+  }
+
+  &.active {
+    background: #c84521;
+    color: #fff;
+    box-shadow: 0 10px 20px rgba(168, 45, 20, 0.18);
+  }
+}
+
+// Formulaires et champs
+.subtab-form {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+  padding: 0.85rem 1rem;
+  border: 1px solid #e6ebf1;
+  border-radius: 18px;
+  background: #fbfcfe;
+  margin-bottom: 1.2rem;
+}
+
+.field {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  min-height: 46px;
+  padding: 0 0.95rem;
+  border: 1px solid #e3e8ef;
+  border-radius: 14px;
+  background: #fff;
+  box-shadow: 0 6px 16px rgba(15, 23, 42, 0.03);
+  flex: 1 1 240px;
+  transition: border-color 0.18s ease, box-shadow 0.18s ease;
+
+  &:hover {
+    border-color: #d0d9e8;
+  }
+
+  &:focus-within {
+    border-color: #c84521;
+    box-shadow: 0 8px 20px rgba(200, 69, 33, 0.12);
+  }
+}
+
+.compact-field {
+  flex: 0 0 140px;
+}
+
+.medium-field {
+  flex: 0 1 260px;
+}
+
+.wide-field {
+  flex: 1.2 1 280px;
+}
+
+// Tableau
+.parameter-table {
+  min-width: 840px;
+}
+
+// Tags et badges
+.level-tags {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  flex-wrap: wrap;
+}
+
+.level-tag {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 26px;
+  padding: 0.2rem 0.65rem;
+  border-radius: 999px;
+  background: #eef2ff;
+  color: #4f46e5;
+  font-size: 0.74rem;
+  font-weight: 700;
+  white-space: nowrap;
+  transition: all 0.18s ease;
+
+  &:hover {
+    background: #e0e7ff;
+    transform: translateY(-1px);
+  }
+}
+
+.document-tag {
+  display: inline-flex;
+  align-items: center;
+  min-height: 26px;
+  padding: 0.22rem 0.68rem;
+  border-radius: 999px;
+  font-size: 0.74rem;
+  font-weight: 700;
+  white-space: nowrap;
+  transition: all 0.18s ease;
+}
+
+.document-tag--provide {
+  background: #eef2ff;
+  color: #4f46e5;
+
+  &:hover {
+    background: #e0e7ff;
+  }
+}
+
+.document-tag--withdraw {
+  background: #fef3c7;
+  color: #b45309;
+
+  &:hover {
+    background: #fde68a;
+  }
+}
+
+// Status pills
+:host ::ng-deep .status-pill.danger,
+.status-pill.danger {
+  background: #fee2e2;
+  color: #dc2626;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.3rem 0.8rem;
+  border-radius: 10px;
+  font-size: 0.78rem;
+  font-weight: 700;
+  transition: all 0.18s ease;
+}
+
+// Responsive design
+@media (max-width: 900px) {
+  .parameter-tabs {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .parameter-tabs .sub-tab {
+    min-width: 0;
+    flex: 1 1 auto;
+    justify-content: center;
+  }
+
+  .subtab-form {
+    flex-direction: column;
+    gap: 0.8rem;
+  }
+
+  .field,
+  .compact-field,
+  .medium-field,
+  .wide-field {
+    min-width: 0;
+    flex: 1 1 100%;
+  }
+
+  .parameter-table {
+    min-width: 760px;
+  }
+}

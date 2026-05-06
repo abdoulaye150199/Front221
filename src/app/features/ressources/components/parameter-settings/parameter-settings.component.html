@@ -1,0 +1,576 @@
+<div class="parameter-settings">
+  <div class="sub-tabs parameter-tabs">
+    <button
+      class="sub-tab"
+      type="button"
+      *ngFor="let tab of tabs; let i = index"
+      [class.active]="activeTabIndex === i"
+      (click)="setActiveTab(i)"
+    >
+      {{ tab }}
+    </button>
+  </div>
+
+  <div class="subtab-content" *ngIf="isEventsTab">
+    <div class="subtab-form">
+      <label class="field select-field">
+        <select [(ngModel)]="eventForm.level">
+          <option value="">Choisir le niveau</option>
+          <option *ngFor="let level of levelOptions" [value]="level">{{ level }}</option>
+        </select>
+      </label>
+
+      <label class="field select-field">
+        <select [(ngModel)]="eventForm.semester">
+          <option value="">Choisir le semestre</option>
+          <option *ngFor="let semester of semesterOptions" [value]="semester">{{ semester }}</option>
+        </select>
+      </label>
+
+      <label class="field wide-field">
+        <input type="text" placeholder="Événement" [(ngModel)]="eventForm.name" />
+      </label>
+
+      <button
+        mat-flat-button
+        class="primary-btn"
+        type="button"
+        [disabled]="!isEventFormValid"
+        (click)="submitEvent()"
+      >
+        {{ editingEventId ? 'Modifier' : 'Créer' }}
+      </button>
+
+      <button
+        *ngIf="editingEventId"
+        mat-stroked-button
+        type="button"
+        (click)="cancelEventEdition()"
+      >
+        Annuler
+      </button>
+    </div>
+
+    <div class="table-wrapper">
+      <table class="resources-table parameter-table">
+        <thead>
+          <tr>
+            <th>Niveau</th>
+            <th>Semestre</th>
+            <th>Événements</th>
+            <th>État</th>
+            <th class="actions-header">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let item of pagedEventItems; trackBy: trackById">
+            <td class="meta-muted">{{ item.level }}</td>
+            <td class="meta-muted">{{ item.semester }}</td>
+            <td class="year-cell">{{ item.name }}</td>
+            <td>
+              <span [ngClass]="['status-pill', getStatusClass(item.status)]">{{ item.status }}</span>
+            </td>
+            <td class="actions-cell">
+              <button
+                class="icon-btn menu"
+                type="button"
+                aria-label="Options"
+                (click)="$event.stopPropagation(); toggleEventActionMenu(item.id)"
+              >
+                <mat-icon>more_vert</mat-icon>
+              </button>
+              <div
+                class="actions-menu"
+                *ngIf="openEventActionId === item.id"
+                (click)="$event.stopPropagation()"
+              >
+                <button type="button" (click)="editEvent(item)">Modifier</button>
+                <button type="button" (click)="deleteEvent(item.id)">Supprimer</button>
+              </div>
+            </td>
+          </tr>
+          <tr *ngIf="pagedEventItems.length === 0">
+            <td colspan="5" class="empty-state">Aucun événement disponible.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="table-footer">
+      <div class="page-size-control">
+        <span>Éléments / page</span>
+        <label class="page-size-select">
+          <select [ngModel]="eventPageSize" (ngModelChange)="setEventPageSize($event)">
+            <option *ngFor="let size of pageSizeOptions" [value]="size">{{ size }}</option>
+          </select>
+        </label>
+      </div>
+
+      <div class="pagination number-pagination">
+        <button class="page-nav-btn" type="button" [disabled]="!canPrevEventPage" (click)="previousEventPage()">
+          <mat-icon>chevron_left</mat-icon>
+        </button>
+
+        <button
+          class="page-number-btn"
+          type="button"
+          *ngFor="let pageNumber of eventPages"
+          [class.active]="pageNumber === currentEventPage"
+          (click)="setEventPage(pageNumber)"
+        >
+          {{ pageNumber }}
+        </button>
+
+        <button class="page-nav-btn" type="button" [disabled]="!canNextEventPage" (click)="nextEventPage()">
+          <mat-icon>chevron_right</mat-icon>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div class="subtab-content" *ngIf="isCivilitiesTab">
+    <div class="subtab-form">
+      <label class="field medium-field">
+        <input type="text" placeholder="Civilité..." [(ngModel)]="civilityLabel" />
+      </label>
+
+      <button
+        mat-flat-button
+        class="primary-btn"
+        type="button"
+        [disabled]="!isCivilityFormValid"
+        (click)="submitCivility()"
+      >
+        {{ editingCivilityId ? 'Modifier' : 'Créer' }}
+      </button>
+
+      <button
+        *ngIf="editingCivilityId"
+        mat-stroked-button
+        type="button"
+        (click)="cancelCivilityEdition()"
+      >
+        Annuler
+      </button>
+    </div>
+
+    <div class="table-wrapper">
+      <table class="resources-table parameter-table">
+        <thead>
+          <tr>
+            <th>Civilité</th>
+            <th>Statut</th>
+            <th class="actions-header">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let item of pagedCivilityItems; trackBy: trackById">
+            <td class="year-cell">{{ item.label }}</td>
+            <td>
+              <span [ngClass]="['status-pill', getStatusClass(item.status)]">{{ item.status }}</span>
+            </td>
+            <td class="actions-cell">
+              <button
+                class="icon-btn menu"
+                type="button"
+                aria-label="Options"
+                (click)="$event.stopPropagation(); toggleCivilityActionMenu(item.id)"
+              >
+                <mat-icon>more_vert</mat-icon>
+              </button>
+              <div
+                class="actions-menu"
+                *ngIf="openCivilityActionId === item.id"
+                (click)="$event.stopPropagation()"
+              >
+                <button type="button" (click)="editCivility(item)">Modifier</button>
+                <button type="button" (click)="deleteCivility(item.id)">Supprimer</button>
+              </div>
+            </td>
+          </tr>
+          <tr *ngIf="pagedCivilityItems.length === 0">
+            <td colspan="3" class="empty-state">Aucune civilité disponible.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="table-footer">
+      <div class="page-size-control">
+        <span>Éléments / page</span>
+        <label class="page-size-select">
+          <select [ngModel]="civilityPageSize" (ngModelChange)="setCivilityPageSize($event)">
+            <option *ngFor="let size of pageSizeOptions" [value]="size">{{ size }}</option>
+          </select>
+        </label>
+      </div>
+
+      <div class="pagination number-pagination">
+        <button class="page-nav-btn" type="button" [disabled]="!canPrevCivilityPage" (click)="previousCivilityPage()">
+          <mat-icon>chevron_left</mat-icon>
+        </button>
+
+        <button
+          class="page-number-btn"
+          type="button"
+          *ngFor="let pageNumber of civilityPages"
+          [class.active]="pageNumber === currentCivilityPage"
+          (click)="setCivilityPage(pageNumber)"
+        >
+          {{ pageNumber }}
+        </button>
+
+        <button class="page-nav-btn" type="button" [disabled]="!canNextCivilityPage" (click)="nextCivilityPage()">
+          <mat-icon>chevron_right</mat-icon>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div class="subtab-content" *ngIf="isRoomsTab">
+    <div class="subtab-form">
+      <label class="field compact-field">
+        <input type="text" placeholder="Numéro" [(ngModel)]="roomForm.code" />
+      </label>
+
+      <label class="field wide-field">
+        <input type="text" placeholder="Nom de la salle" [(ngModel)]="roomForm.name" />
+      </label>
+
+      <label class="field select-field compact-field">
+        <select [ngModel]="roomForm.capacity" (ngModelChange)="setRoomCapacity($event)">
+          <option *ngFor="let capacity of roomCapacityOptions" [value]="capacity">{{ capacity }}</option>
+        </select>
+      </label>
+
+      <button
+        mat-flat-button
+        class="primary-btn"
+        type="button"
+        [disabled]="!isRoomFormValid"
+        (click)="submitRoom()"
+      >
+        {{ editingRoomId ? 'Modifier' : 'Créer' }}
+      </button>
+
+      <button
+        *ngIf="editingRoomId"
+        mat-stroked-button
+        type="button"
+        (click)="cancelRoomEdition()"
+      >
+        Annuler
+      </button>
+    </div>
+
+    <div class="table-wrapper">
+      <table class="resources-table parameter-table">
+        <thead>
+          <tr>
+            <th>Numéro</th>
+            <th>Nom de la salle</th>
+            <th>Nombre de places</th>
+            <th>État</th>
+            <th class="actions-header">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let item of pagedRoomItems; trackBy: trackById">
+            <td class="meta-muted">{{ item.code }}</td>
+            <td class="year-cell">{{ item.name }}</td>
+            <td class="metric">{{ item.capacity }}</td>
+            <td>
+              <span [ngClass]="['status-pill', getStatusClass(item.status)]">{{ item.status }}</span>
+            </td>
+            <td class="actions-cell">
+              <button
+                class="icon-btn menu"
+                type="button"
+                aria-label="Options"
+                (click)="$event.stopPropagation(); toggleRoomActionMenu(item.id)"
+              >
+                <mat-icon>more_vert</mat-icon>
+              </button>
+              <div
+                class="actions-menu"
+                *ngIf="openRoomActionId === item.id"
+                (click)="$event.stopPropagation()"
+              >
+                <button type="button" (click)="editRoom(item)">Modifier</button>
+                <button type="button" (click)="deleteRoom(item.id)">Supprimer</button>
+              </div>
+            </td>
+          </tr>
+          <tr *ngIf="pagedRoomItems.length === 0">
+            <td colspan="5" class="empty-state">Aucune salle disponible.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="table-footer">
+      <div class="page-size-control">
+        <span>Éléments / page</span>
+        <label class="page-size-select">
+          <select [ngModel]="roomPageSize" (ngModelChange)="setRoomPageSize($event)">
+            <option *ngFor="let size of pageSizeOptions" [value]="size">{{ size }}</option>
+          </select>
+        </label>
+      </div>
+
+      <div class="pagination number-pagination">
+        <button class="page-nav-btn" type="button" [disabled]="!canPrevRoomPage" (click)="previousRoomPage()">
+          <mat-icon>chevron_left</mat-icon>
+        </button>
+
+        <button
+          class="page-number-btn"
+          type="button"
+          *ngFor="let pageNumber of roomPages"
+          [class.active]="pageNumber === currentRoomPage"
+          (click)="setRoomPage(pageNumber)"
+        >
+          {{ pageNumber }}
+        </button>
+
+        <button class="page-nav-btn" type="button" [disabled]="!canNextRoomPage" (click)="nextRoomPage()">
+          <mat-icon>chevron_right</mat-icon>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div class="subtab-content" *ngIf="isDocumentsTab">
+    <div class="subtab-form">
+      <label class="field wide-field">
+        <input type="text" placeholder="libellé documents" [(ngModel)]="documentForm.label" />
+      </label>
+
+      <label class="field select-field">
+        <select [(ngModel)]="documentForm.levelName">
+          <option value="">Choisir le Niveau</option>
+          <option *ngFor="let level of levelOptions" [value]="level">{{ level }}</option>
+        </select>
+      </label>
+
+      <label class="field select-field compact-field">
+        <select [(ngModel)]="documentForm.type">
+          <option *ngFor="let type of documentTypeOptions" [value]="type">{{ type }}</option>
+        </select>
+      </label>
+
+      <button
+        mat-flat-button
+        class="primary-btn"
+        type="button"
+        [disabled]="!isDocumentFormValid"
+        (click)="submitDocument()"
+      >
+        {{ editingDocumentId ? 'Modifier' : 'Créer' }}
+      </button>
+
+      <button
+        *ngIf="editingDocumentId"
+        mat-stroked-button
+        type="button"
+        (click)="cancelDocumentEdition()"
+      >
+        Annuler
+      </button>
+    </div>
+
+    <div class="table-wrapper">
+      <table class="resources-table parameter-table">
+        <thead>
+          <tr>
+            <th>Documents</th>
+            <th>Niveau</th>
+            <th>Type documents</th>
+            <th>État</th>
+            <th class="actions-header">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let item of pagedDocumentItems; trackBy: trackById">
+            <td class="year-cell">{{ item.label }}</td>
+            <td>
+              <div class="level-tags">
+                <span class="level-tag" *ngFor="let level of item.levelNames">{{ level }}</span>
+              </div>
+            </td>
+            <td>
+              <span class="document-tag" [ngClass]="getDocumentTypeClass(item.type)">{{ item.type }}</span>
+            </td>
+            <td>
+              <span [ngClass]="['status-pill', getStatusClass(item.status)]">{{ item.status }}</span>
+            </td>
+            <td class="actions-cell">
+              <button
+                class="icon-btn menu"
+                type="button"
+                aria-label="Options"
+                (click)="$event.stopPropagation(); toggleDocumentActionMenu(item.id)"
+              >
+                <mat-icon>more_vert</mat-icon>
+              </button>
+              <div
+                class="actions-menu"
+                *ngIf="openDocumentActionId === item.id"
+                (click)="$event.stopPropagation()"
+              >
+                <button type="button" (click)="editDocument(item)">Modifier</button>
+                <button type="button" (click)="deleteDocument(item.id)">Supprimer</button>
+              </div>
+            </td>
+          </tr>
+          <tr *ngIf="pagedDocumentItems.length === 0">
+            <td colspan="5" class="empty-state">Aucun document disponible.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="table-footer">
+      <div class="page-size-control">
+        <span>Éléments / page</span>
+        <label class="page-size-select">
+          <select [ngModel]="documentPageSize" (ngModelChange)="setDocumentPageSize($event)">
+            <option *ngFor="let size of pageSizeOptions" [value]="size">{{ size }}</option>
+          </select>
+        </label>
+      </div>
+
+      <div class="pagination number-pagination">
+        <button class="page-nav-btn" type="button" [disabled]="!canPrevDocumentPage" (click)="previousDocumentPage()">
+          <mat-icon>chevron_left</mat-icon>
+        </button>
+
+        <button
+          class="page-number-btn"
+          type="button"
+          *ngFor="let pageNumber of documentPages"
+          [class.active]="pageNumber === currentDocumentPage"
+          (click)="setDocumentPage(pageNumber)"
+        >
+          {{ pageNumber }}
+        </button>
+
+        <button class="page-nav-btn" type="button" [disabled]="!canNextDocumentPage" (click)="nextDocumentPage()">
+          <mat-icon>chevron_right</mat-icon>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div class="subtab-content" *ngIf="isSchedulesTab">
+    <div class="subtab-form">
+      <label class="field medium-field">
+        <input type="text" placeholder="libellé horaire" [(ngModel)]="scheduleForm.label" />
+      </label>
+
+      <label class="field select-field">
+        <select [(ngModel)]="scheduleForm.levelName">
+          <option value="">Choisir le Niveau</option>
+          <option *ngFor="let level of levelOptions" [value]="level">{{ level }}</option>
+        </select>
+      </label>
+
+      <button
+        mat-flat-button
+        class="primary-btn"
+        type="button"
+        [disabled]="!isScheduleFormValid"
+        (click)="submitSchedule()"
+      >
+        {{ editingScheduleId ? 'Modifier' : 'Créer' }}
+      </button>
+
+      <button
+        *ngIf="editingScheduleId"
+        mat-stroked-button
+        type="button"
+        (click)="cancelScheduleEdition()"
+      >
+        Annuler
+      </button>
+    </div>
+
+    <div class="table-wrapper">
+      <table class="resources-table parameter-table">
+        <thead>
+          <tr>
+            <th>libellé horaire</th>
+            <th>Niveau</th>
+            <th>État</th>
+            <th class="actions-header">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let item of pagedScheduleItems; trackBy: trackById">
+            <td class="year-cell">{{ item.label }}</td>
+            <td>
+              <div class="level-tags">
+                <span class="level-tag" *ngFor="let level of item.levelNames">{{ level }}</span>
+              </div>
+            </td>
+            <td>
+              <span [ngClass]="['status-pill', getStatusClass(item.status)]">{{ item.status }}</span>
+            </td>
+            <td class="actions-cell">
+              <button
+                class="icon-btn menu"
+                type="button"
+                aria-label="Options"
+                (click)="$event.stopPropagation(); toggleScheduleActionMenu(item.id)"
+              >
+                <mat-icon>more_vert</mat-icon>
+              </button>
+              <div
+                class="actions-menu"
+                *ngIf="openScheduleActionId === item.id"
+                (click)="$event.stopPropagation()"
+              >
+                <button type="button" (click)="editSchedule(item)">Modifier</button>
+                <button type="button" (click)="deleteSchedule(item.id)">Supprimer</button>
+              </div>
+            </td>
+          </tr>
+          <tr *ngIf="pagedScheduleItems.length === 0">
+            <td colspan="4" class="empty-state">Aucun horaire disponible.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="table-footer">
+      <div class="page-size-control">
+        <span>Éléments / page</span>
+        <label class="page-size-select">
+          <select [ngModel]="schedulePageSize" (ngModelChange)="setSchedulePageSize($event)">
+            <option *ngFor="let size of pageSizeOptions" [value]="size">{{ size }}</option>
+          </select>
+        </label>
+      </div>
+
+      <div class="pagination number-pagination">
+        <button class="page-nav-btn" type="button" [disabled]="!canPrevSchedulePage" (click)="previousSchedulePage()">
+          <mat-icon>chevron_left</mat-icon>
+        </button>
+
+        <button
+          class="page-number-btn"
+          type="button"
+          *ngFor="let pageNumber of schedulePages"
+          [class.active]="pageNumber === currentSchedulePage"
+          (click)="setSchedulePage(pageNumber)"
+        >
+          {{ pageNumber }}
+        </button>
+
+        <button class="page-nav-btn" type="button" [disabled]="!canNextSchedulePage" (click)="nextSchedulePage()">
+          <mat-icon>chevron_right</mat-icon>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

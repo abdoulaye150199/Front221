@@ -1,4 +1,4 @@
-@import './components/resource-shared';
+@use './components/resource-shared' as *;
 
 .ressources {
   --resource-accent: #cf4e24;

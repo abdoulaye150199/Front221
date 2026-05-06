@@ -1,4 +1,5 @@
 import { parseAllowedNumberOption } from '../../validation';
+import { calculateTotalPages, calculateStartIndex, calculateEndIndex } from '../../utils';
 
 export abstract class ListPageBase<T> {
   searchTerm = '';
@@ -12,7 +13,7 @@ export abstract class ListPageBase<T> {
   }
 
   get totalPages(): number {
-    return Math.max(1, Math.ceil(this.totalResults / this.pageSize));
+    return calculateTotalPages(this.totalResults, this.pageSize);
   }
 
   get currentPage(): number {
@@ -25,13 +26,11 @@ export abstract class ListPageBase<T> {
   }
 
   get startIndex(): number {
-    return this.totalResults === 0 ? 0 : (this.currentPage - 1) * this.pageSize + 1;
+    return calculateStartIndex(this.totalResults, this.currentPage, this.pageSize);
   }
 
   get endIndex(): number {
-    return this.totalResults === 0
-      ? 0
-      : Math.min(this.currentPage * this.pageSize, this.totalResults);
+    return calculateEndIndex(this.currentPage, this.pageSize, this.totalResults);
   }
 
   get canPrev(): boolean {

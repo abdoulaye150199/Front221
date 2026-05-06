@@ -9,7 +9,7 @@ import {
   SubClassCatalogItem,
 } from '../../models';
 import { ClassStructureService } from '../../services/class-structure.service';
-import { PaginatedFormState } from './helpers/paginated-form-state';
+import { PaginatedFormState } from '@shared/utils/pagination.utils';
 
 @Component({
   selector: 'app-class-structure',

@@ -6,6 +6,7 @@ import { GeneralCalendarComponent } from './components/general-calendar/general-
 import { SpecialityCatalogComponent } from './components/speciality-catalog/speciality-catalog.component';
 import { ClassStructureComponent } from './components/class-structure/class-structure.component';
 import { UeModuleComponent } from './components/ue-module/ue-module.component';
+import { ParameterSettingsComponent } from './components/parameter-settings/parameter-settings.component';
 
 interface ResourceTab {
   title: string;
@@ -58,6 +59,7 @@ const mainTabs: ResourceTab[] = [
     SpecialityCatalogComponent,
     ClassStructureComponent,
     UeModuleComponent,
+    ParameterSettingsComponent,
   ],
   templateUrl: './ressources.html',
   styleUrls: ['./ressources.scss'],
@@ -92,7 +94,12 @@ export class RessourcesComponent {
     return !this.isAcademicMainTab
       && !this.isSpecialityMainTab
       && !this.isClassStructureMainTab
-      && !this.isUeModuleMainTab;
+      && !this.isUeModuleMainTab
+      && !this.isParameterMainTab;
+  }
+
+  get isParameterMainTab(): boolean {
+    return this.currentMainTabTitle === 'Paramètres';
   }
 
   setActiveMainTab(index: number): void {

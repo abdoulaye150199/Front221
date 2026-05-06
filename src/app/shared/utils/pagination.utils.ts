@@ -1,19 +1,109 @@
-export interface PaginationState {
+import { signal } from '@angular/core';
+
+export interface PaginatedState<T> {
+  items: T[];
   page: number;
   pageSize: number;
-  totalResults: number;
+  editingItemId: string | null;
+  openActionId: string | null;
 }
 
-export interface PaginationConfig {
-  pageSizeOptions?: number[];
+export class PaginatedFormState<T> {
+  items: T[] = [];
+  page = signal(1);
+  pageSize: number;
+  editingItemId: string | null = null;
+  openActionId: string | null = null;
+
+  constructor(pageSize: number = 5) {
+    this.pageSize = pageSize;
+  }
+
+  get totalPages(): number {
+    return Math.max(1, Math.ceil(this.items.length / this.pageSize));
+  }
+
+  get currentPage(): number {
+    return Math.min(this.page(), this.totalPages);
+  }
+
+  get pages(): number[] {
+    return Array.from({ length: this.totalPages }, (_, index) => index + 1);
+  }
+
+  get canPrev(): boolean {
+    return this.currentPage > 1;
+  }
+
+  get canNext(): boolean {
+    return this.currentPage < this.totalPages;
+  }
+
+  get pagedItems(): T[] {
+    const start = (this.currentPage - 1) * this.pageSize;
+    return this.items.slice(start, start + this.pageSize);
+  }
+
+  setPage(page: number): void {
+    if (page >= 1 && page <= this.totalPages) {
+      this.page.set(page);
+    }
+  }
+
+  previousPage(): void {
+    if (this.canPrev) {
+      this.page.update(p => p - 1);
+    }
+  }
+
+  nextPage(): void {
+    if (this.canNext) {
+      this.page.update(p => p + 1);
+    }
+  }
+
+  setPageSize(value: string): void {
+    const pageSize = Number(value);
+    if (!Number.isNaN(pageSize) && pageSize > 0) {
+      this.pageSize = pageSize;
+      this.page.set(1);
+    }
+  }
+
+  startEditing(itemId: string): void {
+    this.editingItemId = itemId;
+    this.openActionId = null;
+  }
+
+  stopEditing(): void {
+    this.editingItemId = null;
+  }
+
+  toggleActionMenu(itemId: string): void {
+    this.openActionId = this.openActionId === itemId ? null : itemId;
+  }
+
+  closeActionMenu(): void {
+    this.openActionId = null;
+  }
+
+  reset(): void {
+    this.page.set(1);
+    this.editingItemId = null;
+    this.openActionId = null;
+  }
+}
+
+export interface PageInfo {
+  currentPage: number;
+  totalPages: number;
+  canPrev: boolean;
+  canNext: boolean;
+  pages: number[];
 }
 
 export function calculateTotalPages(totalResults: number, pageSize: number): number {
   return Math.max(1, Math.ceil(totalResults / pageSize));
-}
-
-export function calculateCurrentPage(page: number, totalPages: number): number {
-  return Math.min(page, totalPages);
 }
 
 export function calculateStartIndex(totalResults: number, currentPage: number, pageSize: number): number {
@@ -26,14 +116,37 @@ export function calculateEndIndex(currentPage: number, pageSize: number, totalRe
   return Math.min(currentPage * pageSize, totalResults);
 }
 
-export function canGoPrev(currentPage: number): boolean {
-  return currentPage > 1;
-}
-
-export function canGoNext(currentPage: number, totalPages: number): boolean {
-  return currentPage < totalPages;
-}
-
-export function generatePageNumbers(totalPages: number): number[] {
-  return Array.from({ length: totalPages }, (_, index) => index + 1);
+export function createPaginationHandler(
+  getTotalResults: () => number,
+  getPageSize: () => number,
+  getCurrentPage: () => number,
+  setCurrentPage: (page: number) => void
+) {
+  return {
+    get totalPages(): number {
+      return calculateTotalPages(getTotalResults(), getPageSize());
+    },
+    get canPrev(): boolean {
+      return getCurrentPage() > 1;
+    },
+    get canNext(): boolean {
+      return getCurrentPage() < this.totalPages;
+    },
+    previousPage(): void {
+      if (this.canPrev) {
+        setCurrentPage(getCurrentPage() - 1);
+      }
+    },
+    nextPage(): void {
+      if (this.canNext) {
+        setCurrentPage(getCurrentPage() + 1);
+      }
+    },
+    setPage(page: number): void {
+      const totalPages = this.totalPages;
+      if (page >= 1 && page <= totalPages) {
+        setCurrentPage(page);
+      }
+    }
+  };
 }

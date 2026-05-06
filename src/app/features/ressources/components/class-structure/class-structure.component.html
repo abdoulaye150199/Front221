@@ -103,7 +103,7 @@
               </button>
               <div
                 class="actions-menu"
-                *ngIf="openClassActionId === item.id"
+                *ngIf="classState.openActionId === item.id"
                 (click)="$event.stopPropagation()"
               >
                 <button type="button" (click)="editClass(item)">Modifier</button>
@@ -122,7 +122,7 @@
       <div class="page-size-control">
         <span>Éléments / page</span>
         <label class="page-size-select">
-          <select [ngModel]="classPageSize" (ngModelChange)="setClassPageSize($event)">
+          <select [ngModel]="classState.pageSize" (ngModelChange)="setClassPageSize($event)">
             <option *ngFor="let size of [3, 5, 10]" [value]="size">{{ size }}</option>
           </select>
         </label>
@@ -142,7 +142,7 @@
           class="page-number-btn"
           type="button"
           *ngFor="let pageNumber of classPages"
-          [class.active]="pageNumber === currentClassPage"
+          [class.active]="pageNumber === classState.currentPage"
           (click)="setClassPage(pageNumber)"
         >
           {{ pageNumber }}
@@ -228,7 +228,7 @@
                 </button>
                 <div
                   class="actions-menu"
-                  *ngIf="openSubClassActionId === item.id"
+                  *ngIf="subClassState.openActionId === item.id"
                   (click)="$event.stopPropagation()"
                 >
                   <button type="button" (click)="editSubClass(item)">Modifier</button>
@@ -247,7 +247,7 @@
         <div class="page-size-control">
           <span>Éléments / page</span>
           <label class="page-size-select">
-            <select [ngModel]="subClassPageSize" (ngModelChange)="setSubClassPageSize($event)">
+            <select [ngModel]="subClassState.pageSize" (ngModelChange)="setSubClassPageSize($event)">
               <option *ngFor="let size of [5, 10, 15]" [value]="size">{{ size }}</option>
             </select>
           </label>
@@ -267,7 +267,7 @@
             class="page-number-btn"
             type="button"
             *ngFor="let pageNumber of subClassPages"
-            [class.active]="pageNumber === currentSubClassPage"
+            [class.active]="pageNumber === subClassState.currentPage"
             (click)="setSubClassPage(pageNumber)"
           >
             {{ pageNumber }}
