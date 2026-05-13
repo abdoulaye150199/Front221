@@ -8,15 +8,19 @@ export interface PaginatedState<T> {
   openActionId: string | null;
 }
 
-export class PaginatedFormState<T> {
-  items: T[] = [];
+export class PaginatedFormState<TItem, TForm = never> {
+  items: TItem[] = [];
   page = signal(1);
   pageSize: number;
   editingItemId: string | null = null;
   openActionId: string | null = null;
+  form: TForm;
+  private readonly createForm: (() => TForm) | null;
 
-  constructor(pageSize: number = 5) {
+  constructor(pageSize: number = 5, createForm?: () => TForm) {
     this.pageSize = pageSize;
+    this.createForm = createForm ?? null;
+    this.form = createForm ? createForm() : undefined as TForm;
   }
 
   get totalPages(): number {
@@ -39,7 +43,7 @@ export class PaginatedFormState<T> {
     return this.currentPage < this.totalPages;
   }
 
-  get pagedItems(): T[] {
+  get pagedItems(): TItem[] {
     const start = (this.currentPage - 1) * this.pageSize;
     return this.items.slice(start, start + this.pageSize);
   }
@@ -62,7 +66,7 @@ export class PaginatedFormState<T> {
     }
   }
 
-  setPageSize(value: string): void {
+  setPageSize(value: string | number): void {
     const pageSize = Number(value);
     if (!Number.isNaN(pageSize) && pageSize > 0) {
       this.pageSize = pageSize;
@@ -70,13 +74,19 @@ export class PaginatedFormState<T> {
     }
   }
 
-  startEditing(itemId: string): void {
+  startEditing(itemId: string, form?: TForm): void {
     this.editingItemId = itemId;
     this.openActionId = null;
+    if (form !== undefined) {
+      this.form = form;
+    }
   }
 
-  stopEditing(): void {
+  stopEditing(resetForm: boolean = false): void {
     this.editingItemId = null;
+    if (resetForm) {
+      this.resetForm();
+    }
   }
 
   toggleActionMenu(itemId: string): void {
@@ -87,10 +97,32 @@ export class PaginatedFormState<T> {
     this.openActionId = null;
   }
 
+  setItems(items: TItem[]): void {
+    this.items = items;
+    if (this.page() > this.totalPages) {
+      this.page.set(this.totalPages);
+    }
+  }
+
+  setForm(form: TForm): void {
+    this.form = form;
+  }
+
+  patchForm(patch: Partial<TForm>): void {
+    this.form = { ...(this.form as object), ...(patch as object) } as TForm;
+  }
+
+  resetForm(): void {
+    if (this.createForm) {
+      this.form = this.createForm();
+    }
+  }
+
   reset(): void {
     this.page.set(1);
     this.editingItemId = null;
     this.openActionId = null;
+    this.resetForm();
   }
 }
 

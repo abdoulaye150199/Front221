@@ -1,7 +1,8 @@
 import { Component } from '@angular/core';
 import { FORM_ACTION_IMPORTS } from '@shared/imports/standalone-imports';
 import { hasRequiredTextValues } from '@shared/validation';
-import { TrackedEvent, TrackedEventForm, TrackedEventStatus } from '../../models';
+import { PaginatedFormState } from '@shared/utils/pagination.utils';
+import { TrackedEvent, TrackedEventForm } from '../../models';
 import { TrackedEventService } from '../../services';
 
 @Component({
@@ -14,76 +15,74 @@ import { TrackedEventService } from '../../services';
 export class TrackedEventsComponent {
   readonly levelOptions: string[] = ['Licence', 'Master 1', 'Master 2'];
   readonly semesterOptions: string[] = ['Semestre 1', 'Semestre 2', 'Session intensive'];
-  readonly statusOptions: TrackedEventStatus[] = ['En cours', 'À venir', 'Terminé'];
 
-  trackedEvents: TrackedEvent[] = [];
-  eventForm: TrackedEventForm = { level: '', semester: '', name: '' };
-  eventPage = 1;
-  eventPageSize = 5;
-  openTrackedEventActionId: string | null = null;
-  editingTrackedEventId: string | null = null;
-  nextTrackedEventId = 1;
+  readonly eventState = new PaginatedFormState<TrackedEvent, TrackedEventForm>(
+    5,
+    () => this.createTrackedEventForm()
+  );
 
   constructor(private trackedEventService: TrackedEventService) {
     this.loadTrackedEvents();
   }
 
   private loadTrackedEvents(): void {
-    this.trackedEvents = this.trackedEventService.getAll();
-    this.nextTrackedEventId = this.trackedEvents.length + 1;
+    this.eventState.setItems(this.trackedEventService.getAll());
   }
 
   get isEventFormValid(): boolean {
-    return hasRequiredTextValues(this.eventForm.level, this.eventForm.semester, this.eventForm.name);
+    return hasRequiredTextValues(
+      this.eventState.form.level,
+      this.eventState.form.semester,
+      this.eventState.form.name
+    );
   }
 
   get isEditingTrackedEvent(): boolean {
-    return this.editingTrackedEventId !== null;
+    return this.eventState.editingItemId !== null;
   }
 
-  get totalTrackedEvents(): number {
-    return this.trackedEvents.length;
+  get eventForm(): TrackedEventForm {
+    return this.eventState.form;
   }
 
   get totalTrackedEventPages(): number {
-    return Math.max(1, Math.ceil(this.totalTrackedEvents / this.eventPageSize));
+    return this.eventState.totalPages;
   }
 
   get currentTrackedEventPage(): number {
-    return Math.min(this.eventPage, this.totalTrackedEventPages);
+    return this.eventState.currentPage;
   }
 
   get pagedTrackedEvents(): TrackedEvent[] {
-    const start = (this.currentTrackedEventPage - 1) * this.eventPageSize;
-    return this.trackedEvents.slice(start, start + this.eventPageSize);
+    return this.eventState.pagedItems;
   }
 
   get trackedEventCanPrev(): boolean {
-    return this.currentTrackedEventPage > 1;
+    return this.eventState.canPrev;
   }
 
   get trackedEventCanNext(): boolean {
-    return this.currentTrackedEventPage < this.totalTrackedEventPages;
+    return this.eventState.canNext;
+  }
+
+  get eventPageSize(): number {
+    return this.eventState.pageSize;
+  }
+
+  updateEventForm(patch: Partial<TrackedEventForm>): void {
+    this.eventState.patchForm(patch);
   }
 
   previousTrackedEventPage(): void {
-    if (this.trackedEventCanPrev) {
-      this.eventPage -= 1;
-    }
+    this.eventState.previousPage();
   }
 
   nextTrackedEventPage(): void {
-    if (this.trackedEventCanNext) {
-      this.eventPage += 1;
-    }
+    this.eventState.nextPage();
   }
 
   setTrackedEventPageSize(value: string): void {
-    const pageSize = Number(value);
-    if (!Number.isNaN(pageSize) && pageSize > 0) {
-      this.eventPageSize = pageSize;
-      this.eventPage = 1;
-    }
+    this.eventState.setPageSize(value);
   }
 
   submitTrackedEvent(): void {
@@ -91,51 +90,46 @@ export class TrackedEventsComponent {
       return;
     }
 
-    if (this.editingTrackedEventId) {
-      this.trackedEventService.update(this.editingTrackedEventId, this.eventForm);
-      this.resetTrackedEventForm();
+    const form = { ...this.eventState.form };
+
+    if (this.eventState.editingItemId) {
+      this.trackedEventService.update(this.eventState.editingItemId, form);
+      this.eventState.reset();
       this.loadTrackedEvents();
       return;
     }
 
-    this.trackedEventService.create(this.eventForm);
-    this.resetTrackedEventForm();
+    this.trackedEventService.create(form);
+    this.eventState.reset();
     this.loadTrackedEvents();
   }
 
   editTrackedEvent(event: TrackedEvent): void {
-    this.openTrackedEventActionId = null;
-    this.editingTrackedEventId = event.id;
-    this.eventForm = {
+    this.eventState.startEditing(event.id, {
       level: event.level,
       semester: event.semester,
       name: event.name,
-    };
+    });
   }
 
   deleteTrackedEvent(eventId: string): void {
-    this.openTrackedEventActionId = null;
+    this.eventState.closeActionMenu();
     this.trackedEventService.delete(eventId);
-    if (this.editingTrackedEventId === eventId) {
-      this.resetTrackedEventForm();
+    if (this.eventState.editingItemId === eventId) {
+      this.eventState.reset();
     }
     this.loadTrackedEvents();
-    if (this.eventPage > this.totalTrackedEventPages) {
-      this.eventPage = this.totalTrackedEventPages;
-    }
   }
 
   cancelTrackedEventEdition(): void {
-    this.resetTrackedEventForm();
+    this.eventState.reset();
   }
 
   toggleTrackedEventActionMenu(eventId: string): void {
-    this.openTrackedEventActionId =
-      this.openTrackedEventActionId === eventId ? null : eventId;
+    this.eventState.toggleActionMenu(eventId);
   }
 
-  private resetTrackedEventForm(): void {
-    this.editingTrackedEventId = null;
-    this.eventForm = { level: '', semester: '', name: '' };
+  private createTrackedEventForm(): TrackedEventForm {
+    return { level: '', semester: '', name: '' };
   }
 }

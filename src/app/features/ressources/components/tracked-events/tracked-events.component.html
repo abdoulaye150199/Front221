@@ -1,14 +1,17 @@
 <div class="tracked-events">
   <div class="subtab-form">
     <label class="field select-field">
-      <select [(ngModel)]="eventForm.level">
+      <select [ngModel]="eventForm.level" (ngModelChange)="updateEventForm({ level: $event })">
         <option value="" disabled>Choisir le niveau</option>
         <option *ngFor="let level of levelOptions" [value]="level">{{ level }}</option>
       </select>
     </label>
 
     <label class="field select-field">
-      <select [(ngModel)]="eventForm.semester">
+      <select
+        [ngModel]="eventForm.semester"
+        (ngModelChange)="updateEventForm({ semester: $event })"
+      >
         <option value="" disabled>Choisir le semestre</option>
         <option *ngFor="let semester of semesterOptions" [value]="semester">
           {{ semester }}
@@ -20,7 +23,8 @@
       <input
         type="text"
         placeholder="Événement"
-        [(ngModel)]="eventForm.name"
+        [ngModel]="eventForm.name"
+        (ngModelChange)="updateEventForm({ name: $event })"
       />
     </label>
 
@@ -85,7 +89,7 @@
             </button>
             <div
               class="actions-menu"
-              *ngIf="openTrackedEventActionId === event.id"
+              *ngIf="eventState.openActionId === event.id"
               (click)="$event.stopPropagation()"
             >
               <button type="button" (click)="editTrackedEvent(event)">Modifier</button>

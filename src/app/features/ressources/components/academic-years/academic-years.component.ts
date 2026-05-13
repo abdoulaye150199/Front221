@@ -22,7 +22,6 @@ export class AcademicYearsComponent extends ListPageBase<AcademicYear> {
     this.onSearchChange(value ?? '');
   }
 
-  readonly statusOptions: AcademicYearStatus[] = ['En cours', 'Clôturé'];
   academicYearForm: AcademicYearForm = {
     year: '',
     startDate: '',

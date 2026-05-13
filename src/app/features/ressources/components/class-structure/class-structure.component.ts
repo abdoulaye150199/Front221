@@ -9,7 +9,6 @@ import {
   SubClassCatalogItem,
 } from '../../models';
 import { ClassStructureService } from '../../services/class-structure.service';
-import { ClassFormService } from '../../services/class-form.service';
 import { PaginatedFormState } from '@shared/utils/pagination.utils';
 
 @Component({
@@ -25,20 +24,14 @@ export class ClassStructureComponent {
   readonly tabs: ClassStructureTabKey[] = ['Classes', 'Sous-classes'];
   activeTabIndex = 0;
 
-  readonly classState = new PaginatedFormState<ClassCatalogItem>(3);
-  readonly subClassState = new PaginatedFormState<SubClassCatalogItem>(5);
-
-  // Class form state
-  selectedDomainName = '';
-  selectedSpecialityName = '';
-  selectedLevelName = '';
-  classCode = '';
-  className = '';
-
-  // SubClass form state
-  selectedClassId = '';
-  subClassName = '';
-  selectedSemester = '';
+  readonly classState = new PaginatedFormState<ClassCatalogItem, ClassCatalogForm>(
+    3,
+    () => this.createClassForm()
+  );
+  readonly subClassState = new PaginatedFormState<SubClassCatalogItem, SubClassCatalogForm>(
+    5,
+    () => this.createSubClassForm()
+  );
 
   @Input() set activeTab(index: number) {
     this.setActiveTab(index, true);
@@ -61,7 +54,7 @@ export class ClassStructureComponent {
   }
 
   get specialityOptions(): string[] {
-    return this.classStructureService.getSpecialityOptions(this.selectedDomainName);
+    return this.classStructureService.getSpecialityOptions(this.classState.form.domainName);
   }
 
   get levelOptions(): string[] {
@@ -74,14 +67,6 @@ export class ClassStructureComponent {
 
   get classOptions(): Array<{ id: string; label: string }> {
     return this.classStructureService.getClassOptions();
-  }
-
-  get filteredClassItems(): ClassCatalogItem[] {
-    return this.classState.items;
-  }
-
-  get filteredSubClassItems(): SubClassCatalogItem[] {
-    return this.subClassState.items;
   }
 
   get pagedClassItems(): ClassCatalogItem[] {
@@ -116,26 +101,22 @@ export class ClassStructureComponent {
     return this.subClassState.canNext;
   }
 
-  get totalClassPages(): number {
-    return this.classState.totalPages;
-  }
-
-  get totalSubClassPages(): number {
-    return this.subClassState.totalPages;
-  }
-
   get isClassFormValid(): boolean {
     return hasRequiredTextValues(
-      this.selectedDomainName,
-      this.selectedSpecialityName,
-      this.selectedLevelName,
-      this.classCode,
-      this.className
+      this.classState.form.domainName,
+      this.classState.form.specialityName,
+      this.classState.form.levelName,
+      this.classState.form.code,
+      this.classState.form.className
     );
   }
 
   get isSubClassFormValid(): boolean {
-    return hasRequiredTextValues(this.selectedClassId, this.subClassName);
+    return hasRequiredTextValues(
+      this.subClassState.form.classId,
+      this.subClassState.form.subClassName,
+      this.subClassState.form.currentSemesterLabel
+    );
   }
 
   get isEditingClass(): boolean {
@@ -155,29 +136,46 @@ export class ClassStructureComponent {
     this.activeTabIndex = nextTabIndex;
     this.classState.reset();
     this.subClassState.reset();
-    this.resetForms();
   }
 
   onDomainChange(domainName: string): void {
-    this.selectedDomainName = domainName;
-    if (!this.specialityOptions.includes(this.selectedSpecialityName)) {
-      this.selectedSpecialityName = '';
-    }
+    const nextSpeciality = this.classStructureService
+      .getSpecialityOptions(domainName)
+      .includes(this.classState.form.specialityName)
+      ? this.classState.form.specialityName
+      : '';
+
+    this.classState.patchForm({
+      domainName,
+      specialityName: nextSpeciality,
+    });
+  }
+
+  updateClassForm(patch: Partial<ClassCatalogForm>): void {
+    this.classState.patchForm(patch);
+  }
+
+  updateSubClassForm(patch: Partial<SubClassCatalogForm>): void {
+    this.subClassState.patchForm(patch);
+  }
+
+  setSubClassSemester(value: string): void {
+    this.subClassState.patchForm({ currentSemesterLabel: value });
+  }
+
+  get classForm(): ClassCatalogForm {
+    return this.classState.form;
+  }
+
+  get subClassForm(): SubClassCatalogForm {
+    return this.subClassState.form;
   }
 
   submitClass(): void {
     if (!this.isClassFormValid) {
       return;
     }
-
-    const form: ClassCatalogForm = {
-      code: this.classCode,
-      domainName: this.selectedDomainName,
-      specialityName: this.selectedSpecialityName,
-      levelName: this.selectedLevelName,
-      className: this.className,
-      status: 'Actif',
-    };
+    const form = { ...this.classState.form };
 
     if (this.classState.editingItemId) {
       this.classStructureService.updateClass(this.classState.editingItemId, form);
@@ -186,7 +184,6 @@ export class ClassStructureComponent {
     }
 
     this.classState.reset();
-    this.resetClassForm();
     this.loadData();
   }
 
@@ -195,11 +192,10 @@ export class ClassStructureComponent {
       return;
     }
 
-    const form: SubClassCatalogForm = {
-      classId: this.selectedClassId,
-      subClassName: this.subClassName,
-      currentSemesterLabel: this.selectedSemester || this.semesterOptions[0] || 'Semestre 1',
-      status: 'Actif',
+    const form = {
+      ...this.subClassState.form,
+      currentSemesterLabel:
+        this.subClassState.form.currentSemesterLabel || this.semesterOptions[0] || 'Semestre 1',
     };
 
     if (this.subClassState.editingItemId) {
@@ -209,50 +205,50 @@ export class ClassStructureComponent {
     }
 
     this.subClassState.reset();
-    this.resetSubClassForm();
     this.loadData();
   }
 
   editClass(item: ClassCatalogItem): void {
-    this.classState.startEditing(item.id);
-    this.selectedDomainName = item.domainName;
-    this.selectedSpecialityName = item.specialityName;
-    this.selectedLevelName = item.levelName;
-    this.classCode = item.code;
-    this.className = item.className;
+    this.classState.startEditing(item.id, {
+      code: item.code,
+      domainName: item.domainName,
+      specialityName: item.specialityName,
+      levelName: item.levelName,
+      className: item.className,
+      status: item.status,
+    });
   }
 
   deleteClass(itemId: string): void {
     this.classState.closeActionMenu();
     this.classStructureService.deleteClass(itemId);
     if (this.classState.editingItemId === itemId) {
-      this.resetClassForm();
-      this.classState.stopEditing();
+      this.classState.stopEditing(true);
     }
     this.loadData();
   }
 
   editSubClass(item: SubClassCatalogItem): void {
-    this.subClassState.startEditing(item.id);
-    this.selectedClassId = item.classId;
-    this.subClassName = item.subClassName;
-    this.selectedSemester = item.currentSemesterLabel;
+    this.subClassState.startEditing(item.id, {
+      classId: item.classId,
+      subClassName: item.subClassName,
+      currentSemesterLabel: item.currentSemesterLabel,
+      status: item.status,
+    });
   }
 
   deleteSubClass(itemId: string): void {
     this.subClassState.closeActionMenu();
     this.classStructureService.deleteSubClass(itemId);
     if (this.subClassState.editingItemId === itemId) {
-      this.resetSubClassForm();
-      this.subClassState.stopEditing();
+      this.subClassState.stopEditing(true);
     }
     this.loadData();
   }
 
   cancelEdition(): void {
-    this.resetForms();
-    this.classState.stopEditing();
-    this.subClassState.stopEditing();
+    this.classState.stopEditing(true);
+    this.subClassState.stopEditing(true);
   }
 
   toggleClassActionMenu(itemId: string): void {
@@ -296,27 +292,8 @@ export class ClassStructureComponent {
   }
 
   private loadData(): void {
-    this.classState.items = this.classStructureService.getClassItems();
-    this.subClassState.items = this.classStructureService.getSubClassItems();
-  }
-
-  private resetForms(): void {
-    this.resetClassForm();
-    this.resetSubClassForm();
-  }
-
-  private resetClassForm(): void {
-    this.selectedDomainName = '';
-    this.selectedSpecialityName = '';
-    this.selectedLevelName = '';
-    this.classCode = '';
-    this.className = '';
-  }
-
-  private resetSubClassForm(): void {
-    this.selectedClassId = '';
-    this.subClassName = '';
-    this.selectedSemester = '';
+    this.classState.setItems(this.classStructureService.getClassItems());
+    this.subClassState.setItems(this.classStructureService.getSubClassItems());
   }
 
   private clampTabIndex(index: number): number {
@@ -330,5 +307,24 @@ export class ClassStructureComponent {
 
     return index;
   }
-}
 
+  private createClassForm(): ClassCatalogForm {
+    return {
+      code: '',
+      domainName: '',
+      specialityName: '',
+      levelName: '',
+      className: '',
+      status: 'Actif',
+    };
+  }
+
+  private createSubClassForm(): SubClassCatalogForm {
+    return {
+      classId: '',
+      subClassName: '',
+      currentSemesterLabel: this.semesterOptions[0] ?? 'Semestre 1',
+      status: 'Actif',
+    };
+  }
+}

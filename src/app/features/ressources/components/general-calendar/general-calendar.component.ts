@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { FORM_ACTION_IMPORTS } from '@shared/imports/standalone-imports';
+import { PaginatedFormState } from '@shared/utils/pagination.utils';
 import { GeneralCalendarEntry, GeneralCalendarFilter } from '../../models';
 import { GeneralCalendarService } from '../../services';
 
@@ -14,20 +15,18 @@ export class GeneralCalendarComponent {
   readonly levelOptions: string[] = ['Licence', 'Master 1', 'Master 2'];
   readonly semesterOptions: string[] = ['Semestre 1', 'Semestre 2', 'Session intensive'];
 
-  calendarEntries: GeneralCalendarEntry[] = [];
-  calendarFilters: GeneralCalendarFilter = { level: '', semester: '', eventName: '' };
+  readonly calendarState = new PaginatedFormState<GeneralCalendarEntry, GeneralCalendarFilter>(
+    5,
+    () => this.createCalendarFilters()
+  );
   appliedCalendarFilters: GeneralCalendarFilter = { level: '', semester: '', eventName: '' };
-  calendarPage = 1;
-  calendarPageSize = 5;
-  openCalendarActionId: string | null = null;
-  editingCalendarEntryId: string | null = null;
 
   constructor(private generalCalendarService: GeneralCalendarService) {
     this.loadCalendarEntries();
   }
 
   private loadCalendarEntries(): void {
-    this.calendarEntries = this.generalCalendarService.getAll();
+    this.calendarState.setItems(this.generalCalendarService.filter(this.appliedCalendarFilters));
   }
 
   get calendarEventOptions(): string[] {
@@ -35,7 +34,7 @@ export class GeneralCalendarComponent {
   }
 
   get filteredGeneralCalendarEntries(): GeneralCalendarEntry[] {
-    return this.generalCalendarService.filter(this.appliedCalendarFilters);
+    return this.calendarState.items;
   }
 
   get totalGeneralCalendarEntries(): number {
@@ -43,62 +42,71 @@ export class GeneralCalendarComponent {
   }
 
   get totalGeneralCalendarPages(): number {
-    return Math.max(1, Math.ceil(this.totalGeneralCalendarEntries / this.calendarPageSize));
+    return this.calendarState.totalPages;
   }
 
   get currentGeneralCalendarPage(): number {
-    return Math.min(this.calendarPage, this.totalGeneralCalendarPages);
+    return this.calendarState.currentPage;
   }
 
   get pagedGeneralCalendarEntries(): GeneralCalendarEntry[] {
-    const start = (this.currentGeneralCalendarPage - 1) * this.calendarPageSize;
-    return this.filteredGeneralCalendarEntries.slice(start, start + this.calendarPageSize);
+    return this.calendarState.pagedItems;
   }
 
   get generalCalendarCanPrev(): boolean {
-    return this.currentGeneralCalendarPage > 1;
+    return this.calendarState.canPrev;
   }
 
   get generalCalendarCanNext(): boolean {
-    return this.currentGeneralCalendarPage < this.totalGeneralCalendarPages;
+    return this.calendarState.canNext;
   }
 
   get generalCalendarPages(): number[] {
-    return Array.from({ length: this.totalGeneralCalendarPages }, (_, index) => index + 1);
+    return this.calendarState.pages;
+  }
+
+  get calendarFilters(): GeneralCalendarFilter {
+    return this.calendarState.form;
+  }
+
+  get calendarPageSize(): number {
+    return this.calendarState.pageSize;
+  }
+
+  updateCalendarFilters(patch: Partial<GeneralCalendarFilter>): void {
+    this.calendarState.patchForm(patch);
   }
 
   submitGeneralCalendarFilters(): void {
-    if (this.editingCalendarEntryId) {
-      this.generalCalendarService.update(this.editingCalendarEntryId, this.calendarFilters);
+    const filters = { ...this.calendarState.form };
+
+    if (this.calendarState.editingItemId) {
+      this.generalCalendarService.update(this.calendarState.editingItemId, filters);
       this.resetGeneralCalendarFilters();
       this.loadCalendarEntries();
       return;
     }
 
-    this.appliedCalendarFilters = { ...this.calendarFilters };
-    this.calendarPage = 1;
+    this.appliedCalendarFilters = filters;
+    this.calendarState.setPage(1);
+    this.loadCalendarEntries();
   }
 
   editGeneralCalendarEntry(entry: GeneralCalendarEntry): void {
-    this.openCalendarActionId = null;
-    this.editingCalendarEntryId = entry.id;
-    this.calendarFilters = {
+    this.calendarState.startEditing(entry.id, {
       level: entry.level,
       semester: entry.semester,
       eventName: entry.eventName,
-    };
+    });
   }
 
   deleteGeneralCalendarEntry(entryId: string): void {
-    this.openCalendarActionId = null;
+    this.calendarState.closeActionMenu();
     this.generalCalendarService.delete(entryId);
-    if (this.editingCalendarEntryId === entryId) {
+    if (this.calendarState.editingItemId === entryId) {
       this.resetGeneralCalendarFilters();
     }
     this.loadCalendarEntries();
-    if (this.calendarPage > this.totalGeneralCalendarPages) {
-      this.calendarPage = this.totalGeneralCalendarPages;
-    }
   }
 
   cancelGeneralCalendarEdition(): void {
@@ -106,39 +114,31 @@ export class GeneralCalendarComponent {
   }
 
   toggleGeneralCalendarActionMenu(entryId: string): void {
-    this.openCalendarActionId = this.openCalendarActionId === entryId ? null : entryId;
+    this.calendarState.toggleActionMenu(entryId);
   }
 
   setGeneralCalendarPage(page: number): void {
-    if (page >= 1 && page <= this.totalGeneralCalendarPages) {
-      this.calendarPage = page;
-    }
+    this.calendarState.setPage(page);
   }
 
   previousGeneralCalendarPage(): void {
-    if (this.generalCalendarCanPrev) {
-      this.calendarPage -= 1;
-    }
+    this.calendarState.previousPage();
   }
 
   nextGeneralCalendarPage(): void {
-    if (this.generalCalendarCanNext) {
-      this.calendarPage += 1;
-    }
+    this.calendarState.nextPage();
   }
 
   setGeneralCalendarPageSize(value: string): void {
-    const pageSize = Number(value);
-    if (!Number.isNaN(pageSize) && pageSize > 0) {
-      this.calendarPageSize = pageSize;
-      this.calendarPage = 1;
-    }
+    this.calendarState.setPageSize(value);
   }
 
   private resetGeneralCalendarFilters(): void {
-    this.editingCalendarEntryId = null;
-    this.calendarFilters = { level: '', semester: '', eventName: '' };
-    this.appliedCalendarFilters = { level: '', semester: '', eventName: '' };
-    this.calendarPage = 1;
+    this.calendarState.reset();
+    this.appliedCalendarFilters = this.createCalendarFilters();
+  }
+
+  private createCalendarFilters(): GeneralCalendarFilter {
+    return { level: '', semester: '', eventName: '' };
   }
 }

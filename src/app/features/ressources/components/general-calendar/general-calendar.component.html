@@ -1,14 +1,20 @@
-<div class="general-calendar">
+  <div class="general-calendar">
   <div class="subtab-form">
     <label class="field select-field">
-      <select [(ngModel)]="calendarFilters.level">
+      <select
+        [ngModel]="calendarFilters.level"
+        (ngModelChange)="updateCalendarFilters({ level: $event })"
+      >
         <option value="">Choisir le niveau</option>
         <option *ngFor="let level of levelOptions" [value]="level">{{ level }}</option>
       </select>
     </label>
 
     <label class="field select-field">
-      <select [(ngModel)]="calendarFilters.semester">
+      <select
+        [ngModel]="calendarFilters.semester"
+        (ngModelChange)="updateCalendarFilters({ semester: $event })"
+      >
         <option value="">Choisir le semestre</option>
         <option *ngFor="let semester of semesterOptions" [value]="semester">
           {{ semester }}
@@ -17,7 +23,10 @@
     </label>
 
     <label class="field select-field">
-      <select [(ngModel)]="calendarFilters.eventName">
+      <select
+        [ngModel]="calendarFilters.eventName"
+        (ngModelChange)="updateCalendarFilters({ eventName: $event })"
+      >
         <option value="">Choisir les événements</option>
         <option *ngFor="let eventName of calendarEventOptions" [value]="eventName">
           {{ eventName }}
@@ -76,7 +85,7 @@
             </button>
             <div
               class="actions-menu"
-              *ngIf="openCalendarActionId === entry.id"
+              *ngIf="calendarState.openActionId === entry.id"
               (click)="$event.stopPropagation()"
             >
               <button type="button" (click)="editGeneralCalendarEntry(entry)">Modifier</button>
