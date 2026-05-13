@@ -1,20 +1,25 @@
-@import '../_resource-shared';
+@use '../_resource-shared';
 
 // Override the flex layout from shared styles with a proper grid
 :host .subtab-form {
-  display: grid !important;
-  grid-template-columns: 1fr 1fr 1fr auto;
-  grid-auto-rows: auto;
-  gap: 0 1rem;
-  align-items: start;
-  flex-wrap: unset !important;
-  flex-direction: unset !important;
+  display: flex !important;
+  align-items: flex-start !important;
+  gap: 1rem !important;
+  flex-wrap: wrap !important;
 }
 
-// Field groups should not expand vertically
+:host .subtab-form > * {
+  min-width: 0;
+}
+
+// Field groups behave like the working forms in other tabs, but keep space for errors
 .field-group {
   display: grid;
   gap: 0.35rem;
+  flex: 1 1 240px;
+  min-width: 220px;
+  max-width: 100%;
+  min-width: 0;
 }
 
 // Style the input fields
@@ -28,6 +33,8 @@
   border-radius: 14px;
   background: #fff;
   box-shadow: 0 6px 16px rgba(15, 23, 42, 0.03);
+  box-sizing: border-box;
+  width: 100%;
 }
 
 .field-group .field input {
@@ -57,11 +64,11 @@
 
 // Button styling
 :host .subtab-form .subtab-submit {
-  grid-column: 4;
-  grid-row: 1;
+  flex: 0 0 auto;
   min-width: 112px;
   height: 44px;
-  align-self: center;
+  align-self: start;
+  white-space: nowrap;
 }
 
 .field.invalid {
@@ -88,13 +95,17 @@
 
 @media (max-width: 900px) {
   :host .subtab-form {
-    grid-template-columns: 1fr;
     gap: 0.8rem;
     padding: 0.85rem !important;
   }
 
+  .field-group {
+    flex-basis: 100%;
+  }
+
   :host .subtab-form .subtab-submit {
     width: 100%;
+    flex-basis: 100%;
     justify-self: stretch;
     margin-left: 0;
   }

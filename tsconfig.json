@@ -15,7 +15,6 @@
     "resolveJsonModule": true,
     "target": "ES2022",
     "module": "preserve",
-    "ignoreDeprecations": "6.0",
     "baseUrl": "./src",
     "paths": {
       "@shared/*": ["app/shared/*"],
