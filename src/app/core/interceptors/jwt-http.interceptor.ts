@@ -7,15 +7,10 @@ import { AuthService } from '../services/auth.service';
 let isRefreshing = false;
 const refreshTokenSubject = new BehaviorSubject<string | null>(null);
 
-/**
- * Intercepteur HTTP pour JWT basé sur les fonctions
- * Ajoute le token à chaque requête et gère le rafraîchissement automatique
- */
 export const jwtHttpInterceptor: HttpInterceptorFn = (req, next): Observable<HttpEvent<unknown>> => {
   const tokenService = inject(TokenService);
   const authService = inject(AuthService);
 
-  // Ajouter le token à la requête
   const token = tokenService.getAccessToken();
   if (token && !tokenService.isTokenExpired(token)) {
     req = req.clone({
@@ -35,9 +30,6 @@ export const jwtHttpInterceptor: HttpInterceptorFn = (req, next): Observable<Htt
   );
 };
 
-/**
- * Gérer l'erreur 401 (token expiré)
- */
 function handle401Error(
   request: any,
   next: any,
@@ -75,7 +67,6 @@ function handle401Error(
       })
     );
   } else {
-    // Attendre que le token soit rafraîchi
     return refreshTokenSubject.pipe(
       filter((token) => token !== null),
       take(1),

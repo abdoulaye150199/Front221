@@ -6,7 +6,6 @@ import { jwtHttpInterceptor } from './jwt-http.interceptor';
 import { TokenService } from '../services/token.service';
 import { AuthService } from '../services/auth.service';
 
-// Mock services
 const mockTokenService = {
   getAccessToken: vi.fn(),
   isTokenExpired: vi.fn(() => false),
@@ -60,16 +59,12 @@ describe('JwtHttpInterceptor', () => {
       mockTokenService.getAccessToken.mockReturnValue('valid-token');
 
       const testUrl = 'https://api.example.com/data';
-      // Note: En environnement de test, on ne peut pas facilement tester les requêtes réelles
-      // Ce test vérifie juste que l'intercepteur est configuré correctement
-
       expect(jwtHttpInterceptor).toBeDefined();
     });
   });
 
   describe('when token is expired (401)', () => {
     it('should attempt to refresh token', () => {
-      // Ce test vérifie la logique de rafraîchissement
       mockTokenService.getAccessToken.mockReturnValue('expired-token');
       mockTokenService.isTokenExpired.mockReturnValue(true);
 
