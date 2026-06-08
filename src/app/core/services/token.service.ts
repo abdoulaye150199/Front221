@@ -1,19 +1,12 @@
 import { Injectable } from '@angular/core';
 
-/**
- * Service pour gérer les tokens JWT
- * Stockage sécurisé des tokens
- */
+
 @Injectable({
   providedIn: 'root',
 })
 export class TokenService {
   private readonly accessTokenKey = 'access_token';
   private readonly refreshTokenKey = 'refresh_token';
-
-  /**
-   * Stocker les tokens en sessionStorage (plus sécurisé que localStorage)
-   */
   setTokens(accessToken: string, refreshToken: string): void {
     if (this.hasStorage()) {
       sessionStorage.setItem(this.accessTokenKey, accessToken);

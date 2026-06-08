@@ -1,8 +1,3 @@
-import { CommonModule } from '@angular/common';
-import { MatButtonModule } from '@angular/material/button';
-import { MatIconModule } from '@angular/material/icon';
-import { MatTabsModule } from '@angular/material/tabs';
-import { RouterModule } from '@angular/router';
 import {
   CourseCardComponent,
   EventCardComponent,
@@ -12,20 +7,34 @@ import {
   SidebarComponent,
   StatCardComponent,
 } from '../components';
+import {
+  ACTION_IMPORTS,
+  BASE_IMPORTS,
+  MATERIAL_TABS_IMPORTS,
+  ROUTER_IMPORTS,
+} from './standalone-imports';
 
-export const MAIN_LAYOUT_IMPORTS = [CommonModule, RouterModule, HeaderComponent, SidebarComponent] as const;
+/**
+ * ========== PAGE-LEVEL COMPOSITE IMPORTS ==========
+ * Built by composing from standalone layers + page-specific components
+ */
+
+export const MAIN_LAYOUT_IMPORTS = [
+  ...BASE_IMPORTS,
+  ...ROUTER_IMPORTS,
+  HeaderComponent,
+  SidebarComponent,
+] as const;
+
 export const LIST_PAGE_IMPORTS = [
-  CommonModule,
-  MatIconModule,
-  MatButtonModule,
+  ...ACTION_IMPORTS,
   ListFiltersComponent,
   NumberPaginationComponent,
 ] as const;
+
 export const DASHBOARD_IMPORTS = [
-  CommonModule,
-  MatIconModule,
-  MatButtonModule,
-  MatTabsModule,
+  ...ACTION_IMPORTS,
+  ...MATERIAL_TABS_IMPORTS,
   StatCardComponent,
   EventCardComponent,
   CourseCardComponent,
