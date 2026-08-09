@@ -47,7 +47,7 @@
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let student of pagedStudents">
+        <tr *ngFor="let student of pagedStudents; trackBy: trackByStudentId">
           <td>
             <div class="avatar">{{ getInitials(student.name) }}</div>
           </td>

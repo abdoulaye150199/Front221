@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';
 import { LIST_FILTER_IMPORTS } from '../../imports/standalone-imports';
 import { ListFilterConfig, SelectOption } from '../../models';
 
@@ -8,6 +8,7 @@ import { ListFilterConfig, SelectOption } from '../../models';
   imports: [...LIST_FILTER_IMPORTS],
   templateUrl: './list-filters.html',
   styleUrls: ['./list-filters.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ListFiltersComponent {
   @Input({ required: true }) pageSizeLabel = '';
@@ -23,5 +24,9 @@ export class ListFiltersComponent {
 
   onFilterValueChange(id: string, value: string): void {
     this.filterChange.emit({ id, value });
+  }
+
+  trackByOptionValue(_index: number, option: SelectOption): string {
+    return option.value;
   }
 }

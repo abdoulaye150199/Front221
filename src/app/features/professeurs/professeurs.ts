@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { LIST_PAGE_IMPORTS } from '../../shared/imports/page-imports';
 import { getInitials } from '../../shared/utils';
 import { parseAllowedNumberOption } from '../../shared/validation';
@@ -11,6 +11,7 @@ import { Professor, ProfessorService } from './services/professor.service';
   imports: [...LIST_PAGE_IMPORTS],
   templateUrl: './professeurs.html',
   styleUrls: ['./professeurs.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ProfesseursComponent {
   readonly getInitials = getInitials;
@@ -21,6 +22,7 @@ export class ProfesseursComponent {
 
   classes: SelectOption[] = [];
   statusOptions: SelectOption[] = [];
+  filterConfigs: { id: string; label: string; value: string; options: SelectOption[] }[] = [];
 
   selectedClasse = 'toutes';
   selectedStatus = 'tous';
@@ -39,6 +41,7 @@ export class ProfesseursComponent {
     this.allProfessors = this.professorService.getProfessors();
     this.selectedClasse = this.classes[0]?.value ?? 'toutes';
     this.selectedStatus = this.statusOptions[0]?.value ?? 'tous';
+    this.refreshFilterConfigs();
   }
 
   onSearchChange(value: string): void {
@@ -55,8 +58,8 @@ export class ProfesseursComponent {
     this.page = 1;
   }
 
-  get filterConfigs(): { id: string; label: string; value: string; options: SelectOption[] }[] {
-    return [
+  private refreshFilterConfigs(): void {
+    this.filterConfigs = [
       { id: 'class', label: 'Classe', value: this.selectedClasse, options: this.classes },
       { id: 'status', label: 'Statut', value: this.selectedStatus, options: this.statusOptions },
     ];
@@ -136,6 +139,11 @@ export class ProfesseursComponent {
       this.selectedStatus = filter.value;
     }
     this.page = 1;
+    this.refreshFilterConfigs();
+  }
+
+  trackByProfessorId(_index: number, professor: Professor): string {
+    return professor.id;
   }
 
   toggleMenu(id: string): void {

@@ -27,7 +27,7 @@ export class ProfessorService {
   private readonly data: ProfesseursDataSource;
 
   constructor() {
-    this.data = structuredClone(APP_DATA.features.professeurs as ProfesseursDataSource);
+    this.data = APP_DATA.features.professeurs as ProfesseursDataSource;
   }
 
   getProfessors(): Professor[] {

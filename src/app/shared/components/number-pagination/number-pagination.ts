@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';
 import { PAGINATION_IMPORTS } from '../../imports/standalone-imports';
 
 @Component({
@@ -7,6 +7,7 @@ import { PAGINATION_IMPORTS } from '../../imports/standalone-imports';
   imports: [...PAGINATION_IMPORTS],
   templateUrl: './number-pagination.html',
   styleUrls: ['./number-pagination.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class NumberPaginationComponent {
   @Input() currentPage = 1;
@@ -15,4 +16,8 @@ export class NumberPaginationComponent {
   @Input() canNext = false;
 
   @Output() pageChange = new EventEmitter<number>();
+
+  trackByPageNumber(_index: number, page: number): number {
+    return page;
+  }
 }

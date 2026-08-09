@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { APP_DATA } from '../../shared/data';
 import { LIST_PAGE_IMPORTS } from '../../shared/imports/page-imports';
 import { ListFilterConfig, SelectOption } from '../../shared/models';
@@ -30,23 +30,29 @@ const inscriptionsData = APP_DATA.features.inscriptions as InscriptionsDataSourc
   imports: [...LIST_PAGE_IMPORTS],
   templateUrl: './inscriptions.html',
   styleUrls: ['./inscriptions.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class InscriptionsComponent {
   readonly getInitials = getInitials;
   searchTerm = '';
   page = 1;
-  readonly pageSizeOptions = inscriptionsData.pageSizeOptions;
-  readonly classOptions = inscriptionsData.classOptions;
-  readonly statusOptions = inscriptionsData.statusOptions;
+  readonly pageSizeOptions = [...inscriptionsData.pageSizeOptions];
+  readonly classOptions = [...inscriptionsData.classOptions];
+  readonly statusOptions = [...inscriptionsData.statusOptions];
   pageSize = Number(this.pageSizeOptions[0]?.value ?? 10);
 
   selectedClass = this.classOptions[0]?.value ?? '';
   selectedStatus = this.statusOptions[0]?.value ?? '';
+  filterConfigs: ListFilterConfig[] = [];
 
   openMenuId: string | null = null;
   selectedStudent: Student | null = null;
 
-  readonly students = inscriptionsData.students;
+  readonly students = [...inscriptionsData.students];
+
+  constructor() {
+    this.refreshFilterConfigs();
+  }
 
   onSearchChange(value: string) {
     this.searchTerm = value;
@@ -64,13 +70,6 @@ export class InscriptionsComponent {
 
     this.pageSize = pageSize;
     this.page = 1;
-  }
-
-  get filterConfigs(): ListFilterConfig[] {
-    return [
-      { id: 'class', label: 'Classe', value: this.selectedClass, options: this.classOptions },
-      { id: 'status', label: 'Statut', value: this.selectedStatus, options: this.statusOptions },
-    ];
   }
 
   get filteredStudents(): Student[] {
@@ -151,6 +150,14 @@ export class InscriptionsComponent {
     }
 
     this.page = 1;
+    this.refreshFilterConfigs();
+  }
+
+  private refreshFilterConfigs(): void {
+    this.filterConfigs = [
+      { id: 'class', label: 'Classe', value: this.selectedClass, options: this.classOptions },
+      { id: 'status', label: 'Statut', value: this.selectedStatus, options: this.statusOptions },
+    ];
   }
 
   toggleMenu(id: string) {
@@ -164,5 +171,9 @@ export class InscriptionsComponent {
 
   closeDetails() {
     this.selectedStudent = null;
+  }
+
+  trackByStudentId(_index: number, student: Student): string {
+    return student.id;
   }
 }

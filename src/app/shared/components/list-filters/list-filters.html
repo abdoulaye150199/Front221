@@ -3,7 +3,7 @@
     <div class="filter-group">
       <label>{{ pageSizeLabel }}</label>
       <select [ngModel]="pageSizeValue" (ngModelChange)="pageSizeChange.emit($event)">
-        <option *ngFor="let item of pageSizeOptions" [value]="item.value">
+        <option *ngFor="let item of pageSizeOptions; trackBy: trackByOptionValue" [value]="item.value">
           {{ item.label }}
         </option>
       </select>
@@ -12,7 +12,7 @@
     <div class="filter-group" *ngFor="let filter of filters">
       <label>{{ filter.label }}</label>
       <select [ngModel]="filter.value" (ngModelChange)="onFilterValueChange(filter.id, $event)">
-        <option *ngFor="let item of filter.options" [value]="item.value">
+        <option *ngFor="let item of filter.options; trackBy: trackByOptionValue" [value]="item.value">
           {{ item.label }}
         </option>
       </select>

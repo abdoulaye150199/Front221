@@ -10,7 +10,7 @@
   </button>
 
   <button
-    *ngFor="let page of pages"
+    *ngFor="let page of pages; trackBy: trackByPageNumber"
     type="button"
     class="page-btn"
     [class.active]="page === currentPage"
