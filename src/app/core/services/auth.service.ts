@@ -61,6 +61,10 @@ export class AuthService {
    * Retourne une réponse avec JWT tokens (en mode démo)
    */
   login(phoneOrEmail: string, password: string): Observable<AuthResponse> {
+    if (this.shouldUseOfflineDemoAuth()) {
+      return of(this.createOfflineDemoSession(phoneOrEmail));
+    }
+
     if (!environment.mockData) {
       return this.http
         .post<AuthResponse>(`${environment.apiUrl}/auth/login`, {
@@ -70,13 +74,15 @@ export class AuthService {
         .pipe(
           tap((response) => this.applySuccessfulAuthentication(response)),
           catchError((error: HttpErrorResponse) =>
-            of({
-              success: false,
-              message:
-                error.status === 401
-                  ? 'Email/téléphone ou mot de passe invalide'
-                  : 'Service de connexion momentanément indisponible',
-            }),
+            error.status === 0
+              ? of(this.createOfflineDemoSession(phoneOrEmail))
+              : of({
+                  success: false,
+                  message:
+                    error.status === 401
+                      ? 'Email/téléphone ou mot de passe invalide'
+                      : 'Service de connexion momentanément indisponible',
+                }),
           ),
         );
     }
@@ -183,18 +189,20 @@ export class AuthService {
       });
     }
 
+    if (this.shouldUseOfflineDemoAuth()) {
+      return this.refreshOfflineDemoSession();
+    }
+
     if (!environment.mockData) {
       return this.http
         .post<AuthResponse>(`${environment.apiUrl}/auth/refresh`, { refreshToken })
         .pipe(
           tap((response) => this.applySuccessfulAuthentication(response)),
-          catchError(() => {
-            this.logout();
-            return of({
-              success: false,
-              message: 'La session a expiré',
-            });
-          }),
+          catchError((error: HttpErrorResponse) =>
+            error.status === 0
+              ? this.refreshOfflineDemoSession()
+              : this.handleExpiredSession(),
+          ),
         );
     }
 
@@ -316,6 +324,121 @@ export class AuthService {
    */
   private getAllUsers(): StoredUser[] {
     return MOCK_USERS;
+  }
+
+  private shouldUseOfflineDemoAuth(): boolean {
+    if (environment.mockData) {
+      return true;
+    }
+
+    if (typeof window === 'undefined') {
+      return false;
+    }
+
+    try {
+      const apiOrigin = new URL(environment.apiUrl, window.location.origin).origin;
+      return window.location.hostname.endsWith('vercel.app') && apiOrigin !== window.location.origin;
+    } catch {
+      return false;
+    }
+  }
+
+  private createOfflineDemoSession(identifier: string): AuthResponse {
+    const demoUser = this.createOfflineDemoStoredUser(identifier);
+    const user = this.toUser(demoUser);
+    const tokens = this.generateJwtTokens(demoUser);
+
+    this.tokenService.setTokens(tokens.accessToken, tokens.refreshToken);
+    this.persistUser(user);
+
+    return {
+      success: true,
+      user,
+      tokens,
+      message: 'Connexion hors ligne activée',
+    };
+  }
+
+  private refreshOfflineDemoSession(): Observable<AuthResponse> {
+    const currentUser = this.currentUserSubject.value;
+    if (!currentUser) {
+      return of({
+        success: false,
+        message: 'Utilisateur non trouvé',
+      });
+    }
+
+    const demoUser: StoredUser = {
+      id: currentUser.id,
+      firstName: currentUser.firstName,
+      lastName: currentUser.lastName,
+      email: currentUser.email,
+      phone: currentUser.phone,
+      role: currentUser.role,
+      userInitial: currentUser.userInitial,
+      passwordHash: '',
+      salt: '',
+    };
+
+    const tokens = this.generateJwtTokens(demoUser);
+    this.tokenService.setTokens(tokens.accessToken, tokens.refreshToken);
+
+    return of({
+      success: true,
+      user: currentUser,
+      tokens,
+    });
+  }
+
+  private handleExpiredSession(): Observable<AuthResponse> {
+    this.logout();
+    return of({
+      success: false,
+      message: 'La session a expiré',
+    });
+  }
+
+  private createOfflineDemoStoredUser(identifier: string): StoredUser {
+    const normalizedIdentifier = identifier.trim();
+    const localPart = normalizedIdentifier.includes('@')
+      ? normalizedIdentifier.split('@')[0]
+      : normalizedIdentifier;
+    const cleanedName = this.toDisplayName(localPart);
+    const firstName = cleanedName.split(' ')[0] ?? 'Utilisateur';
+    const lastName = cleanedName.split(' ').slice(1).join(' ') || 'Démo';
+    const email = normalizedIdentifier.includes('@')
+      ? normalizedIdentifier.toLowerCase()
+      : `${cleanedName.toLowerCase().replace(/\s+/g, '.')}@ecole221.local`;
+    const phone = normalizedIdentifier.includes('@') ? '+221700000000' : normalizedIdentifier;
+
+    return {
+      id: `offline-${cleanedName.toLowerCase().replace(/[^a-z0-9]+/g, '-') || 'user'}`,
+      firstName,
+      lastName,
+      email,
+      phone,
+      role: 'Administrateur',
+      userInitial: firstName.charAt(0).toUpperCase() || 'E',
+      passwordHash: '',
+      salt: '',
+    };
+  }
+
+  private toDisplayName(value: string): string {
+    const words = value
+      .replace(/[._-]+/g, ' ')
+      .replace(/\s+/g, ' ')
+      .trim()
+      .split(' ')
+      .filter(Boolean);
+
+    if (words.length === 0) {
+      return 'Utilisateur Demo';
+    }
+
+    return words
+      .map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+      .join(' ');
   }
 
   /**
