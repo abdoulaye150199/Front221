@@ -26,7 +26,7 @@ export class HeaderComponent {
 
   constructor(
     private readonly authService: AuthService,
-    private readonly router: Router
+    private readonly router: Router,
   ) {}
 
   logout(): void {

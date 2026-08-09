@@ -98,9 +98,7 @@
           </td>
         </tr>
         <tr *ngIf="pagedTrackedEvents.length === 0">
-          <td colspan="7" class="empty-state">
-            Aucun événement disponible pour le moment.
-          </td>
+          <td colspan="7" class="empty-state">Aucun événement disponible pour le moment.</td>
         </tr>
       </tbody>
     </table>
@@ -110,10 +108,7 @@
     <div class="page-size-control">
       <span>Éléments / page</span>
       <label class="page-size-select">
-        <select
-          [ngModel]="eventPageSize"
-          (ngModelChange)="setTrackedEventPageSize($event)"
-        >
+        <select [ngModel]="eventPageSize" (ngModelChange)="setTrackedEventPageSize($event)">
           <option *ngFor="let size of [5, 10, 15]" [value]="size">{{ size }}</option>
         </select>
       </label>

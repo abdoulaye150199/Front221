@@ -22,7 +22,7 @@ export class AcademicYearService {
   }
 
   getById(id: string): AcademicYear | undefined {
-    return this.academicYears.find(year => year.id === id);
+    return this.academicYears.find((year) => year.id === id);
   }
 
   create(form: AcademicYearForm): AcademicYear {
@@ -42,7 +42,7 @@ export class AcademicYearService {
   }
 
   updateStatus(id: string, status: AcademicYear['status']): void {
-    const index = this.academicYears.findIndex(year => year.id === id);
+    const index = this.academicYears.findIndex((year) => year.id === id);
     if (index !== -1) {
       this.academicYears[index].status = status;
     }
@@ -53,10 +53,10 @@ export class AcademicYearService {
       return this.getAll();
     }
     const lowerTerm = term.toLowerCase();
-    return this.academicYears.filter(year =>
+    return this.academicYears.filter((year) =>
       `${year.year} ${year.startDate} ${year.endDate} ${year.semester} ${year.status}`
         .toLowerCase()
-        .includes(lowerTerm)
+        .includes(lowerTerm),
     );
   }
 

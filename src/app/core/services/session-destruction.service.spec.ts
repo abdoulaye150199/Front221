@@ -34,7 +34,6 @@ describe('SessionDestructionService', () => {
         { provide: AuthService, useValue: mockAuthService },
         { provide: Router, useValue: mockRouter },
         { provide: PLATFORM_ID, useValue: mockPlatformId },
-        NgZone,
       ],
     });
 

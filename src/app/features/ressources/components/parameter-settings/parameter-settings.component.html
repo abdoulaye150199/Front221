@@ -23,7 +23,9 @@
       <label class="field select-field">
         <select [(ngModel)]="eventForm.semester">
           <option value="">Choisir le semestre</option>
-          <option *ngFor="let semester of semesterOptions" [value]="semester">{{ semester }}</option>
+          <option *ngFor="let semester of semesterOptions" [value]="semester">
+            {{ semester }}
+          </option>
         </select>
       </label>
 
@@ -68,7 +70,9 @@
             <td class="meta-muted">{{ item.semester }}</td>
             <td class="year-cell">{{ item.name }}</td>
             <td>
-              <span [ngClass]="['status-pill', getStatusClass(item.status)]">{{ item.status }}</span>
+              <span [ngClass]="['status-pill', getStatusClass(item.status)]">{{
+                item.status
+              }}</span>
             </td>
             <td class="actions-cell">
               <button
@@ -107,7 +111,12 @@
       </div>
 
       <div class="pagination number-pagination">
-        <button class="page-nav-btn" type="button" [disabled]="!canPrevEventPage" (click)="previousEventPage()">
+        <button
+          class="page-nav-btn"
+          type="button"
+          [disabled]="!canPrevEventPage"
+          (click)="previousEventPage()"
+        >
           <mat-icon>chevron_left</mat-icon>
         </button>
 
@@ -121,7 +130,12 @@
           {{ pageNumber }}
         </button>
 
-        <button class="page-nav-btn" type="button" [disabled]="!canNextEventPage" (click)="nextEventPage()">
+        <button
+          class="page-nav-btn"
+          type="button"
+          [disabled]="!canNextEventPage"
+          (click)="nextEventPage()"
+        >
           <mat-icon>chevron_right</mat-icon>
         </button>
       </div>
@@ -167,7 +181,9 @@
           <tr *ngFor="let item of pagedCivilityItems; trackBy: trackById">
             <td class="year-cell">{{ item.label }}</td>
             <td>
-              <span [ngClass]="['status-pill', getStatusClass(item.status)]">{{ item.status }}</span>
+              <span [ngClass]="['status-pill', getStatusClass(item.status)]">{{
+                item.status
+              }}</span>
             </td>
             <td class="actions-cell">
               <button
@@ -206,7 +222,12 @@
       </div>
 
       <div class="pagination number-pagination">
-        <button class="page-nav-btn" type="button" [disabled]="!canPrevCivilityPage" (click)="previousCivilityPage()">
+        <button
+          class="page-nav-btn"
+          type="button"
+          [disabled]="!canPrevCivilityPage"
+          (click)="previousCivilityPage()"
+        >
           <mat-icon>chevron_left</mat-icon>
         </button>
 
@@ -220,7 +241,12 @@
           {{ pageNumber }}
         </button>
 
-        <button class="page-nav-btn" type="button" [disabled]="!canNextCivilityPage" (click)="nextCivilityPage()">
+        <button
+          class="page-nav-btn"
+          type="button"
+          [disabled]="!canNextCivilityPage"
+          (click)="nextCivilityPage()"
+        >
           <mat-icon>chevron_right</mat-icon>
         </button>
       </div>
@@ -239,7 +265,9 @@
 
       <label class="field select-field compact-field">
         <select [ngModel]="roomForm.capacity" (ngModelChange)="setRoomCapacity($event)">
-          <option *ngFor="let capacity of roomCapacityOptions" [value]="capacity">{{ capacity }}</option>
+          <option *ngFor="let capacity of roomCapacityOptions" [value]="capacity">
+            {{ capacity }}
+          </option>
         </select>
       </label>
 
@@ -253,12 +281,7 @@
         {{ editingRoomId ? 'Modifier' : 'Créer' }}
       </button>
 
-      <button
-        *ngIf="editingRoomId"
-        mat-stroked-button
-        type="button"
-        (click)="cancelRoomEdition()"
-      >
+      <button *ngIf="editingRoomId" mat-stroked-button type="button" (click)="cancelRoomEdition()">
         Annuler
       </button>
     </div>
@@ -280,7 +303,9 @@
             <td class="year-cell">{{ item.name }}</td>
             <td class="metric">{{ item.capacity }}</td>
             <td>
-              <span [ngClass]="['status-pill', getStatusClass(item.status)]">{{ item.status }}</span>
+              <span [ngClass]="['status-pill', getStatusClass(item.status)]">{{
+                item.status
+              }}</span>
             </td>
             <td class="actions-cell">
               <button
@@ -319,7 +344,12 @@
       </div>
 
       <div class="pagination number-pagination">
-        <button class="page-nav-btn" type="button" [disabled]="!canPrevRoomPage" (click)="previousRoomPage()">
+        <button
+          class="page-nav-btn"
+          type="button"
+          [disabled]="!canPrevRoomPage"
+          (click)="previousRoomPage()"
+        >
           <mat-icon>chevron_left</mat-icon>
         </button>
 
@@ -333,7 +363,12 @@
           {{ pageNumber }}
         </button>
 
-        <button class="page-nav-btn" type="button" [disabled]="!canNextRoomPage" (click)="nextRoomPage()">
+        <button
+          class="page-nav-btn"
+          type="button"
+          [disabled]="!canNextRoomPage"
+          (click)="nextRoomPage()"
+        >
           <mat-icon>chevron_right</mat-icon>
         </button>
       </div>
@@ -399,10 +434,14 @@
               </div>
             </td>
             <td>
-              <span class="document-tag" [ngClass]="getDocumentTypeClass(item.type)">{{ item.type }}</span>
+              <span class="document-tag" [ngClass]="getDocumentTypeClass(item.type)">{{
+                item.type
+              }}</span>
             </td>
             <td>
-              <span [ngClass]="['status-pill', getStatusClass(item.status)]">{{ item.status }}</span>
+              <span [ngClass]="['status-pill', getStatusClass(item.status)]">{{
+                item.status
+              }}</span>
             </td>
             <td class="actions-cell">
               <button
@@ -441,7 +480,12 @@
       </div>
 
       <div class="pagination number-pagination">
-        <button class="page-nav-btn" type="button" [disabled]="!canPrevDocumentPage" (click)="previousDocumentPage()">
+        <button
+          class="page-nav-btn"
+          type="button"
+          [disabled]="!canPrevDocumentPage"
+          (click)="previousDocumentPage()"
+        >
           <mat-icon>chevron_left</mat-icon>
         </button>
 
@@ -455,7 +499,12 @@
           {{ pageNumber }}
         </button>
 
-        <button class="page-nav-btn" type="button" [disabled]="!canNextDocumentPage" (click)="nextDocumentPage()">
+        <button
+          class="page-nav-btn"
+          type="button"
+          [disabled]="!canNextDocumentPage"
+          (click)="nextDocumentPage()"
+        >
           <mat-icon>chevron_right</mat-icon>
         </button>
       </div>
@@ -514,7 +563,9 @@
               </div>
             </td>
             <td>
-              <span [ngClass]="['status-pill', getStatusClass(item.status)]">{{ item.status }}</span>
+              <span [ngClass]="['status-pill', getStatusClass(item.status)]">{{
+                item.status
+              }}</span>
             </td>
             <td class="actions-cell">
               <button
@@ -553,7 +604,12 @@
       </div>
 
       <div class="pagination number-pagination">
-        <button class="page-nav-btn" type="button" [disabled]="!canPrevSchedulePage" (click)="previousSchedulePage()">
+        <button
+          class="page-nav-btn"
+          type="button"
+          [disabled]="!canPrevSchedulePage"
+          (click)="previousSchedulePage()"
+        >
           <mat-icon>chevron_left</mat-icon>
         </button>
 
@@ -567,7 +623,12 @@
           {{ pageNumber }}
         </button>
 
-        <button class="page-nav-btn" type="button" [disabled]="!canNextSchedulePage" (click)="nextSchedulePage()">
+        <button
+          class="page-nav-btn"
+          type="button"
+          [disabled]="!canNextSchedulePage"
+          (click)="nextSchedulePage()"
+        >
           <mat-icon>chevron_right</mat-icon>
         </button>
       </div>

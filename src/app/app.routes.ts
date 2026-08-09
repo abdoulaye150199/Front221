@@ -1,51 +1,52 @@
 import { Routes } from '@angular/router';
-import { AuthGuard } from './core/guards/auth-jwt.guard';
-import { MainLayoutComponent } from './shared/layouts/main-layout';
+import { authGuard } from './core/guards/auth.guard';
+import { MainLayoutComponent } from './layouts/main-layout/main-layout';
 
 export const routes: Routes = [
   {
-    path: 'auth',
-    loadChildren: () => import('./features/auth/auth-module').then(m => m.AuthModule),
+    path: 'auth/login',
+    loadComponent: () => import('./features/auth/login/login').then((m) => m.LoginComponent),
   },
   {
     path: '',
     component: MainLayoutComponent,
-    canActivate: [AuthGuard],
+    canActivate: [authGuard],
     children: [
       {
         path: 'dashboard',
-        loadChildren: () => import('./features/dashboard/dashboard-module').then(m => m.DashboardModule),
+        loadComponent: () => import('./features/dashboard/dashboard').then((m) => m.DashboardComponent),
       },
       {
         path: 'ressources',
-        loadChildren: () => import('./features/ressources/ressources-module').then(m => m.RessourcesModule),
+        loadComponent: () => import('./features/ressources/ressources').then((m) => m.RessourcesComponent),
       },
       {
         path: 'cours',
-        loadChildren: () => import('./features/cours/cours-module').then(m => m.CoursModule),
+        loadComponent: () => import('./features/cours/cours').then((m) => m.CoursComponent),
       },
       {
         path: 'referentiel',
-        loadChildren: () => import('./features/referentiel/referentiel-module').then(m => m.ReferentielModule),
+        loadComponent: () => import('./features/referentiel/referentiel').then((m) => m.ReferentielComponent),
       },
       {
         path: 'professeurs',
-        loadChildren: () => import('./features/professeurs/professeurs-module').then(m => m.ProfesseursModule),
+        loadComponent: () => import('./features/professeurs/professeurs').then((m) => m.ProfesseursComponent),
       },
       {
         path: 'planning',
-        loadChildren: () => import('./features/planning/planning-module').then(m => m.PlanningModule),
+        loadComponent: () => import('./features/planning/planning.component').then((m) => m.PlanningComponent),
       },
       {
         path: 'inscriptions',
-        loadChildren: () => import('./features/inscriptions/inscriptions-module').then(m => m.InscriptionsModule),
+        loadComponent: () => import('./features/inscriptions/inscriptions').then((m) => m.InscriptionsComponent),
       },
       {
         path: 'paiement',
-        loadChildren: () => import('./features/paiement/paiement-module').then(m => m.PaiementModule),
+        loadComponent: () => import('./features/paiement/paiement').then((m) => m.PaiementComponent),
       },
       { path: '', redirectTo: '/dashboard', pathMatch: 'full' },
     ],
   },
+  { path: 'auth', redirectTo: '/auth/login', pathMatch: 'full' },
   { path: '**', redirectTo: '/auth/login' },
 ];

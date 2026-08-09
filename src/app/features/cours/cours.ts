@@ -1,7 +1,13 @@
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { FORM_ACTION_IMPORTS } from '../../shared/imports/standalone-imports';
 import { CourseService, Course, CourseFilters } from './services/course.service';
 import { createPaginationHandler } from '../../shared/utils';
+
+interface CourseGroup {
+  ue: string;
+  credits: number;
+  courses: Course[];
+}
 
 @Component({
   selector: 'app-cours',
@@ -9,6 +15,7 @@ import { createPaginationHandler } from '../../shared/utils';
   imports: [...FORM_ACTION_IMPORTS],
   templateUrl: './cours.html',
   styleUrls: ['./cours.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CoursComponent {
   searchTerm = '';
@@ -24,6 +31,14 @@ export class CoursComponent {
   selectedNiveau = 'tous';
   selectedClasse = 'toutes';
   selectedSemestre = 'tous';
+  openCourseActionId: string | null = null;
+  readonly semesterTabs = ['S1', 'S2', 'S3', 'S4', 'S5', 'S6'];
+  readonly academicContext = {
+    domain: 'Sciences et Technologies',
+    speciality: 'Développement Web et Mobile',
+    mention: 'Informatique',
+    grade: 'Licence',
+  };
 
   private allCourses: Course[] = [];
 
@@ -31,7 +46,9 @@ export class CoursComponent {
     () => this.filteredCourses.length,
     () => this.pageSize,
     () => this.page,
-    (page) => { this.page = page; }
+    (page) => {
+      this.page = page;
+    },
   );
 
   constructor(private courseService: CourseService) {
@@ -52,6 +69,20 @@ export class CoursComponent {
   onSearchChange(value: string): void {
     this.searchTerm = value;
     this.page = 1;
+  }
+
+  selectSemester(semester: string): void {
+    this.selectedSemestre = semester;
+    this.page = 1;
+    this.closeActionMenu();
+  }
+
+  toggleActionMenu(courseId: string): void {
+    this.openCourseActionId = this.openCourseActionId === courseId ? null : courseId;
+  }
+
+  closeActionMenu(): void {
+    this.openCourseActionId = null;
   }
 
   get filteredCourses(): Course[] {
@@ -85,12 +116,49 @@ export class CoursComponent {
     return this.filteredCourses.slice(start, start + this.pageSize);
   }
 
+  get groupedCourses(): CourseGroup[] {
+    const groups = new Map<string, CourseGroup>();
+
+    for (const course of this.pagedCourses) {
+      const current = groups.get(course.ue);
+      if (current) {
+        current.courses.push(course);
+      } else {
+        groups.set(course.ue, {
+          ue: course.ue,
+          credits: course.credits,
+          courses: [course],
+        });
+      }
+    }
+
+    return [...groups.values()];
+  }
+
+  coefficient(course: Course): number {
+    return course.coefficient ?? Math.max(1, Math.round(course.credits / 2));
+  }
+
+  plannedHours(course: Course): number {
+    return course.vhp ?? (Number.parseInt(course.hours, 10) || 0);
+  }
+
+  personalWorkHours(course: Course): number {
+    return course.tpe ?? 0;
+  }
+
+  totalHours(course: Course): number {
+    return course.vht ?? this.plannedHours(course) + this.personalWorkHours(course);
+  }
+
   get startIndex(): number {
     return this.totalResults === 0 ? 0 : (this.currentPage - 1) * this.pageSize + 1;
   }
 
   get endIndex(): number {
-    return this.totalResults === 0 ? 0 : Math.min(this.currentPage * this.pageSize, this.totalResults);
+    return this.totalResults === 0
+      ? 0
+      : Math.min(this.currentPage * this.pageSize, this.totalResults);
   }
 
   get canPrev(): boolean {

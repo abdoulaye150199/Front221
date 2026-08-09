@@ -1,7 +1,8 @@
 import { TestBed } from '@angular/core/testing';
-import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
-import { provideHttpClient, withInterceptors, withFetch } from '@angular/common/http';
+import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
+import { HttpClient, provideHttpClient, withInterceptors } from '@angular/common/http';
 import { describe, it, expect, beforeEach, vi } from 'vitest';
+import { of } from 'rxjs';
 import { jwtHttpInterceptor } from './jwt-http.interceptor';
 import { TokenService } from '../services/token.service';
 import { AuthService } from '../services/auth.service';
@@ -14,44 +15,43 @@ const mockTokenService = {
 };
 
 const mockAuthService = {
-  refreshAccessToken: vi.fn(() => ({
-    subscribe: (callback: (response: { success: boolean; tokens?: any }) => void) => {
-      callback({ success: true, tokens: { accessToken: 'new-token', refreshToken: 'new-refresh' } });
-    }
-  })),
+  refreshAccessToken: vi.fn(() =>
+    of({
+      success: true,
+      tokens: {
+        accessToken: 'new-token',
+        refreshToken: 'new-refresh',
+        expiresIn: 900,
+      },
+    }),
+  ),
   logout: vi.fn(),
-  isAuthenticated: vi.fn(() => true),
 };
 
 describe('JwtHttpInterceptor', () => {
   let httpMock: HttpTestingController;
-  let tokenService: TokenService;
-  let authService: AuthService;
+  let http: HttpClient;
 
   beforeEach(() => {
+    vi.clearAllMocks();
+    mockTokenService.getAccessToken.mockReturnValue(null);
+    mockTokenService.isTokenExpired.mockReturnValue(false);
+
     TestBed.configureTestingModule({
-      imports: [HttpClientTestingModule],
       providers: [
-        provideHttpClient(
-          withFetch(),
-          withInterceptors([jwtHttpInterceptor])
-        ),
+        provideHttpClient(withInterceptors([jwtHttpInterceptor])),
+        provideHttpClientTesting(),
         { provide: TokenService, useValue: mockTokenService },
         { provide: AuthService, useValue: mockAuthService },
       ],
     });
 
     httpMock = TestBed.inject(HttpTestingController);
-    tokenService = TestBed.inject(TokenService);
-    authService = TestBed.inject(AuthService);
+    http = TestBed.inject(HttpClient);
   });
 
   afterEach(() => {
     httpMock.verify();
-  });
-
-  it('should be created', () => {
-    expect(jwtHttpInterceptor).toBeDefined();
   });
 
   describe('when making a request with valid token', () => {
@@ -59,16 +59,38 @@ describe('JwtHttpInterceptor', () => {
       mockTokenService.getAccessToken.mockReturnValue('valid-token');
 
       const testUrl = 'https://api.example.com/data';
-      expect(jwtHttpInterceptor).toBeDefined();
-    });
-  });
+      http.get(testUrl).subscribe();
 
-  describe('when token is expired (401)', () => {
-    it('should attempt to refresh token', () => {
+      const request = httpMock.expectOne(testUrl);
+      expect(request.request.headers.get('Authorization')).toBe('Bearer valid-token');
+      request.flush({ ok: true });
+    });
+
+    it('should not add a token when it is expired', () => {
       mockTokenService.getAccessToken.mockReturnValue('expired-token');
       mockTokenService.isTokenExpired.mockReturnValue(true);
 
-      expect(jwtHttpInterceptor).toBeDefined();
+      http.get('/api/data').subscribe();
+
+      const request = httpMock.expectOne('/api/data');
+      expect(request.request.headers.has('Authorization')).toBe(false);
+      request.flush({ ok: true });
+    });
+  });
+
+  describe('when the API returns 401', () => {
+    it('should refresh the token and retry the request', () => {
+      mockTokenService.getAccessToken.mockReturnValue('old-token');
+
+      http.get('/api/protected').subscribe();
+
+      const firstRequest = httpMock.expectOne('/api/protected');
+      firstRequest.flush({}, { status: 401, statusText: 'Unauthorized' });
+
+      expect(mockAuthService.refreshAccessToken).toHaveBeenCalledOnce();
+      const retriedRequest = httpMock.expectOne('/api/protected');
+      expect(retriedRequest.request.headers.get('Authorization')).toBe('Bearer new-token');
+      retriedRequest.flush({ ok: true });
     });
   });
 });

@@ -16,7 +16,9 @@ export class SpecialityCatalogService {
   private nextId: number;
 
   constructor() {
-    this.items = this.hydrateSpecialityItems(structuredClone(RESSOURCES_DATA.specialityCatalogItems));
+    this.items = this.hydrateSpecialityItems(
+      structuredClone(RESSOURCES_DATA.specialityCatalogItems),
+    );
     this.nextId = this.items.length + 1;
   }
 
@@ -25,11 +27,11 @@ export class SpecialityCatalogService {
   }
 
   getByCategory(category: SpecialitySectionKey): SpecialityCatalogItem[] {
-    return this.items.filter(item => item.category === category);
+    return this.items.filter((item) => item.category === category);
   }
 
   getById(id: string): SpecialityCatalogItem | undefined {
-    return this.items.find(item => item.id === id);
+    return this.items.find((item) => item.id === id);
   }
 
   create(form: SpecialityCatalogForm): SpecialityCatalogItem {
@@ -44,8 +46,12 @@ export class SpecialityCatalogService {
       levelNames: form.levelNames ? [...form.levelNames] : undefined,
       durationLabel: form.durationLabel,
       hourlyRateLabel: form.hourlyRateLabel,
-      documentItemsToProvide: form.documentItemsToProvide ? [...form.documentItemsToProvide] : undefined,
-      documentItemsToWithdraw: form.documentItemsToWithdraw ? [...form.documentItemsToWithdraw] : undefined,
+      documentItemsToProvide: form.documentItemsToProvide
+        ? [...form.documentItemsToProvide]
+        : undefined,
+      documentItemsToWithdraw: form.documentItemsToWithdraw
+        ? [...form.documentItemsToWithdraw]
+        : undefined,
       currentSemesterLabel: form.currentSemesterLabel,
       status: form.status,
     });
@@ -55,7 +61,7 @@ export class SpecialityCatalogService {
   }
 
   update(id: string, form: SpecialityCatalogForm): SpecialityCatalogItem | undefined {
-    const index = this.items.findIndex(item => item.id === id);
+    const index = this.items.findIndex((item) => item.id === id);
     if (index === -1) {
       return undefined;
     }
@@ -70,8 +76,12 @@ export class SpecialityCatalogService {
       levelNames: form.levelNames ? [...form.levelNames] : undefined,
       durationLabel: form.durationLabel,
       hourlyRateLabel: form.hourlyRateLabel,
-      documentItemsToProvide: form.documentItemsToProvide ? [...form.documentItemsToProvide] : undefined,
-      documentItemsToWithdraw: form.documentItemsToWithdraw ? [...form.documentItemsToWithdraw] : undefined,
+      documentItemsToProvide: form.documentItemsToProvide
+        ? [...form.documentItemsToProvide]
+        : undefined,
+      documentItemsToWithdraw: form.documentItemsToWithdraw
+        ? [...form.documentItemsToWithdraw]
+        : undefined,
       currentSemesterLabel: form.currentSemesterLabel,
       status: this.items[index].status,
     });
@@ -80,25 +90,29 @@ export class SpecialityCatalogService {
 
   delete(id: string): boolean {
     const initialLength = this.items.length;
-    this.items = this.items.filter(item => item.id !== id);
+    this.items = this.items.filter((item) => item.id !== id);
     return this.items.length < initialLength;
   }
 
   getDomainOptions(): string[] {
-    return [...new Set(
-      this.items
-        .filter(item => item.category === 'Domaines' && item.status === 'Actif')
-        .map(item => item.name)
-    )];
+    return [
+      ...new Set(
+        this.items
+          .filter((item) => item.category === 'Domaines' && item.status === 'Actif')
+          .map((item) => item.name),
+      ),
+    ];
   }
 
   getMentionOptions(domainName?: string): string[] {
-    return [...new Set(
-      this.items
-        .filter(item => item.category === 'Mention' && item.status === 'Actif')
-        .filter(item => !domainName || item.domainName === domainName)
-        .map(item => item.name)
-    )];
+    return [
+      ...new Set(
+        this.items
+          .filter((item) => item.category === 'Mention' && item.status === 'Actif')
+          .filter((item) => !domainName || item.domainName === domainName)
+          .map((item) => item.name),
+      ),
+    ];
   }
 
   getLevelOptions(): string[] {
@@ -107,70 +121,80 @@ export class SpecialityCatalogService {
       return [...new Set(configuredLevels)];
     }
 
-    return [...new Set(
-      this.items
-        .filter(item => item.category === 'Niveau' && item.status === 'Actif')
-        .map(item => item.name)
-    )];
+    return [
+      ...new Set(
+        this.items
+          .filter((item) => item.category === 'Niveau' && item.status === 'Actif')
+          .map((item) => item.name),
+      ),
+    ];
   }
 
   getCycleDurationOptions(): string[] {
-    return [...new Set([
-      '1 année',
-      '2 années',
-      '3 années',
-      ...this.items
-        .filter(item => item.category === 'Cycle' && item.durationLabel)
-        .map(item => item.durationLabel as string),
-    ])];
+    return [
+      ...new Set([
+        '1 année',
+        '2 années',
+        '3 années',
+        ...this.items
+          .filter((item) => item.category === 'Cycle' && item.durationLabel)
+          .map((item) => item.durationLabel as string),
+      ]),
+    ];
   }
 
   getHourlyRateOptions(): string[] {
-    return [...new Set([
-      '10 000 F',
-      '20 000 F',
-      '30 000 F',
-      ...this.items
-        .filter(item => item.category === 'Cycle' && item.hourlyRateLabel)
-        .map(item => item.hourlyRateLabel as string),
-    ])];
+    return [
+      ...new Set([
+        '10 000 F',
+        '20 000 F',
+        '30 000 F',
+        ...this.items
+          .filter((item) => item.category === 'Cycle' && item.hourlyRateLabel)
+          .map((item) => item.hourlyRateLabel as string),
+      ]),
+    ];
   }
 
   getCycleOptions(): string[] {
-    return [...new Set(
-      this.items
-        .filter(item => item.category === 'Cycle' && item.status === 'Actif')
-        .map(item => item.name)
-    )];
+    return [
+      ...new Set(
+        this.items
+          .filter((item) => item.category === 'Cycle' && item.status === 'Actif')
+          .map((item) => item.name),
+      ),
+    ];
   }
 
   getSemesterOptions(): string[] {
-    return [...new Set(
-      [
+    return [
+      ...new Set([
         ...(RESSOURCES_DATA.semesterOptions?.filter(Boolean) ?? []),
         ...this.items
-        .filter(item => item.category === 'Semestres' && item.status === 'Actif')
-        .map(item => item.name),
-      ]
-    )];
+          .filter((item) => item.category === 'Semestres' && item.status === 'Actif')
+          .map((item) => item.name),
+      ]),
+    ];
   }
 
   getSemesterDurationOptions(): string[] {
-    return [...new Set([
-      '5 mois',
-      '6 mois',
-      ...this.items
-        .filter(item => item.category === 'Semestres' && item.durationLabel)
-        .map(item => item.durationLabel as string),
-    ])];
+    return [
+      ...new Set([
+        '5 mois',
+        '6 mois',
+        ...this.items
+          .filter((item) => item.category === 'Semestres' && item.durationLabel)
+          .map((item) => item.durationLabel as string),
+      ]),
+    ];
   }
 
   private hydrateSpecialityItems(items: SpecialityCatalogItem[]): SpecialityCatalogItem[] {
     const activeMentions = items.filter(
-      item => item.category === 'Mention' && item.status === 'Actif'
+      (item) => item.category === 'Mention' && item.status === 'Actif',
     );
     const domainFallback = items.find(
-      item => item.category === 'Domaines' && item.status === 'Actif'
+      (item) => item.category === 'Domaines' && item.status === 'Actif',
     )?.name;
     const levelOptions = this.getConfiguredLevelOptions(items);
     const levelPresets = [
@@ -181,16 +205,18 @@ export class SpecialityCatalogService {
 
     let specialityIndex = 0;
 
-    return items.map(item => {
+    return items.map((item) => {
       if (item.category !== 'Spécialité') {
         return this.enrichCatalogItem(item);
       }
 
-      const fallbackMention = activeMentions.length > 0
-        ? activeMentions[specialityIndex % activeMentions.length]
-        : undefined;
-      const fallbackLevels = levelPresets[specialityIndex % levelPresets.length]
-        .filter(level => levelOptions.includes(level));
+      const fallbackMention =
+        activeMentions.length > 0
+          ? activeMentions[specialityIndex % activeMentions.length]
+          : undefined;
+      const fallbackLevels = levelPresets[specialityIndex % levelPresets.length].filter((level) =>
+        levelOptions.includes(level),
+      );
       specialityIndex += 1;
 
       return this.enrichCatalogItem({
@@ -212,11 +238,13 @@ export class SpecialityCatalogService {
       return [...new Set(configuredLevels)];
     }
 
-    return [...new Set(
-      items
-        .filter(item => item.category === 'Niveau' && item.status === 'Actif')
-        .map(item => item.name)
-    )];
+    return [
+      ...new Set(
+        items
+          .filter((item) => item.category === 'Niveau' && item.status === 'Actif')
+          .map((item) => item.name),
+      ),
+    ];
   }
 
   private getCycleDefaults(cycleName: string): { durationLabel: string; hourlyRateLabel: string } {
@@ -271,7 +299,7 @@ export class SpecialityCatalogService {
 
   private getLevelDefaults(
     levelName: string,
-    cycleName?: string
+    cycleName?: string,
   ): {
     cycleName: string;
     documentItemsToProvide: string[];
@@ -289,10 +317,7 @@ export class SpecialityCatalogService {
           "4 photos d'identité",
           'Photocopie dernier diplôme obtenu',
         ],
-        documentItemsToWithdraw: [
-          'Relevé de notes semestre 2',
-          'Attestation de réussite',
-        ],
+        documentItemsToWithdraw: ['Relevé de notes semestre 2', 'Attestation de réussite'],
         currentSemesterLabel: 'Semestre 1',
       };
     }
@@ -321,10 +346,7 @@ export class SpecialityCatalogService {
         "4 photos d'identité",
         'Photocopie dernier diplôme obtenu',
       ],
-      documentItemsToWithdraw: [
-        'Bulletin de notes semestre 2',
-        'Attestation de réussite',
-      ],
+      documentItemsToWithdraw: ['Bulletin de notes semestre 2', 'Attestation de réussite'],
       currentSemesterLabel: normalizedLevelName.endsWith('2') ? 'Semestre 2' : 'Semestre 1',
     };
   }
@@ -343,12 +365,16 @@ export class SpecialityCatalogService {
 
   private getSemesterDefaults(
     semesterName: string,
-    semesterLevelName?: string
+    semesterLevelName?: string,
   ): {
     semesterLevelName: string;
     durationLabel: string;
   } {
-    const availableLevels = RESSOURCES_DATA.levelOptions?.filter(Boolean) ?? ['Licence', 'Master 1', 'Master 2'];
+    const availableLevels = RESSOURCES_DATA.levelOptions?.filter(Boolean) ?? [
+      'Licence',
+      'Master 1',
+      'Master 2',
+    ];
     const fallbackLevel = semesterLevelName ?? availableLevels[0] ?? 'Licence';
     const normalizedSemesterName = semesterName.trim();
 

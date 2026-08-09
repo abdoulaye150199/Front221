@@ -1,4 +1,10 @@
-import { HttpInterceptorFn, HttpErrorResponse, HttpEvent } from '@angular/common/http';
+import {
+  HttpErrorResponse,
+  HttpEvent,
+  HttpHandlerFn,
+  HttpInterceptorFn,
+  HttpRequest,
+} from '@angular/common/http';
 import { inject } from '@angular/core';
 import { catchError, filter, take, switchMap, throwError, BehaviorSubject, Observable } from 'rxjs';
 import { TokenService } from '../services/token.service';
@@ -7,7 +13,10 @@ import { AuthService } from '../services/auth.service';
 let isRefreshing = false;
 const refreshTokenSubject = new BehaviorSubject<string | null>(null);
 
-export const jwtHttpInterceptor: HttpInterceptorFn = (req, next): Observable<HttpEvent<unknown>> => {
+export const jwtHttpInterceptor: HttpInterceptorFn = (
+  req,
+  next,
+): Observable<HttpEvent<unknown>> => {
   const tokenService = inject(TokenService);
   const authService = inject(AuthService);
 
@@ -23,19 +32,18 @@ export const jwtHttpInterceptor: HttpInterceptorFn = (req, next): Observable<Htt
   return next(req).pipe(
     catchError((error: unknown) => {
       if (error instanceof HttpErrorResponse && error.status === 401) {
-        return handle401Error(req, next, authService, tokenService) as Observable<HttpEvent<unknown>>;
+        return handle401Error(req, next, authService);
       }
       return throwError(() => error);
-    })
+    }),
   );
 };
 
 function handle401Error(
-  request: any,
-  next: any,
+  request: HttpRequest<unknown>,
+  next: HttpHandlerFn,
   authService: AuthService,
-  tokenService: TokenService
-): any {
+): Observable<HttpEvent<unknown>> {
   if (!isRefreshing) {
     isRefreshing = true;
     refreshTokenSubject.next(null);
@@ -64,7 +72,7 @@ function handle401Error(
         isRefreshing = false;
         authService.logout();
         return throwError(() => err);
-      })
+      }),
     );
   } else {
     return refreshTokenSubject.pipe(
@@ -82,7 +90,7 @@ function handle401Error(
         });
 
         return next(clonedRequest);
-      })
+      }),
     );
   }
 }

@@ -15,6 +15,6 @@ export const AUTH_ERROR_MESSAGES = {
   ...authErrorMessages,
   passwordMinLength: authErrorMessages.passwordMinLengthTemplate.replace(
     '{min}',
-    String(passwordMinLength)
+    String(passwordMinLength),
   ),
 };

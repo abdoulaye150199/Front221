@@ -36,11 +36,23 @@
 
   <div class="calendar-toolbar">
     <div class="month-navigation">
-      <button mat-icon-button class="nav-btn" type="button" (click)="previousMonth()">
+      <button
+        mat-icon-button
+        class="nav-btn"
+        type="button"
+        aria-label="Mois précédent"
+        (click)="previousMonth()"
+      >
         <mat-icon>chevron_left</mat-icon>
       </button>
       <span class="month-year">{{ monthName }} {{ yearNumber }}</span>
-      <button mat-icon-button class="nav-btn" type="button" (click)="nextMonth()">
+      <button
+        mat-icon-button
+        class="nav-btn"
+        type="button"
+        aria-label="Mois suivant"
+        (click)="nextMonth()"
+      >
         <mat-icon>chevron_right</mat-icon>
       </button>
       <button class="today-btn" type="button">Aujourd'hui</button>
@@ -85,11 +97,7 @@
     <div class="schedule-body">
       <div class="schedule-header">
         <div class="time-header"></div>
-        <div
-          class="day-header"
-          *ngFor="let day of weekDays"
-          [class.is-next]="day.isNextMonth"
-        >
+        <div class="day-header" *ngFor="let day of weekDays" [class.is-next]="day.isNextMonth">
           <div class="day-name">{{ day.label }}</div>
           <div class="day-number">{{ formatDay(day.date) }}</div>
         </div>
@@ -98,10 +106,12 @@
         <div class="time-cell">{{ slot }}</div>
         <div class="day-cell" *ngFor="let day of weekDays; let dayIndex = index">
           <ng-container *ngIf="getSession(dayIndex, slot) as session; else emptyCell">
-            <div
+            <button
+              type="button"
               class="session-card"
               [ngClass]="session.status"
               (click)="openModal('details', session)"
+              [attr.aria-label]="'Ouvrir la session ' + session.title + ' à ' + session.time"
             >
               <div class="session-title">{{ session.title }}</div>
               <div class="session-time">{{ session.time }}</div>
@@ -121,12 +131,17 @@
                   {{ getStatusLabel(session.status) }}
                 </span>
               </div>
-            </div>
+            </button>
           </ng-container>
           <ng-template #emptyCell>
-            <div class="empty-cell" (click)="openModal('create')">
+            <button
+              type="button"
+              class="empty-cell"
+              aria-label="Ajouter une session"
+              (click)="openModal('create')"
+            >
               <mat-icon>add</mat-icon>
-            </div>
+            </button>
           </ng-template>
         </div>
       </div>
@@ -138,10 +153,15 @@
   </div>
 
   <div class="session-modal-backdrop" *ngIf="isModalOpen">
-    <div class="session-modal">
+    <div
+      class="session-modal"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="session-modal-title"
+    >
       <div class="modal-header">
         <div>
-          <h3>
+          <h3 id="session-modal-title">
             {{ modalMode === 'create' ? 'Nouvelle session' : 'Détails de la session' }}
           </h3>
           <p>
@@ -152,7 +172,12 @@
             }}
           </p>
         </div>
-        <button type="button" class="close-btn" (click)="closeModal()">
+        <button
+          type="button"
+          class="close-btn"
+          aria-label="Fermer la fenêtre"
+          (click)="closeModal()"
+        >
           <mat-icon>close</mat-icon>
         </button>
       </div>
@@ -239,18 +264,12 @@
       </div>
 
       <div class="modal-footer">
-        <button
-          type="button"
-          class="delete-btn"
-          *ngIf="modalMode === 'details'"
-        >
+        <button type="button" class="delete-btn" *ngIf="modalMode === 'details'">
           <mat-icon>delete</mat-icon>
           Supprimer
         </button>
         <div class="footer-actions">
-          <button type="button" class="ghost-action" (click)="closeModal()">
-            Annuler
-          </button>
+          <button type="button" class="ghost-action" (click)="closeModal()">Annuler</button>
           <button type="button" class="primary-action">
             {{ modalMode === 'create' ? 'Ajouter' : 'Enregistrer' }}
           </button>

@@ -23,7 +23,7 @@ export class TrackedEventService {
   }
 
   getById(id: string): TrackedEvent | undefined {
-    return this.trackedEvents.find(event => event.id === id);
+    return this.trackedEvents.find((event) => event.id === id);
   }
 
   create(form: TrackedEventForm): TrackedEvent {
@@ -43,7 +43,7 @@ export class TrackedEventService {
   }
 
   update(id: string, form: TrackedEventForm): TrackedEvent | undefined {
-    const index = this.trackedEvents.findIndex(event => event.id === id);
+    const index = this.trackedEvents.findIndex((event) => event.id === id);
     if (index === -1) {
       return undefined;
     }
@@ -58,7 +58,7 @@ export class TrackedEventService {
 
   delete(id: string): boolean {
     const initialLength = this.trackedEvents.length;
-    this.trackedEvents = this.trackedEvents.filter(event => event.id !== id);
+    this.trackedEvents = this.trackedEvents.filter((event) => event.id !== id);
     return this.trackedEvents.length < initialLength;
   }
 

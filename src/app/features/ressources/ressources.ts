@@ -19,32 +19,34 @@ const mainTabs: ResourceTab[] = [
   {
     title: 'Années académiques',
     subtitle: 'Calendrier et cycles',
-    description: 'Pilotez les années scolaires, les événements structurants et le calendrier général.',
-    icon: 'calendar_month'
+    description:
+      'Pilotez les années scolaires, les événements structurants et le calendrier général.',
+    icon: 'calendar_month',
   },
   {
     title: 'Domaines & spécialités',
     subtitle: 'Catalogue pédagogique',
     description: 'Organisez l’offre de formation, les mentions, cycles, niveaux et semestres.',
-    icon: 'account_tree'
+    icon: 'account_tree',
   },
   {
     title: 'Classes & sous-classes',
     subtitle: 'Organisation des cohortes',
     description: 'Préparez la structuration des promotions, groupes et sous-ensembles académiques.',
-    icon: 'groups_2'
+    icon: 'groups_2',
   },
   {
     title: 'UE & modules',
     subtitle: 'Maquettes d’enseignement',
     description: 'Centralisez les unités d’enseignement et la construction des modules par niveau.',
-    icon: 'library_books'
+    icon: 'library_books',
   },
   {
     title: 'Paramètres',
     subtitle: 'Configuration métier',
-    description: 'Réglez les préférences globales qui alimentent l’ensemble du référentiel ressources.',
-    icon: 'tune'
+    description:
+      'Réglez les préférences globales qui alimentent l’ensemble du référentiel ressources.',
+    icon: 'tune',
   },
 ];
 
@@ -91,11 +93,13 @@ export class RessourcesComponent {
   }
 
   get isPlaceholderMainTab(): boolean {
-    return !this.isAcademicMainTab
-      && !this.isSpecialityMainTab
-      && !this.isClassStructureMainTab
-      && !this.isUeModuleMainTab
-      && !this.isParameterMainTab;
+    return (
+      !this.isAcademicMainTab &&
+      !this.isSpecialityMainTab &&
+      !this.isClassStructureMainTab &&
+      !this.isUeModuleMainTab &&
+      !this.isParameterMainTab
+    );
   }
 
   get isParameterMainTab(): boolean {

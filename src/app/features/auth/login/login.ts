@@ -1,8 +1,11 @@
-import { Component, OnDestroy } from '@angular/core';
+import { ChangeDetectionStrategy, Component, DestroyRef, inject } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { FormControl, FormGroup, NonNullableFormBuilder, Validators } from '@angular/forms';
+import { ReactiveFormsModule } from '@angular/forms';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { Router } from '@angular/router';
-import { Subject, finalize, takeUntil } from 'rxjs';
+import { finalize } from 'rxjs';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { AUTH_ERROR_MESSAGES } from '../../../shared/errors';
 import { AUTH_VALIDATION_RULES } from '../../../shared/validation';
 import { AuthService } from '../../../core/services/auth.service';
@@ -29,12 +32,14 @@ interface LoginIconsViewModel {
 
 @Component({
   selector: 'app-login',
-  standalone: false,
+  standalone: true,
+  imports: [CommonModule, ReactiveFormsModule],
   templateUrl: './login.html',
   styleUrls: ['./login.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class LoginComponent implements OnDestroy {
-  private readonly destroy$ = new Subject<void>();
+export class LoginComponent {
+  private readonly destroyRef = inject(DestroyRef);
   readonly validationMessages = AUTH_ERROR_MESSAGES;
   readonly icons: LoginIconsViewModel;
   readonly loginForm: FormGroup<LoginFormModel>;
@@ -46,12 +51,15 @@ export class LoginComponent implements OnDestroy {
     private fb: NonNullableFormBuilder,
     private authService: AuthService,
     private router: Router,
-    private sanitizer: DomSanitizer
+    private sanitizer: DomSanitizer,
   ) {
     this.icons = this.createSafeIcons();
     this.loginForm = this.fb.group({
       phoneOrEmail: ['', [Validators.required, phoneOrEmailValidator()]],
-      password: ['', [Validators.required, Validators.minLength(AUTH_VALIDATION_RULES.passwordMinLength)]],
+      password: [
+        '',
+        [Validators.required, Validators.minLength(AUTH_VALIDATION_RULES.passwordMinLength)],
+      ],
     });
   }
 
@@ -117,7 +125,7 @@ export class LoginComponent implements OnDestroy {
       .login(credentials.phoneOrEmail, credentials.password)
       .pipe(
         finalize(() => (this.isLoading = false)),
-        takeUntil(this.destroy$)
+        takeUntilDestroyed(this.destroyRef),
       )
       .subscribe({
         next: (response) => {
@@ -132,11 +140,6 @@ export class LoginComponent implements OnDestroy {
           this.loginError = 'Une erreur est survenue lors de la connexion';
         },
       });
-  }
-
-  ngOnDestroy(): void {
-    this.destroy$.next();
-    this.destroy$.complete();
   }
 
   private createSafeIcons(): LoginIconsViewModel {

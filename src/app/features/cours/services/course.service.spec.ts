@@ -32,8 +32,12 @@ describe('CourseService', () => {
     });
 
     expect(filteredCourses.length).toBeGreaterThan(0);
-    expect(filteredCourses.every((course) => course.professor === firstCourse.professor)).toBe(true);
-    expect(filteredCourses.every((course) => course.specialite === firstCourse.specialite)).toBe(true);
+    expect(filteredCourses.every((course) => course.professor === firstCourse.professor)).toBe(
+      true,
+    );
+    expect(filteredCourses.every((course) => course.specialite === firstCourse.specialite)).toBe(
+      true,
+    );
   });
 
   it('should keep all courses when filters are set to all values and search is empty', () => {

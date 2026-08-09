@@ -50,10 +50,10 @@ export class ProfessorService {
     professors: Professor[],
     searchTerm: string,
     selectedClass: string,
-    selectedStatus: string
+    selectedStatus: string,
   ): Professor[] {
     const term = searchTerm.trim().toLowerCase();
-    return professors.filter(prof => {
+    return professors.filter((prof) => {
       const matchesSearch = term
         ? `${prof.name} ${prof.grade} ${prof.email}`.toLowerCase().includes(term)
         : true;

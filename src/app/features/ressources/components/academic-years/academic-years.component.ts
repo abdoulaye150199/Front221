@@ -47,7 +47,7 @@ export class AcademicYearsComponent extends ListPageBase<AcademicYear> {
     return validateAcademicYearForm(
       this.academicYearForm.year,
       this.academicYearForm.startDate,
-      this.academicYearForm.endDate
+      this.academicYearForm.endDate,
     );
   }
 
@@ -55,7 +55,7 @@ export class AcademicYearsComponent extends ListPageBase<AcademicYear> {
     return isAcademicYearFormValid(
       this.academicYearForm.year,
       this.academicYearForm.startDate,
-      this.academicYearForm.endDate
+      this.academicYearForm.endDate,
     );
   }
 

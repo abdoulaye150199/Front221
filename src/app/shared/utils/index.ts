@@ -1,2 +1,2 @@
-export * from './name.utils';
 export * from './pagination.utils';
+export * from './string.utils';

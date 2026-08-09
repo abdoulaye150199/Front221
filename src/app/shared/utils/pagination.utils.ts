@@ -20,7 +20,7 @@ export class PaginatedFormState<TItem, TForm = never> {
   constructor(pageSize: number = 5, createForm?: () => TForm) {
     this.pageSize = pageSize;
     this.createForm = createForm ?? null;
-    this.form = createForm ? createForm() : undefined as TForm;
+    this.form = createForm ? createForm() : (undefined as TForm);
   }
 
   get totalPages(): number {
@@ -56,13 +56,13 @@ export class PaginatedFormState<TItem, TForm = never> {
 
   previousPage(): void {
     if (this.canPrev) {
-      this.page.update(p => p - 1);
+      this.page.update((p) => p - 1);
     }
   }
 
   nextPage(): void {
     if (this.canNext) {
-      this.page.update(p => p + 1);
+      this.page.update((p) => p + 1);
     }
   }
 
@@ -138,12 +138,20 @@ export function calculateTotalPages(totalResults: number, pageSize: number): num
   return Math.max(1, Math.ceil(totalResults / pageSize));
 }
 
-export function calculateStartIndex(totalResults: number, currentPage: number, pageSize: number): number {
+export function calculateStartIndex(
+  totalResults: number,
+  currentPage: number,
+  pageSize: number,
+): number {
   if (totalResults === 0) return 0;
   return (currentPage - 1) * pageSize + 1;
 }
 
-export function calculateEndIndex(currentPage: number, pageSize: number, totalResults: number): number {
+export function calculateEndIndex(
+  currentPage: number,
+  pageSize: number,
+  totalResults: number,
+): number {
   if (totalResults === 0) return 0;
   return Math.min(currentPage * pageSize, totalResults);
 }
@@ -152,7 +160,7 @@ export function createPaginationHandler(
   getTotalResults: () => number,
   getPageSize: () => number,
   getCurrentPage: () => number,
-  setCurrentPage: (page: number) => void
+  setCurrentPage: (page: number) => void,
 ) {
   return {
     get totalPages(): number {
@@ -179,6 +187,6 @@ export function createPaginationHandler(
       if (page >= 1 && page <= totalPages) {
         setCurrentPage(page);
       }
-    }
+    },
   };
 }

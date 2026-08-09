@@ -1146,11 +1146,7 @@
           "isNextMonth": true
         }
       ],
-      "timeSlots": [
-        "08:00",
-        "09:00",
-        "10:00"
-      ],
+      "timeSlots": ["08:00", "09:00", "10:00"],
       "modalModules": [
         {
           "value": "",
@@ -1255,14 +1251,7 @@
           "label": "Salle B"
         }
       ],
-      "timeOptions": [
-        "08:00",
-        "09:00",
-        "10:00",
-        "11:00",
-        "12:00",
-        "14:00"
-      ],
+      "timeOptions": ["08:00", "09:00", "10:00", "11:00", "12:00", "14:00"],
       "defaultModalForm": {
         "module": "",
         "class": "",
@@ -1445,36 +1434,11 @@
           "icon": "settings"
         }
       ],
-      "subTabs": [
-        "Année Scolaire",
-        "Suivi des événements",
-        "Calendrier Général"
-      ],
-      "specialityTabs": [
-        "Domaines",
-        "Mention",
-        "Spécialité",
-        "Cycle",
-        "Niveau",
-        "Semestres"
-      ],
-      "levelOptions": [
-        "Licence",
-        "Master 1",
-        "Master 2"
-      ],
-      "semesterOptions": [
-        "Semestre 1",
-        "Semestre 2",
-        "Session intensive"
-      ],
-      "parameterTabs": [
-        "Événements",
-        "Civilité",
-        "Salles",
-        "Documents",
-        "Horaires"
-      ],
+      "subTabs": ["Année Scolaire", "Suivi des événements", "Calendrier Général"],
+      "specialityTabs": ["Domaines", "Mention", "Spécialité", "Cycle", "Niveau", "Semestres"],
+      "levelOptions": ["Licence", "Master 1", "Master 2"],
+      "semesterOptions": ["Semestre 1", "Semestre 2", "Session intensive"],
+      "parameterTabs": ["Événements", "Civilité", "Salles", "Documents", "Horaires"],
       "parameterLevelOptions": [
         "Licence",
         "Licence 1",
@@ -1483,26 +1447,10 @@
         "Master 1",
         "Master 2"
       ],
-      "parameterSemesterOptions": [
-        "Semestre 1",
-        "Semestre 2"
-      ],
-      "parameterRoomCapacityOptions": [
-        20,
-        30,
-        40,
-        50,
-        60
-      ],
-      "parameterDocumentTypeOptions": [
-        "A ramener",
-        "A retirer"
-      ],
-      "pageSizeOptions": [
-        5,
-        10,
-        15
-      ],
+      "parameterSemesterOptions": ["Semestre 1", "Semestre 2"],
+      "parameterRoomCapacityOptions": [20, 30, 40, 50, 60],
+      "parameterDocumentTypeOptions": ["A ramener", "A retirer"],
+      "pageSizeOptions": [5, 10, 15],
       "academicYears": [
         {
           "id": "1",
@@ -1824,22 +1772,14 @@
         {
           "id": "1",
           "label": "Extrait de naissance",
-          "levelNames": [
-            "Licence 1",
-            "Master 1",
-            "Master 2"
-          ],
+          "levelNames": ["Licence 1", "Master 1", "Master 2"],
           "type": "A ramener",
           "status": "Disponible"
         },
         {
           "id": "2",
           "label": "Relevé de notes",
-          "levelNames": [
-            "Licence 3",
-            "Master 1",
-            "Master 2"
-          ],
+          "levelNames": ["Licence 3", "Master 1", "Master 2"],
           "type": "A retirer",
           "status": "Indisponible"
         }
@@ -1848,21 +1788,13 @@
         {
           "id": "1",
           "label": "En Présentiel",
-          "levelNames": [
-            "Licence 1",
-            "Master 1",
-            "Master 2"
-          ],
+          "levelNames": ["Licence 1", "Master 1", "Master 2"],
           "status": "Disponible"
         },
         {
           "id": "2",
           "label": "En Ligne",
-          "levelNames": [
-            "Licence 3",
-            "Master 1",
-            "Master 2"
-          ],
+          "levelNames": ["Licence 3", "Master 1", "Master 2"],
           "status": "Indisponible"
         }
       ],
@@ -1980,21 +1912,5 @@
         }
       ]
     }
-  },
-  "users": {
-    "admin": [
-      {
-        "id": "admin-001",
-        "firstName": "Amadou",
-        "lastName": "Diallo",
-        "email": "admin@ecole221.sn",
-        "phone": "+221771234567",
-        "passwordHash": "QWRtaW5AMTIzZWNvbGUyMjE=",
-        "salt": "ecole221",
-        "role": "Administrateur",
-        "userInitial": "A",
-        "createdAt": "2024-01-01T00:00:00Z"
-      }
-    ]
   }
 }

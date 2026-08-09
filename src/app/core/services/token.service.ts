@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 
-
 @Injectable({
   providedIn: 'root',
 })
@@ -45,8 +44,18 @@ export class TokenService {
         return true;
       }
 
-      const payload = JSON.parse(atob(parts[1]));
-      const expirationTime = payload.exp * 1000; // convertir en ms
+      const encodedPayload = parts[1].replace(/-/g, '+').replace(/_/g, '/');
+      const padding = '='.repeat((4 - (encodedPayload.length % 4)) % 4);
+      const payload: unknown = JSON.parse(atob(encodedPayload + padding));
+      if (
+        !payload ||
+        typeof payload !== 'object' ||
+        !('exp' in payload) ||
+        typeof payload.exp !== 'number'
+      ) {
+        return true;
+      }
+      const expirationTime = payload.exp * 1000;
       return Date.now() >= expirationTime;
     } catch {
       return true;

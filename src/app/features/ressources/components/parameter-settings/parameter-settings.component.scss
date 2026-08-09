@@ -68,7 +68,9 @@
   background: #fff;
   box-shadow: 0 6px 16px rgba(15, 23, 42, 0.03);
   flex: 1 1 240px;
-  transition: border-color 0.18s ease, box-shadow 0.18s ease;
+  transition:
+    border-color 0.18s ease,
+    box-shadow 0.18s ease;
 
   &:hover {
     border-color: #d0d9e8;

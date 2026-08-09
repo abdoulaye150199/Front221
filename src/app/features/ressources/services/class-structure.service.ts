@@ -41,33 +41,29 @@ export class ClassStructureService {
   }
 
   getDomainOptions(): string[] {
-    return (REFERENTIEL_DATA.domainOptions ?? [])
-      .map(option => option.label)
-      .filter(Boolean);
+    return (REFERENTIEL_DATA.domainOptions ?? []).map((option) => option.label).filter(Boolean);
   }
 
   getSpecialityOptions(_domainName?: string): string[] {
     return (REFERENTIEL_DATA.specialiteOptions ?? [])
-      .map(option => this.normalizeSpecialityLabel(option.label))
+      .map((option) => this.normalizeSpecialityLabel(option.label))
       .filter(Boolean);
   }
 
   getLevelOptions(): string[] {
-    return (REFERENTIEL_DATA.niveauOptions ?? [])
-      .map(option => option.label)
-      .filter(Boolean);
+    return (REFERENTIEL_DATA.niveauOptions ?? []).map((option) => option.label).filter(Boolean);
   }
 
   getSemesterOptions(): string[] {
     return (REFERENTIEL_DATA.semestreOptions ?? [])
-      .map(option => option.label)
-      .filter(label => label !== 'Tous les semestres');
+      .map((option) => option.label)
+      .filter((label) => label !== 'Tous les semestres');
   }
 
   getClassOptions(): Array<{ id: string; label: string }> {
     return this.classItems
-      .filter(item => item.status === 'Actif')
-      .map(item => ({ id: item.id, label: item.className }));
+      .filter((item) => item.status === 'Actif')
+      .map((item) => ({ id: item.id, label: item.className }));
   }
 
   createClass(form: ClassCatalogForm): ClassCatalogItem {
@@ -88,7 +84,7 @@ export class ClassStructureService {
   }
 
   updateClass(id: string, form: ClassCatalogForm): ClassCatalogItem | undefined {
-    const index = this.classItems.findIndex(item => item.id === id);
+    const index = this.classItems.findIndex((item) => item.id === id);
     if (index === -1) {
       return undefined;
     }
@@ -103,8 +99,8 @@ export class ClassStructureService {
     };
 
     this.classItems[index] = updatedClass;
-    this.subClassItems = this.subClassItems.map(item =>
-      item.classId === id ? { ...item, className: updatedClass.className } : item
+    this.subClassItems = this.subClassItems.map((item) =>
+      item.classId === id ? { ...item, className: updatedClass.className } : item,
     );
     this.classItems = this.syncClassSubClasses(this.classItems, this.subClassItems);
     return this.classItems[index];
@@ -112,14 +108,14 @@ export class ClassStructureService {
 
   deleteClass(id: string): boolean {
     const initialLength = this.classItems.length;
-    this.classItems = this.classItems.filter(item => item.id !== id);
-    this.subClassItems = this.subClassItems.filter(item => item.classId !== id);
+    this.classItems = this.classItems.filter((item) => item.id !== id);
+    this.subClassItems = this.subClassItems.filter((item) => item.classId !== id);
     this.classItems = this.syncClassSubClasses(this.classItems, this.subClassItems);
     return this.classItems.length < initialLength;
   }
 
   createSubClass(form: SubClassCatalogForm): SubClassCatalogItem | undefined {
-    const parentClass = this.classItems.find(item => item.id === form.classId);
+    const parentClass = this.classItems.find((item) => item.id === form.classId);
     if (!parentClass) {
       return undefined;
     }
@@ -140,12 +136,12 @@ export class ClassStructureService {
   }
 
   updateSubClass(id: string, form: SubClassCatalogForm): SubClassCatalogItem | undefined {
-    const index = this.subClassItems.findIndex(item => item.id === id);
+    const index = this.subClassItems.findIndex((item) => item.id === id);
     if (index === -1) {
       return undefined;
     }
 
-    const parentClass = this.classItems.find(item => item.id === form.classId);
+    const parentClass = this.classItems.find((item) => item.id === form.classId);
     if (!parentClass) {
       return undefined;
     }
@@ -163,7 +159,7 @@ export class ClassStructureService {
 
   deleteSubClass(id: string): boolean {
     const initialLength = this.subClassItems.length;
-    this.subClassItems = this.subClassItems.filter(item => item.id !== id);
+    this.subClassItems = this.subClassItems.filter((item) => item.id !== id);
     this.classItems = this.syncClassSubClasses(this.classItems, this.subClassItems);
     return this.subClassItems.length < initialLength;
   }
@@ -257,13 +253,13 @@ export class ClassStructureService {
 
   private syncClassSubClasses(
     classItems: ClassCatalogItem[],
-    subClassItems: SubClassCatalogItem[]
+    subClassItems: SubClassCatalogItem[],
   ): ClassCatalogItem[] {
-    return classItems.map(item => ({
+    return classItems.map((item) => ({
       ...item,
       subClassNames: subClassItems
-        .filter(subClass => subClass.classId === item.id)
-        .map(subClass => subClass.subClassName),
+        .filter((subClass) => subClass.classId === item.id)
+        .map((subClass) => subClass.subClassName),
     }));
   }
 

@@ -128,7 +128,7 @@ export class PlanningComponent implements OnInit {
 
   buildSessionMap() {
     this.sessionMap = {};
-    this.sessions.forEach(session => {
+    this.sessions.forEach((session) => {
       this.sessionMap[`${session.dayIndex}-${session.slot}`] = session;
     });
   }
@@ -138,11 +138,11 @@ export class PlanningComponent implements OnInit {
   }
 
   getStatusLabel(value: SessionStatus): string {
-    return this.sessionStatusOptions.find(status => status.value === value)?.label ?? '';
+    return this.sessionStatusOptions.find((status) => status.value === value)?.label ?? '';
   }
 
   getStatusColor(value: SessionStatus): string {
-    return this.sessionStatusOptions.find(status => status.value === value)?.color ?? '#9ca3af';
+    return this.sessionStatusOptions.find((status) => status.value === value)?.color ?? '#9ca3af';
   }
 
   formatDay(day: number): string {

@@ -71,12 +71,7 @@
         {{ isEditingClass ? 'Modifier' : 'Créer' }}
       </button>
 
-      <button
-        *ngIf="isEditingClass"
-        mat-stroked-button
-        type="button"
-        (click)="cancelEdition()"
-      >
+      <button *ngIf="isEditingClass" mat-stroked-button type="button" (click)="cancelEdition()">
         Annuler
       </button>
     </div>
@@ -283,7 +278,10 @@
         <div class="page-size-control">
           <span>Éléments / page</span>
           <label class="page-size-select">
-            <select [ngModel]="subClassState.pageSize" (ngModelChange)="setSubClassPageSize($event)">
+            <select
+              [ngModel]="subClassState.pageSize"
+              (ngModelChange)="setSubClassPageSize($event)"
+            >
               <option *ngFor="let size of [5, 10, 15]" [value]="size">{{ size }}</option>
             </select>
           </label>

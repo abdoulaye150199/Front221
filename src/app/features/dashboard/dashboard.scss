@@ -218,11 +218,19 @@
         }
 
         .view-all {
+          appearance: none;
+          display: inline-flex;
+          align-items: center;
           color: #c1361c;
           text-decoration: none;
           font-size: 0.82rem;
           font-weight: 600;
           transition: color 0.3s;
+          border: 0;
+          background: transparent;
+          padding: 0;
+          font: inherit;
+          cursor: pointer;
 
           &:hover {
             color: #a02815;

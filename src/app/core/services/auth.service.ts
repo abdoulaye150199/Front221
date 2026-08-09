@@ -1,8 +1,9 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable, of } from 'rxjs';
-import { APP_DATA } from '../../shared/data';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { BehaviorSubject, catchError, Observable, of, tap } from 'rxjs';
 import { TokenService } from './token.service';
 import { environment } from '../../../environments/environment';
+import { MOCK_USERS } from './mock-users';
 
 export interface User {
   id: string;
@@ -27,13 +28,9 @@ export interface JwtTokens {
   expiresIn: number;
 }
 
-interface StoredUser extends User {
+export interface StoredUser extends User {
   passwordHash: string;
   salt: string;
-}
-
-interface AppUsersData {
-  admin?: StoredUser[];
 }
 
 /**
@@ -52,7 +49,10 @@ export class AuthService {
   private readonly currentUserSubject = new BehaviorSubject<User | null>(this.getUserFromStorage());
   readonly currentUser$ = this.currentUserSubject.asObservable();
 
-  constructor(private tokenService: TokenService) {
+  constructor(
+    private readonly tokenService: TokenService,
+    private readonly http: HttpClient,
+  ) {
     this.validateStoredToken();
   }
 
@@ -61,14 +61,33 @@ export class AuthService {
    * Retourne une réponse avec JWT tokens (en mode démo)
    */
   login(phoneOrEmail: string, password: string): Observable<AuthResponse> {
+    if (!environment.mockData) {
+      return this.http
+        .post<AuthResponse>(`${environment.apiUrl}/auth/login`, {
+          identifier: phoneOrEmail.trim(),
+          password,
+        })
+        .pipe(
+          tap((response) => this.applySuccessfulAuthentication(response)),
+          catchError((error: HttpErrorResponse) =>
+            of({
+              success: false,
+              message:
+                error.status === 401
+                  ? 'Email/téléphone ou mot de passe invalide'
+                  : 'Service de connexion momentanément indisponible',
+            }),
+          ),
+        );
+    }
+
     try {
       const normalizedIdentifier = phoneOrEmail.trim().toLowerCase();
       const users = this.getAllUsers();
 
       // Trouver l'utilisateur
       const user = users.find(
-        (u) =>
-          (u.email.toLowerCase() === normalizedIdentifier || u.phone === phoneOrEmail.trim())
+        (u) => u.email.toLowerCase() === normalizedIdentifier || u.phone === phoneOrEmail.trim(),
       );
 
       if (!user) {
@@ -102,7 +121,7 @@ export class AuthService {
         user: userWithoutPassword,
         tokens,
       });
-    } catch (error) {
+    } catch {
       return of({
         success: false,
         message: 'Une erreur est survenue lors de la connexion',
@@ -162,6 +181,21 @@ export class AuthService {
         success: false,
         message: 'Pas de token de rafraîchissement',
       });
+    }
+
+    if (!environment.mockData) {
+      return this.http
+        .post<AuthResponse>(`${environment.apiUrl}/auth/refresh`, { refreshToken })
+        .pipe(
+          tap((response) => this.applySuccessfulAuthentication(response)),
+          catchError(() => {
+            this.logout();
+            return of({
+              success: false,
+              message: 'La session a expiré',
+            });
+          }),
+        );
     }
 
     try {
@@ -245,8 +279,8 @@ export class AuthService {
     const headerEncoded = btoa(JSON.stringify(header));
     const payloadEncoded = btoa(JSON.stringify(payload));
 
-    // Signature factice - EN PRODUCTION: secret fort côté serveur uniquement
-    const signature = btoa('demo-secret-key-change-in-production');
+    // Valeur opaque de démonstration, sans secret embarqué.
+    const signature = btoa(`${String(payload['sub'])}.${String(payload['iat'])}`);
 
     return `${headerEncoded}.${payloadEncoded}.${signature}`;
   }
@@ -260,16 +294,6 @@ export class AuthService {
     // EN PRODUCTION: Utiliser bcrypt côté serveur uniquement
     const simpleHash = btoa(password + salt);
     return simpleHash === hash;
-  }
-
-  /**
-   * Hasher un mot de passe (démo uniquement)
-   * EN PRODUCTION: Ne JAMAIS hasher côté client
-   */
-  private hashPassword(password: string, salt: string = 'ecole221'): string {
-    // Implémentation simple pour la démo
-    // EN PRODUCTION: Bcrypt côté serveur uniquement
-    return btoa(password + salt);
   }
 
   /**
@@ -291,20 +315,7 @@ export class AuthService {
    * Récupérer tous les utilisateurs depuis APP_DATA
    */
   private getAllUsers(): StoredUser[] {
-    const usersData = APP_DATA.users as AppUsersData | undefined;
-    const users = usersData?.admin || [];
-
-    // Si les mots de passe ne sont pas hachés, les hasher maintenant (démo uniquement)
-    return users.map((user) => {
-      if (!user.salt) {
-        (user as any).salt = 'ecole221';
-      }
-      if (!user.passwordHash && (user as any).password) {
-        (user as any).passwordHash = this.hashPassword((user as any).password, (user as any).salt);
-        delete (user as any).password; // Supprimer le mot de passe en clair
-      }
-      return user;
-    });
+    return MOCK_USERS;
   }
 
   /**
@@ -336,6 +347,15 @@ export class AuthService {
       sessionStorage.setItem('user_data', JSON.stringify(user));
     }
     this.currentUserSubject.next(user);
+  }
+
+  private applySuccessfulAuthentication(response: AuthResponse): void {
+    if (!response.success || !response.user || !response.tokens) {
+      return;
+    }
+
+    this.tokenService.setTokens(response.tokens.accessToken, response.tokens.refreshToken);
+    this.persistUser(response.user);
   }
 
   /**

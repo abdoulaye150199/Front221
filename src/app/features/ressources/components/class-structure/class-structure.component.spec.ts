@@ -48,8 +48,8 @@ describe('ClassStructureComponent', () => {
     component.updateClassForm({ className: 'Licence 1 Développement Web/Mobile Premium' });
     component.submitClass();
 
-    expect(service.getClassItems().find(classItem => classItem.id === item.id)?.className).toBe(
-      'Licence 1 Développement Web/Mobile Premium'
+    expect(service.getClassItems().find((classItem) => classItem.id === item.id)?.className).toBe(
+      'Licence 1 Développement Web/Mobile Premium',
     );
     expect(component.isEditingClass).toBe(false);
   });

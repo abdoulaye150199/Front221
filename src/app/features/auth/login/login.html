@@ -28,7 +28,7 @@
       <h2 class="login-title">Se connecter</h2>
 
       <!-- Google Sign In Button -->
-      <button class="google-signin-btn">
+      <button type="button" class="google-signin-btn" aria-label="Se connecter avec Google">
         <span [innerHTML]="icons.google"></span>
         <span>Sign in with Google</span>
       </button>
@@ -49,11 +49,15 @@
               id="phone-email"
               type="text"
               formControlName="phoneOrEmail"
+              autocomplete="username"
+              inputmode="email"
+              aria-describedby="phone-email-error"
+              [attr.aria-invalid]="phoneOrEmailErrorMessage ? 'true' : null"
               placeholder="Téléphone ou email"
               class="form-input"
             />
           </div>
-          <span class="error-message" *ngIf="phoneOrEmailErrorMessage">
+          <span id="phone-email-error" class="error-message" *ngIf="phoneOrEmailErrorMessage">
             {{ phoneOrEmailErrorMessage }}
           </span>
         </div>
@@ -67,6 +71,9 @@
               id="password"
               [type]="passwordFieldType"
               formControlName="password"
+              autocomplete="current-password"
+              aria-describedby="password-error"
+              [attr.aria-invalid]="passwordErrorMessage ? 'true' : null"
               placeholder="Mot de passe"
               class="form-input"
             />
@@ -74,21 +81,24 @@
               type="button"
               class="password-toggle"
               (click)="togglePasswordVisibility()"
-              tabindex="-1"
               [attr.aria-pressed]="showPassword"
-              [attr.aria-label]="showPassword ? 'Masquer le mot de passe' : 'Afficher le mot de passe'"
+              [attr.aria-label]="
+                showPassword ? 'Masquer le mot de passe' : 'Afficher le mot de passe'
+              "
             >
               <span [innerHTML]="icons.passwordEye"></span>
             </button>
           </div>
-          <a href="#" class="forgot-password-link">Mot de passe oublié ?</a>
-          <span class="error-message" *ngIf="passwordErrorMessage">
+          <button type="button" class="forgot-password-link" aria-disabled="true">
+            Mot de passe oublié ?
+          </button>
+          <span id="password-error" class="error-message" *ngIf="passwordErrorMessage">
             {{ passwordErrorMessage }}
           </span>
         </div>
 
         <!-- Login Error Message -->
-        <div class="error-alert" *ngIf="loginError">
+        <div class="error-alert" role="alert" aria-live="assertive" *ngIf="loginError">
           <span [innerHTML]="icons.error"></span>
           <span>{{ loginError }}</span>
         </div>
@@ -98,6 +108,7 @@
           type="submit"
           class="login-button"
           [disabled]="loginForm.invalid || isLoading"
+          [attr.aria-busy]="isLoading"
         >
           <span *ngIf="!isLoading">Se connecter</span>
           <span *ngIf="isLoading" class="loading-text">Connexion en cours...</span>

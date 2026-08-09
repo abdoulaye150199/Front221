@@ -21,11 +21,11 @@ export class GeneralCalendarService {
   }
 
   getById(id: string): GeneralCalendarEntry | undefined {
-    return this.entries.find(entry => entry.id === id);
+    return this.entries.find((entry) => entry.id === id);
   }
 
   update(id: string, filters: Partial<GeneralCalendarFilter>): GeneralCalendarEntry | undefined {
-    const index = this.entries.findIndex(entry => entry.id === id);
+    const index = this.entries.findIndex((entry) => entry.id === id);
     if (index === -1) {
       return undefined;
     }
@@ -38,12 +38,12 @@ export class GeneralCalendarService {
 
   delete(id: string): boolean {
     const initialLength = this.entries.length;
-    this.entries = this.entries.filter(entry => entry.id !== id);
+    this.entries = this.entries.filter((entry) => entry.id !== id);
     return this.entries.length < initialLength;
   }
 
   filter(filters: GeneralCalendarFilter): GeneralCalendarEntry[] {
-    return this.entries.filter(entry => {
+    return this.entries.filter((entry) => {
       const levelMatch = !filters.level || entry.level === filters.level;
       const semesterMatch = !filters.semester || entry.semester === filters.semester;
       const eventMatch = !filters.eventName || entry.eventName === filters.eventName;
@@ -52,6 +52,6 @@ export class GeneralCalendarService {
   }
 
   getEventNames(): string[] {
-    return [...new Set(this.entries.map(entry => entry.eventName))];
+    return [...new Set(this.entries.map((entry) => entry.eventName))];
   }
 }

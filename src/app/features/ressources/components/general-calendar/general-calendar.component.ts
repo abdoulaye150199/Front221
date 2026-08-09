@@ -17,7 +17,7 @@ export class GeneralCalendarComponent {
 
   readonly calendarState = new PaginatedFormState<GeneralCalendarEntry, GeneralCalendarFilter>(
     5,
-    () => this.createCalendarFilters()
+    () => this.createCalendarFilters(),
   );
   appliedCalendarFilters: GeneralCalendarFilter = { level: '', semester: '', eventName: '' };
 

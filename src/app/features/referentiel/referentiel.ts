@@ -69,7 +69,7 @@ export class ReferentielComponent {
   }
 
   getLabel(options: SelectOption[], value: string): string {
-    const match = options.find(option => option.value === value);
+    const match = options.find((option) => option.value === value);
     return match ? match.label : '';
   }
 

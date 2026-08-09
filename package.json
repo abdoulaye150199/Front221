@@ -9,6 +9,9 @@
     "build:analyze": "ng run ecole-221:build-client:production --stats-json",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
+    "test:ci": "ng test --watch=false",
+    "test:coverage": "ng test --watch=false --coverage",
+    "format:check": "prettier --check .",
     "serve:ssr:ecole-221": "node dist/ecole-221/server/server.mjs"
   },
   "private": true,
@@ -30,6 +33,7 @@
     "bcryptjs": "^3.0.3",
     "express": "^5.1.0",
     "jsonwebtoken": "^9.0.3",
+    "material-icons": "^1.13.14",
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0"
   },
@@ -39,6 +43,7 @@
     "@angular/compiler-cli": "^21.2.0",
     "@types/express": "^5.0.1",
     "@types/node": "^20.17.19",
+    "@vitest/coverage-v8": "^4.0.18",
     "jsdom": "^28.0.0",
     "prettier": "^3.8.1",
     "typescript": "~5.9.2",

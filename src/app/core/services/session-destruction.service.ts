@@ -1,4 +1,4 @@
-import { Injectable, NgZone, inject, PLATFORM_ID } from '@angular/core';
+import { Injectable, NgZone, OnDestroy, inject, PLATFORM_ID } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 import { Router } from '@angular/router';
 import { AuthService } from './auth.service';
@@ -12,17 +12,19 @@ import { AuthService } from './auth.service';
 @Injectable({
   providedIn: 'root',
 })
-export class SessionDestructionService {
+export class SessionDestructionService implements OnDestroy {
   private inactivityTimeout: ReturnType<typeof setTimeout> | null = null;
   private readonly INACTIVITY_TIME = 30 * 60 * 1000; // 30 minutes
   private lastActivityTime = Date.now();
   private isCleaningUp = false;
   private platformId = inject(PLATFORM_ID);
+  private readonly handleActivity = () => this.resetInactivityTimer();
+  private readonly handleBeforeUnload = () => this.performCleanup();
 
   constructor(
     private authService: AuthService,
     private router: Router,
-    private ngZone: NgZone
+    private ngZone: NgZone,
   ) {
     // Initialiser la surveillance seulement côté client
     if (isPlatformBrowser(this.platformId)) {
@@ -36,13 +38,29 @@ export class SessionDestructionService {
   private initializeSessionMonitoring(): void {
     // Listener pour l'inactivité
     this.ngZone.runOutsideAngular(() => {
-      document.addEventListener('click', () => this.resetInactivityTimer());
-      document.addEventListener('keydown', () => this.resetInactivityTimer());
-      document.addEventListener('mousemove', () => this.resetInactivityTimer());
+      document.addEventListener('click', this.handleActivity, { passive: true });
+      document.addEventListener('keydown', this.handleActivity);
+      document.addEventListener('mousemove', this.handleActivity, { passive: true });
     });
 
-    // Nettoyer la session avant fermeture
-    window.addEventListener('beforeunload', () => this.performCleanup());
+    window.addEventListener('beforeunload', this.handleBeforeUnload);
+    this.resetInactivityTimer();
+  }
+
+  ngOnDestroy(): void {
+    if (!isPlatformBrowser(this.platformId)) {
+      return;
+    }
+
+    document.removeEventListener('click', this.handleActivity);
+    document.removeEventListener('keydown', this.handleActivity);
+    document.removeEventListener('mousemove', this.handleActivity);
+    window.removeEventListener('beforeunload', this.handleBeforeUnload);
+
+    if (this.inactivityTimeout) {
+      clearTimeout(this.inactivityTimeout);
+      this.inactivityTimeout = null;
+    }
   }
 
   /**
@@ -135,12 +153,7 @@ export class SessionDestructionService {
       return;
     }
 
-    const keysToRemove = [
-      'currentUser',
-      'auth_token',
-      'remember_me',
-      'user_preferences',
-    ];
+    const keysToRemove = ['currentUser', 'auth_token', 'remember_me', 'user_preferences'];
 
     keysToRemove.forEach((key) => {
       localStorage.removeItem(key);

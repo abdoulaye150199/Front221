@@ -31,7 +31,10 @@
         <button
           class="sub-tab"
           type="button"
-          *ngFor="let tab of ['Année Scolaire', 'Suivi des événements', 'Calendrier Général']; let i = index"
+          *ngFor="
+            let tab of ['Année Scolaire', 'Suivi des événements', 'Calendrier Général'];
+            let i = index
+          "
           [class.active]="activeSubTab === i"
           (click)="setActiveSubTab(i)"
         >
@@ -40,11 +43,7 @@
 
         <label class="sub-tabs-search" *ngIf="activeSubTab === 0">
           <mat-icon>search</mat-icon>
-          <input
-            type="text"
-            placeholder="Rechercher..."
-            [(ngModel)]="academicYearSearchTerm"
-          />
+          <input type="text" placeholder="Rechercher..." [(ngModel)]="academicYearSearchTerm" />
         </label>
       </div>
 
@@ -66,7 +65,10 @@
         <button
           class="sub-tab"
           type="button"
-          *ngFor="let tab of ['Domaines', 'Mention', 'Spécialité', 'Cycle', 'Niveau', 'Semestres']; let i = index"
+          *ngFor="
+            let tab of ['Domaines', 'Mention', 'Spécialité', 'Cycle', 'Niveau', 'Semestres'];
+            let i = index
+          "
           [class.active]="activeSubTab === i"
           (click)="setActiveSubTab(i)"
         >

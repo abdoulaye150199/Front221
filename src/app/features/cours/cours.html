@@ -1,6 +1,9 @@
 <div class="courses">
   <div class="page-header">
-    <h1 class="page-title">Gestion des Cours</h1>
+    <div class="title-wrap">
+      <h1 class="page-title">Gestion des Cours</h1>
+      <span class="course-count">({{ totalResults }})</span>
+    </div>
     <button mat-flat-button class="primary-btn" type="button">
       <mat-icon>add</mat-icon>
       Nouveau Cours
@@ -8,35 +11,35 @@
   </div>
 
   <div class="filters-card">
-    <div class="filters-title">Filtres</div>
+    <div class="filters-title">Filtres académiques</div>
     <div class="filters-grid">
       <div class="filter-field">
-        <label>Spécialité</label>
-        <select [(ngModel)]="selectedSpecialite">
+        <label for="course-speciality">Spécialité</label>
+        <select id="course-speciality" [(ngModel)]="selectedSpecialite">
           <option *ngFor="let item of specialites" [value]="item.value">
             {{ item.label }}
           </option>
         </select>
       </div>
       <div class="filter-field">
-        <label>Niveau</label>
-        <select [(ngModel)]="selectedNiveau">
+        <label for="course-level">Niveau</label>
+        <select id="course-level" [(ngModel)]="selectedNiveau">
           <option *ngFor="let item of niveaux" [value]="item.value">
             {{ item.label }}
           </option>
         </select>
       </div>
       <div class="filter-field">
-        <label>Classe</label>
-        <select [(ngModel)]="selectedClasse">
+        <label for="course-class">Classe</label>
+        <select id="course-class" [(ngModel)]="selectedClasse">
           <option *ngFor="let item of classes" [value]="item.value">
             {{ item.label }}
           </option>
         </select>
       </div>
       <div class="filter-field">
-        <label>Semestre</label>
-        <select [(ngModel)]="selectedSemestre">
+        <label for="course-semester">Semestre</label>
+        <select id="course-semester" [(ngModel)]="selectedSemestre">
           <option *ngFor="let item of semestres" [value]="item.value">
             {{ item.label }}
           </option>
@@ -45,20 +48,55 @@
     </div>
   </div>
 
+  <section class="academic-context" aria-label="Contexte académique">
+    <div>
+      <strong>Domaine</strong><span>{{ academicContext.domain }}</span>
+    </div>
+    <div>
+      <strong>Spécialité</strong><span>{{ academicContext.speciality }}</span>
+    </div>
+    <div>
+      <strong>Mention</strong><span>{{ academicContext.mention }}</span>
+    </div>
+    <div>
+      <strong>Grade</strong><span>{{ academicContext.grade }}</span>
+    </div>
+  </section>
+
   <div class="table-card">
     <div class="table-toolbar">
       <label class="search-box">
         <mat-icon>search</mat-icon>
         <input
-          type="text"
+          type="search"
+          aria-label="Rechercher une unité d'enseignement, un module ou un professeur"
           placeholder="Rechercher un cours..."
           [(ngModel)]="searchTerm"
           (ngModelChange)="onSearchChange($event)"
         />
       </label>
-      <button mat-stroked-button class="export-btn" type="button">
-        <mat-icon>download</mat-icon>
-        Exporter
+      <div class="toolbar-actions">
+        <button mat-stroked-button class="export-btn" type="button">
+          <mat-icon>content_copy</mat-icon>
+          Dupliquer le référentiel
+        </button>
+        <button mat-stroked-button class="export-btn" type="button">
+          <mat-icon>download</mat-icon>
+          Télécharger le résumé
+        </button>
+      </div>
+    </div>
+
+    <div class="semester-tabs" role="tablist" aria-label="Semestres">
+      <button
+        *ngFor="let semester of semesterTabs"
+        type="button"
+        role="tab"
+        [class.active]="selectedSemestre === semester"
+        [attr.aria-selected]="selectedSemestre === semester"
+        (click)="selectSemester(semester)"
+      >
+        Semestre {{ semester.slice(1) }}
       </button>
     </div>
 
@@ -66,42 +104,72 @@
       <table class="courses-table">
         <thead>
           <tr>
-            <th>UE</th>
+            <th>Unité d'enseignement</th>
             <th>Module</th>
+            <th>Coef.</th>
+            <th>Crédit</th>
             <th>Professeur</th>
-            <th>Crédits</th>
-            <th>Heures</th>
-            <th>Étudiants</th>
+            <th>VHP</th>
+            <th>TPE</th>
+            <th>VHT</th>
             <th class="actions-header">Actions</th>
           </tr>
         </thead>
         <tbody>
-          <tr *ngFor="let course of pagedCourses">
-            <td class="ue-cell">{{ course.ue }}</td>
-            <td>{{ course.module }}</td>
-            <td>
-              <div class="teacher-cell">
-                <span class="teacher-avatar">
-                  <mat-icon>person</mat-icon>
-                </span>
-                {{ course.professor }}
-              </div>
-            </td>
-            <td>
-              <span class="credit-pill">{{ course.credits }} crédits</span>
-            </td>
-            <td>{{ course.hours }}</td>
-            <td class="students-cell">{{ course.students }}</td>
-            <td class="actions-cell">
-              <button class="icon-btn" type="button" aria-label="Voir">
-                <mat-icon>visibility</mat-icon>
-              </button>
-              <button class="icon-btn" type="button" aria-label="Modifier">
-                <mat-icon>edit</mat-icon>
-              </button>
-              <button class="icon-btn danger" type="button" aria-label="Supprimer">
-                <mat-icon>delete</mat-icon>
-              </button>
+          <ng-container *ngFor="let group of groupedCourses">
+            <tr *ngFor="let course of group.courses; let first = first">
+              <td *ngIf="first" class="ue-cell" [attr.rowspan]="group.courses.length">
+                <span class="ue-code">{{ group.ue }}</span>
+              </td>
+              <td class="module-cell">{{ course.module }}</td>
+              <td>{{ coefficient(course) }}</td>
+              <td *ngIf="first" [attr.rowspan]="group.courses.length">
+                <span class="credit-pill">{{ group.credits }}</span>
+              </td>
+              <td>
+                <div class="teacher-cell">
+                  <span class="teacher-avatar"><mat-icon>person</mat-icon></span>
+                  {{ course.professor }}
+                </div>
+              </td>
+              <td>{{ plannedHours(course) }}</td>
+              <td>{{ personalWorkHours(course) }}</td>
+              <td>{{ totalHours(course) }}</td>
+              <td class="actions-cell">
+                <button
+                  class="icon-btn action-trigger"
+                  type="button"
+                  aria-label="Afficher les actions du cours"
+                  [attr.aria-expanded]="openCourseActionId === course.id"
+                  (click)="$event.stopPropagation(); toggleActionMenu(course.id)"
+                >
+                  <mat-icon>more_vert</mat-icon>
+                </button>
+                <div *ngIf="openCourseActionId === course.id" class="action-menu" role="menu">
+                  <button type="button" role="menuitem" (click)="closeActionMenu()">
+                    <mat-icon>visibility</mat-icon>
+                    Voir
+                  </button>
+                  <button type="button" role="menuitem" (click)="closeActionMenu()">
+                    <mat-icon>edit</mat-icon>
+                    Modifier
+                  </button>
+                  <button
+                    type="button"
+                    role="menuitem"
+                    class="danger-action"
+                    (click)="closeActionMenu()"
+                  >
+                    <mat-icon>delete</mat-icon>
+                    Supprimer
+                  </button>
+                </div>
+              </td>
+            </tr>
+          </ng-container>
+          <tr *ngIf="groupedCourses.length === 0">
+            <td class="empty-state" colspan="9">
+              Aucun cours ne correspond aux critères sélectionnés.
             </td>
           </tr>
         </tbody>

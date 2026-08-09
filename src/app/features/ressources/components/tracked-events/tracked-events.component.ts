@@ -16,9 +16,8 @@ export class TrackedEventsComponent {
   readonly levelOptions: string[] = ['Licence', 'Master 1', 'Master 2'];
   readonly semesterOptions: string[] = ['Semestre 1', 'Semestre 2', 'Session intensive'];
 
-  readonly eventState = new PaginatedFormState<TrackedEvent, TrackedEventForm>(
-    5,
-    () => this.createTrackedEventForm()
+  readonly eventState = new PaginatedFormState<TrackedEvent, TrackedEventForm>(5, () =>
+    this.createTrackedEventForm(),
   );
 
   constructor(private trackedEventService: TrackedEventService) {
@@ -33,7 +32,7 @@ export class TrackedEventsComponent {
     return hasRequiredTextValues(
       this.eventState.form.level,
       this.eventState.form.semester,
-      this.eventState.form.name
+      this.eventState.form.name,
     );
   }
 

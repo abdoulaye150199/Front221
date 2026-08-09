@@ -14,6 +14,10 @@ export interface Course {
   niveau: string;
   classe: string;
   semestre: string;
+  coefficient?: number;
+  vhp?: number;
+  tpe?: number;
+  vht?: number;
 }
 
 export interface CoursDataSource {
@@ -54,11 +58,18 @@ export class CourseService {
     semestres: SelectOption[];
     pageSize: number;
   } {
+    const semesterOptions = Array.from({ length: 6 }, (_, index) => ({
+      value: `S${index + 1}`,
+      label: `Semestre ${index + 1}`,
+    }));
+
     return {
       specialites: [...this.data.specialites],
       niveaux: [...this.data.niveaux],
       classes: [...this.data.classes],
-      semestres: [...this.data.semestres],
+      semestres: [this.data.semestres[0], ...semesterOptions].filter(
+        (option): option is SelectOption => option !== undefined,
+      ),
       pageSize: this.data.pageSize,
     };
   }
@@ -67,7 +78,7 @@ export class CourseService {
     const { searchTerm, specialite, niveau, classe, semestre } = filters;
     const term = searchTerm.trim().toLowerCase();
 
-    return courses.filter(course => {
+    return courses.filter((course) => {
       const matchesSearch = term
         ? `${course.ue} ${course.module} ${course.professor}`.toLowerCase().includes(term)
         : true;
@@ -75,7 +86,9 @@ export class CourseService {
       const matchesNiveau = niveau === 'tous' || course.niveau === niveau;
       const matchesClasse = classe === 'toutes' || course.classe === classe;
       const matchesSemestre = semestre === 'tous' || course.semestre === semestre;
-      return matchesSearch && matchesSpecialite && matchesNiveau && matchesClasse && matchesSemestre;
+      return (
+        matchesSearch && matchesSpecialite && matchesNiveau && matchesClasse && matchesSemestre
+      );
     });
   }
 }

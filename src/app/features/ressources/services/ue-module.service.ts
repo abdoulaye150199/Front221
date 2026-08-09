@@ -61,16 +61,18 @@ export class UeModuleService {
   }
 
   getMentionOptions(): string[] {
-    return [...new Set([
-      ...(REFERENTIEL_DATA.mentionOptions ?? []).map(option => option.label).filter(Boolean),
-      ...this.getDerivedMentionLabels(),
-    ])];
+    return [
+      ...new Set([
+        ...(REFERENTIEL_DATA.mentionOptions ?? []).map((option) => option.label).filter(Boolean),
+        ...this.getDerivedMentionLabels(),
+      ]),
+    ];
   }
 
   getUeOptions(): Array<{ id: string; label: string }> {
     return this.ueItems
-      .filter(item => item.status === 'Actif')
-      .map(item => ({ id: item.id, label: item.title }));
+      .filter((item) => item.status === 'Actif')
+      .map((item) => ({ id: item.id, label: item.title }));
   }
 
   createUeType(form: UeTypeCatalogForm): UeTypeCatalogItem {
@@ -91,7 +93,7 @@ export class UeModuleService {
   }
 
   updateUeType(id: string, form: UeTypeCatalogForm): UeTypeCatalogItem | undefined {
-    const index = this.ueTypeItems.findIndex(item => item.id === id);
+    const index = this.ueTypeItems.findIndex((item) => item.id === id);
     if (index === -1) {
       return undefined;
     }
@@ -105,7 +107,7 @@ export class UeModuleService {
 
   deleteUeType(id: string): boolean {
     const initialLength = this.ueTypeItems.length;
-    this.ueTypeItems = this.ueTypeItems.filter(item => item.id !== id);
+    this.ueTypeItems = this.ueTypeItems.filter((item) => item.id !== id);
     return this.ueTypeItems.length < initialLength;
   }
 
@@ -124,7 +126,7 @@ export class UeModuleService {
   }
 
   updateUe(id: string, form: UeCatalogForm): UeCatalogItem | undefined {
-    const index = this.ueItems.findIndex(item => item.id === id);
+    const index = this.ueItems.findIndex((item) => item.id === id);
     if (index === -1) {
       return undefined;
     }
@@ -136,8 +138,8 @@ export class UeModuleService {
       mentionNames: [form.mentionName],
     };
 
-    this.moduleItems = this.moduleItems.map(item =>
-      item.ueId === id ? { ...item, ueTitles: [this.ueItems[index].title] } : item
+    this.moduleItems = this.moduleItems.map((item) =>
+      item.ueId === id ? { ...item, ueTitles: [this.ueItems[index].title] } : item,
     );
 
     return this.ueItems[index];
@@ -145,13 +147,13 @@ export class UeModuleService {
 
   deleteUe(id: string): boolean {
     const initialLength = this.ueItems.length;
-    this.ueItems = this.ueItems.filter(item => item.id !== id);
-    this.moduleItems = this.moduleItems.filter(item => item.ueId !== id);
+    this.ueItems = this.ueItems.filter((item) => item.id !== id);
+    this.moduleItems = this.moduleItems.filter((item) => item.ueId !== id);
     return this.ueItems.length < initialLength;
   }
 
   createModule(form: ModuleCatalogForm): ModuleCatalogItem | undefined {
-    const parentUe = this.ueItems.find(item => item.id === form.ueId);
+    const parentUe = this.ueItems.find((item) => item.id === form.ueId);
     if (!parentUe) {
       return undefined;
     }
@@ -171,12 +173,12 @@ export class UeModuleService {
   }
 
   updateModule(id: string, form: ModuleCatalogForm): ModuleCatalogItem | undefined {
-    const index = this.moduleItems.findIndex(item => item.id === id);
+    const index = this.moduleItems.findIndex((item) => item.id === id);
     if (index === -1) {
       return undefined;
     }
 
-    const parentUe = this.ueItems.find(item => item.id === form.ueId);
+    const parentUe = this.ueItems.find((item) => item.id === form.ueId);
     if (!parentUe) {
       return undefined;
     }
@@ -193,7 +195,7 @@ export class UeModuleService {
 
   deleteModule(id: string): boolean {
     const initialLength = this.moduleItems.length;
-    this.moduleItems = this.moduleItems.filter(item => item.id !== id);
+    this.moduleItems = this.moduleItems.filter((item) => item.id !== id);
     return this.moduleItems.length < initialLength;
   }
 
@@ -205,7 +207,7 @@ export class UeModuleService {
       code: item.code,
       title: item.title,
       mentionNames: mentionPresets[index % mentionPresets.length],
-      moduleNames: item.modules.map(module => module.name),
+      moduleNames: item.modules.map((module) => module.name),
       status: 'Actif',
     }));
   }
@@ -223,7 +225,7 @@ export class UeModuleService {
   }
 
   private buildModuleItems(): ModuleCatalogItem[] {
-    return (REFERENTIEL_DATA.ueList ?? []).flatMap(item =>
+    return (REFERENTIEL_DATA.ueList ?? []).flatMap((item) =>
       item.modules.map((module, index) => ({
         id: `${item.id}-${module.id}`,
         ueId: item.id,
@@ -231,7 +233,7 @@ export class UeModuleService {
         name: module.name,
         ueTitles: [item.title],
         status: 'Actif' as const,
-      }))
+      })),
     );
   }
 
@@ -239,20 +241,16 @@ export class UeModuleService {
     const mentionOptions = this.getMentionOptions();
     const [first = 'Informatique', second = 'Gestion', third = 'Droit'] = mentionOptions;
 
-    return [
-      [first, second, third],
-      [first, second],
-      [first],
-    ];
+    return [[first, second, third], [first, second], [first]];
   }
 
   private getDerivedMentionLabels(): string[] {
     const derived: string[] = [];
     const hasGestion = (REFERENTIEL_DATA.domainOptions ?? []).some(
-      option => option.label === 'Sciences de Gestion'
+      (option) => option.label === 'Sciences de Gestion',
     );
     const hasDroit = (REFERENTIEL_DATA.modalModules ?? []).some(
-      option => option.label === 'Droit public'
+      (option) => option.label === 'Droit public',
     );
 
     if (hasGestion) {
@@ -268,8 +266,8 @@ export class UeModuleService {
 
   private getModuleSeedOptions(): string[] {
     return (REFERENTIEL_DATA.modalModules ?? [])
-      .map(option => option.label)
-      .filter(label => label !== 'Sélectionner');
+      .map((option) => option.label)
+      .filter((label) => label !== 'Sélectionner');
   }
 
   private buildUeCode(title: string, suffix: number): string {
@@ -279,7 +277,7 @@ export class UeModuleService {
       .split(/\s+/)
       .filter(Boolean)
       .slice(0, 3)
-      .map(chunk => chunk[0]?.toUpperCase() ?? '')
+      .map((chunk) => chunk[0]?.toUpperCase() ?? '')
       .join('');
 
     return `UE-${compact || 'NEW'}${suffix}`;
@@ -292,7 +290,7 @@ export class UeModuleService {
       .split(/\s+/)
       .filter(Boolean)
       .slice(0, 2)
-      .map(chunk => chunk.slice(0, 2).toUpperCase())
+      .map((chunk) => chunk.slice(0, 2).toUpperCase())
       .join('');
 
     return `M-${compact || 'MD'}${suffix}`;

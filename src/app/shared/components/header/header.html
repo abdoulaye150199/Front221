@@ -9,12 +9,17 @@
   <div class="header-center">
     <div class="search-bar">
       <mat-icon>search</mat-icon>
-      <input type="text" placeholder="Rechercher..." />
+      <input type="search" placeholder="Rechercher..." aria-label="Rechercher dans l'application" />
     </div>
   </div>
 
   <div class="header-right">
-    <button mat-icon-button class="notification-btn">
+    <button
+      mat-icon-button
+      type="button"
+      class="notification-btn"
+      aria-label="Voir les notifications"
+    >
       <mat-icon>notifications</mat-icon>
       <span class="notification-badge"></span>
     </button>

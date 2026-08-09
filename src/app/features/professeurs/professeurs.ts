@@ -19,15 +19,11 @@ export class ProfesseursComponent {
   pageSize = 10;
   pageSizeOptions: SelectOption[] = [];
 
-  specialites: SelectOption[] = [];
-  niveaux: SelectOption[] = [];
   classes: SelectOption[] = [];
-  semestres: SelectOption[] = [];
+  statusOptions: SelectOption[] = [];
 
-  selectedSpecialite = 'toutes';
-  selectedNiveau = 'tous';
   selectedClasse = 'toutes';
-  selectedSemestre = 'tous';
+  selectedStatus = 'tous';
 
   openMenuId: string | null = null;
   selectedProfessor: Professor | null = null;
@@ -38,14 +34,11 @@ export class ProfesseursComponent {
     const options = this.professorService.getFilterOptions();
     this.pageSizeOptions = options.pageSizeOptions;
     this.pageSize = Number(this.pageSizeOptions[0]?.value ?? 10);
-    this.specialites = options.pageSizeOptions;
-    this.niveaux = options.classOptions;
-    this.classes = options.statusOptions;
+    this.classes = options.classOptions;
+    this.statusOptions = options.statusOptions;
     this.allProfessors = this.professorService.getProfessors();
-
-    this.selectedSpecialite = this.specialites[0]?.value ?? 'toutes';
-    this.selectedNiveau = this.niveaux[0]?.value ?? 'tous';
     this.selectedClasse = this.classes[0]?.value ?? 'toutes';
+    this.selectedStatus = this.statusOptions[0]?.value ?? 'tous';
   }
 
   onSearchChange(value: string): void {
@@ -65,7 +58,7 @@ export class ProfesseursComponent {
   get filterConfigs(): { id: string; label: string; value: string; options: SelectOption[] }[] {
     return [
       { id: 'class', label: 'Classe', value: this.selectedClasse, options: this.classes },
-      { id: 'status', label: 'Statut', value: this.selectedSemestre, options: this.semestres },
+      { id: 'status', label: 'Statut', value: this.selectedStatus, options: this.statusOptions },
     ];
   }
 
@@ -74,7 +67,7 @@ export class ProfesseursComponent {
       this.allProfessors,
       this.searchTerm,
       this.selectedClasse,
-      this.selectedSemestre
+      this.selectedStatus,
     );
   }
 
@@ -140,7 +133,7 @@ export class ProfesseursComponent {
       this.selectedClasse = filter.value;
     }
     if (filter.id === 'status') {
-      this.selectedSemestre = filter.value;
+      this.selectedStatus = filter.value;
     }
     this.page = 1;
   }

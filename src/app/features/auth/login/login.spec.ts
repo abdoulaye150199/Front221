@@ -1,19 +1,20 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { of, throwError } from 'rxjs';
+import { FormBuilder } from '@angular/forms';
+import { inject } from '@angular/core';
+import { DomSanitizer } from '@angular/platform-browser';
+import { TestBed } from '@angular/core/testing';
 import { Router } from '@angular/router';
+import { of, throwError } from 'rxjs';
 import { vi } from 'vitest';
 
-import { AuthModule } from '../auth-module';
-import { LoginComponent } from './login';
 import { AuthService } from '../../../core/services/auth.service';
+import { LoginComponent } from './login';
 
 describe('LoginComponent', () => {
   let component: LoginComponent;
-  let fixture: ComponentFixture<LoginComponent>;
   let authService: Pick<AuthService, 'login'>;
   let router: Pick<Router, 'navigate'>;
 
-  beforeEach(async () => {
+  beforeEach(() => {
     authService = {
       login: vi.fn(),
     };
@@ -21,17 +22,28 @@ describe('LoginComponent', () => {
       navigate: vi.fn().mockResolvedValue(true),
     };
 
-    await TestBed.configureTestingModule({
-      imports: [AuthModule],
+    const sanitizer = {
+      bypassSecurityTrustHtml: vi.fn((value: string) => value),
+    } as unknown as DomSanitizer;
+
+    TestBed.configureTestingModule({
       providers: [
         { provide: AuthService, useValue: authService },
         { provide: Router, useValue: router },
+        { provide: DomSanitizer, useValue: sanitizer },
+        { provide: FormBuilder, useValue: new FormBuilder() },
       ],
-    }).compileComponents();
+    });
 
-    fixture = TestBed.createComponent(LoginComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
+    component = TestBed.runInInjectionContext(
+      () =>
+        new LoginComponent(
+          inject(FormBuilder).nonNullable,
+          inject(AuthService),
+          inject(Router),
+          inject(DomSanitizer),
+        ),
+    );
   });
 
   it('should create', () => {
@@ -66,7 +78,9 @@ describe('LoginComponent', () => {
   });
 
   it('should expose the backend error when login fails', () => {
-    vi.mocked(authService.login).mockReturnValue(of({ success: false, message: 'Identifiants invalides' }));
+    vi.mocked(authService.login).mockReturnValue(
+      of({ success: false, message: 'Identifiants invalides' }),
+    );
     component.loginForm.setValue({
       phoneOrEmail: 'admin@ecole221.com',
       password: 'wrong-password',

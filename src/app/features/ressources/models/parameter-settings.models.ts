@@ -1,9 +1,4 @@
-export type ResourceParameterTab =
-  | 'Événements'
-  | 'Civilité'
-  | 'Salles'
-  | 'Documents'
-  | 'Horaires';
+export type ResourceParameterTab = 'Événements' | 'Civilité' | 'Salles' | 'Documents' | 'Horaires';
 
 export type ParameterEventStatus = 'En cours' | 'En attente' | 'Terminé';
 export type ParameterCivilityStatus = 'Actif' | 'Inactif';

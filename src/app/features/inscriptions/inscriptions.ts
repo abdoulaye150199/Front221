@@ -54,7 +54,10 @@ export class InscriptionsComponent {
   }
 
   onPageSizeChange(value: string) {
-    const pageSize = parseAllowedNumberOption(value, this.pageSizeOptions.map(option => Number(option.value)));
+    const pageSize = parseAllowedNumberOption(
+      value,
+      this.pageSizeOptions.map((option) => Number(option.value)),
+    );
     if (pageSize === null) {
       return;
     }
@@ -72,15 +75,15 @@ export class InscriptionsComponent {
 
   get filteredStudents(): Student[] {
     const term = this.searchTerm.trim().toLowerCase();
-    return this.students.filter(student => {
+    return this.students.filter((student) => {
       const matchesSearch = term
         ? `${student.name} ${student.matricule} ${student.address} ${student.classe}`
             .toLowerCase()
             .includes(term)
         : true;
-      const matchesClass =
-        this.selectedClass === 'toutes' || student.classe === this.selectedClass;
-      const matchesStatus = this.selectedStatus === 'tous' || student.status === this.selectedStatus;
+      const matchesClass = this.selectedClass === 'toutes' || student.classe === this.selectedClass;
+      const matchesStatus =
+        this.selectedStatus === 'tous' || student.status === this.selectedStatus;
       return matchesSearch && matchesClass && matchesStatus;
     });
   }

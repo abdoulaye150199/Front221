@@ -38,9 +38,7 @@
                 "input": "public"
               }
             ],
-            "styles": [
-              "src/styles.scss"
-            ],
+            "styles": ["node_modules/material-icons/iconfont/filled.css", "src/styles.scss"],
             "server": "src/main.server.ts",
             "outputMode": "server",
             "security": {
@@ -52,6 +50,16 @@
           },
           "configurations": {
             "production": {
+              "fileReplacements": [
+                {
+                  "replace": "src/environments/environment.ts",
+                  "with": "src/environments/environment.prod.ts"
+                },
+                {
+                  "replace": "src/app/core/services/mock-users.ts",
+                  "with": "src/app/core/services/mock-users.prod.ts"
+                }
+              ],
               "budgets": [
                 {
                   "type": "initial",
@@ -81,6 +89,16 @@
               "outputHashing": "all"
             },
             "vercel": {
+              "fileReplacements": [
+                {
+                  "replace": "src/environments/environment.ts",
+                  "with": "src/environments/environment.prod.ts"
+                },
+                {
+                  "replace": "src/app/core/services/mock-users.ts",
+                  "with": "src/app/core/services/mock-users.prod.ts"
+                }
+              ],
               "budgets": [
                 {
                   "type": "initial",
@@ -134,15 +152,23 @@
                 "input": "public"
               }
             ],
-            "styles": [
-              "src/styles.scss"
-            ],
+            "styles": ["node_modules/material-icons/iconfont/filled.css", "src/styles.scss"],
             "security": {
               "allowedHosts": []
             }
           },
           "configurations": {
             "production": {
+              "fileReplacements": [
+                {
+                  "replace": "src/environments/environment.ts",
+                  "with": "src/environments/environment.prod.ts"
+                },
+                {
+                  "replace": "src/app/core/services/mock-users.ts",
+                  "with": "src/app/core/services/mock-users.prod.ts"
+                }
+              ],
               "budgets": [
                 {
                   "type": "initial",

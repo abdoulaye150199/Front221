@@ -1,39 +1,34 @@
 import { TestBed } from '@angular/core/testing';
 import { describe, it, expect, beforeEach, vi } from 'vitest';
-import { Router } from '@angular/router';
+import { ActivatedRouteSnapshot, Router, RouterStateSnapshot, UrlTree } from '@angular/router';
 import { AuthGuard, authGuard } from './auth-jwt.guard';
 import { AuthService } from '../services/auth.service';
 
 // Mock du service d'authentification
 const mockAuthService = {
-  isAuthenticated: vi.fn()
+  isAuthenticated: vi.fn(),
 };
 
 // Mock du router
 const mockRouter = {
-  navigate: vi.fn()
+  createUrlTree: vi.fn(),
 };
 
 describe('AuthGuard', () => {
   let guard: AuthGuard;
-  let authService: AuthService;
-  let router: Router;
-
   beforeEach(() => {
-    // Reset mocks before each test
     mockAuthService.isAuthenticated.mockReset();
-    mockRouter.navigate.mockReset();
+    mockRouter.createUrlTree.mockReset();
+    mockRouter.createUrlTree.mockReturnValue({ redirect: true } as unknown as UrlTree);
 
     TestBed.configureTestingModule({
       providers: [
         AuthGuard,
         { provide: AuthService, useValue: mockAuthService },
-        { provide: Router, useValue: mockRouter }
-      ]
+        { provide: Router, useValue: mockRouter },
+      ],
     });
     guard = TestBed.inject(AuthGuard);
-    authService = TestBed.inject(AuthService);
-    router = TestBed.inject(Router);
   });
 
   it('should be created', () => {
@@ -44,20 +39,26 @@ describe('AuthGuard', () => {
     it('should return true when user is authenticated', () => {
       mockAuthService.isAuthenticated.mockReturnValue(true);
 
-      const result = guard.canActivate(null as any, null as any);
+      const result = guard.canActivate(
+        {} as ActivatedRouteSnapshot,
+        { url: '/dashboard' } as RouterStateSnapshot,
+      );
 
       expect(result).toBe(true);
-      expect(mockRouter.navigate).not.toHaveBeenCalled();
+      expect(mockRouter.createUrlTree).not.toHaveBeenCalled();
     });
 
     it('should redirect to login when user is not authenticated', () => {
       mockAuthService.isAuthenticated.mockReturnValue(false);
-      const state = { url: '/dashboard' } as any;
+      const result = guard.canActivate(
+        {} as ActivatedRouteSnapshot,
+        { url: '/dashboard' } as RouterStateSnapshot,
+      );
 
-      const result = guard.canActivate(null as any, state);
-
-      expect(result).toBe(false);
-      expect(mockRouter.navigate).toHaveBeenCalledWith(['/login'], { queryParams: { returnUrl: '/dashboard' } });
+      expect(result).toEqual({ redirect: true });
+      expect(mockRouter.createUrlTree).toHaveBeenCalledWith(['/auth/login'], {
+        queryParams: { returnUrl: '/dashboard' },
+      });
     });
   });
 
@@ -65,19 +66,23 @@ describe('AuthGuard', () => {
     it('should return true when user is authenticated', () => {
       mockAuthService.isAuthenticated.mockReturnValue(true);
 
-      const result = authGuard(null as any, null as any);
+      const result = TestBed.runInInjectionContext(() =>
+        authGuard({} as ActivatedRouteSnapshot, { url: '/dashboard' } as RouterStateSnapshot),
+      );
 
       expect(result).toBe(true);
     });
 
-    it('should return false and redirect when user is not authenticated', () => {
+    it('should return a login UrlTree when user is not authenticated', () => {
       mockAuthService.isAuthenticated.mockReturnValue(false);
-      const state = { url: '/dashboard' } as any;
+      const result = TestBed.runInInjectionContext(() =>
+        authGuard({} as ActivatedRouteSnapshot, { url: '/dashboard' } as RouterStateSnapshot),
+      );
 
-      const result = authGuard(null as any, state);
-
-      expect(result).toBe(false);
-      expect(mockRouter.navigate).toHaveBeenCalledWith(['/login'], { queryParams: { returnUrl: '/dashboard' } });
+      expect(result).toEqual({ redirect: true });
+      expect(mockRouter.createUrlTree).toHaveBeenCalledWith(['/auth/login'], {
+        queryParams: { returnUrl: '/dashboard' },
+      });
     });
   });
 });

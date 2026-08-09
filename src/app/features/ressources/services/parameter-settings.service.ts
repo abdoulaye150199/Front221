@@ -37,19 +37,17 @@ const RESSOURCES_DATA = APP_DATA.features.ressources as ParameterSettingsDataSou
 })
 export class ParameterSettingsService {
   private eventItems: ParameterEventItem[] = structuredClone(
-    RESSOURCES_DATA.parameterEventItems ?? []
+    RESSOURCES_DATA.parameterEventItems ?? [],
   );
   private civilityItems: ParameterCivilityItem[] = structuredClone(
-    RESSOURCES_DATA.parameterCivilities ?? []
+    RESSOURCES_DATA.parameterCivilities ?? [],
   );
-  private roomItems: ParameterRoomItem[] = structuredClone(
-    RESSOURCES_DATA.parameterRooms ?? []
-  );
+  private roomItems: ParameterRoomItem[] = structuredClone(RESSOURCES_DATA.parameterRooms ?? []);
   private documentItems: ParameterDocumentItem[] = structuredClone(
-    RESSOURCES_DATA.parameterDocuments ?? []
+    RESSOURCES_DATA.parameterDocuments ?? [],
   );
   private scheduleItems: ParameterScheduleItem[] = structuredClone(
-    RESSOURCES_DATA.parameterSchedules ?? []
+    RESSOURCES_DATA.parameterSchedules ?? [],
   );
 
   private nextEventId = this.eventItems.length + 1;
@@ -74,14 +72,15 @@ export class ParameterSettingsService {
         'Documents',
         'Horaires',
       ],
-      levelOptions: RESSOURCES_DATA.parameterLevelOptions
-        ?? RESSOURCES_DATA.levelOptions
-        ?? ['Licence', 'Master 1', 'Master 2'],
-      semesterOptions: RESSOURCES_DATA.parameterSemesterOptions
-        ?? RESSOURCES_DATA.semesterOptions
-        ?? ['Semestre 1', 'Semestre 2'],
+      levelOptions: RESSOURCES_DATA.parameterLevelOptions ??
+        RESSOURCES_DATA.levelOptions ?? ['Licence', 'Master 1', 'Master 2'],
+      semesterOptions: RESSOURCES_DATA.parameterSemesterOptions ??
+        RESSOURCES_DATA.semesterOptions ?? ['Semestre 1', 'Semestre 2'],
       roomCapacityOptions: RESSOURCES_DATA.parameterRoomCapacityOptions ?? [20, 30, 40, 50, 60],
-      documentTypeOptions: RESSOURCES_DATA.parameterDocumentTypeOptions ?? ['A ramener', 'A retirer'],
+      documentTypeOptions: RESSOURCES_DATA.parameterDocumentTypeOptions ?? [
+        'A ramener',
+        'A retirer',
+      ],
       pageSizeOptions: RESSOURCES_DATA.pageSizeOptions ?? [5, 10, 15],
     });
   }
@@ -105,7 +104,7 @@ export class ParameterSettingsService {
   }
 
   updateEvent(id: string, form: ParameterEventForm): ParameterEventItem | undefined {
-    const index = this.eventItems.findIndex(item => item.id === id);
+    const index = this.eventItems.findIndex((item) => item.id === id);
     if (index === -1) {
       return undefined;
     }
@@ -141,7 +140,7 @@ export class ParameterSettingsService {
   }
 
   updateCivility(id: string, label: string): ParameterCivilityItem | undefined {
-    const index = this.civilityItems.findIndex(item => item.id === id);
+    const index = this.civilityItems.findIndex((item) => item.id === id);
     if (index === -1) {
       return undefined;
     }
@@ -177,7 +176,7 @@ export class ParameterSettingsService {
   }
 
   updateRoom(id: string, form: ParameterRoomForm): ParameterRoomItem | undefined {
-    const index = this.roomItems.findIndex(item => item.id === id);
+    const index = this.roomItems.findIndex((item) => item.id === id);
     if (index === -1) {
       return undefined;
     }
@@ -215,7 +214,7 @@ export class ParameterSettingsService {
   }
 
   updateDocument(id: string, form: ParameterDocumentForm): ParameterDocumentItem | undefined {
-    const index = this.documentItems.findIndex(item => item.id === id);
+    const index = this.documentItems.findIndex((item) => item.id === id);
     if (index === -1) {
       return undefined;
     }
@@ -252,7 +251,7 @@ export class ParameterSettingsService {
   }
 
   updateSchedule(id: string, form: ParameterScheduleForm): ParameterScheduleItem | undefined {
-    const index = this.scheduleItems.findIndex(item => item.id === id);
+    const index = this.scheduleItems.findIndex((item) => item.id === id);
     if (index === -1) {
       return undefined;
     }
@@ -271,7 +270,7 @@ export class ParameterSettingsService {
   }
 
   private deleteById<T extends { id: string }>(items: T[], id: string): boolean {
-    const index = items.findIndex(item => item.id === id);
+    const index = items.findIndex((item) => item.id === id);
     if (index === -1) {
       return false;
     }

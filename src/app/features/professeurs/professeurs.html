@@ -114,10 +114,7 @@
           <div>
             <div class="profile-name">{{ professor.name }}</div>
             <div class="profile-grade">{{ professor.grade }}</div>
-            <span
-              class="status-pill"
-              [class.inactive]="professor.status === 'Inactif'"
-            >
+            <span class="status-pill" [class.inactive]="professor.status === 'Inactif'">
               {{ professor.status }}
             </span>
           </div>
@@ -125,33 +122,33 @@
 
         <div class="profile-grid">
           <div class="profile-card">
-              <mat-icon>call</mat-icon>
-              <div>
-                <div class="label">Téléphone</div>
-                <div class="value">{{ professor.phone }}</div>
-              </div>
+            <mat-icon>call</mat-icon>
+            <div>
+              <div class="label">Téléphone</div>
+              <div class="value">{{ professor.phone }}</div>
             </div>
+          </div>
           <div class="profile-card">
-              <mat-icon>mail</mat-icon>
-              <div>
-                <div class="label">Email</div>
-                <div class="value">{{ professor.email }}</div>
-              </div>
+            <mat-icon>mail</mat-icon>
+            <div>
+              <div class="label">Email</div>
+              <div class="value">{{ professor.email }}</div>
             </div>
+          </div>
           <div class="profile-card">
-              <mat-icon>school</mat-icon>
-              <div>
-                <div class="label">Classe</div>
-                <div class="value">{{ professor.classe }}</div>
-              </div>
+            <mat-icon>school</mat-icon>
+            <div>
+              <div class="label">Classe</div>
+              <div class="value">{{ professor.classe }}</div>
             </div>
+          </div>
           <div class="profile-card">
-              <mat-icon>schedule</mat-icon>
-              <div>
-                <div class="label">Heures effectuées</div>
-                <div class="value">{{ professor.hours }} Heures</div>
-              </div>
+            <mat-icon>schedule</mat-icon>
+            <div>
+              <div class="label">Heures effectuées</div>
+              <div class="value">{{ professor.hours }} Heures</div>
             </div>
+          </div>
         </div>
       </div>
       <div class="modal-footer">

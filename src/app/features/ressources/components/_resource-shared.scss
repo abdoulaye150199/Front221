@@ -15,7 +15,10 @@
   font-weight: 700;
   letter-spacing: -0.01em;
   text-transform: none !important;
-  transition: transform 0.18s ease, box-shadow 0.18s ease, background 0.18s ease;
+  transition:
+    transform 0.18s ease,
+    box-shadow 0.18s ease,
+    background 0.18s ease;
 
   mat-icon {
     margin: 0;
@@ -79,7 +82,10 @@
   border-radius: 14px;
   background: #fff;
   box-shadow: 0 6px 16px rgba(15, 23, 42, 0.03);
-  transition: border-color 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease,
+    background 0.2s ease;
   min-width: 0;
   width: 100%;
 }
@@ -176,7 +182,9 @@
   }
 
   tbody tr {
-    transition: transform 0.18s ease, background 0.18s ease;
+    transition:
+      transform 0.18s ease,
+      background 0.18s ease;
   }
 
   tbody tr:hover td {

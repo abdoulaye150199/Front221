@@ -15,11 +15,7 @@
     <div class="subtab-form">
       <ng-container *ngIf="isUeTypeTab">
         <label class="field wide-field">
-          <input
-            type="text"
-            placeholder="Unité d'enseignement (U.E)"
-            [(ngModel)]="ueTypeTitle"
-          />
+          <input type="text" placeholder="Unité d'enseignement (U.E)" [(ngModel)]="ueTypeTitle" />
         </label>
       </ng-container>
 
@@ -36,11 +32,7 @@
         </label>
 
         <label class="field wide-field">
-          <input
-            type="text"
-            placeholder="Unité d'enseignement (U.E)"
-            [(ngModel)]="ueTitle"
-          />
+          <input type="text" placeholder="Unité d'enseignement (U.E)" [(ngModel)]="ueTitle" />
         </label>
       </ng-container>
 
@@ -71,12 +63,7 @@
         {{ isEditing ? 'Modifier' : 'Créer' }}
       </button>
 
-      <button
-        *ngIf="isEditing"
-        mat-stroked-button
-        type="button"
-        (click)="cancelEdition()"
-      >
+      <button *ngIf="isEditing" mat-stroked-button type="button" (click)="cancelEdition()">
         Annuler
       </button>
     </div>
@@ -109,15 +96,15 @@
         </thead>
 
         <tbody *ngIf="isUeTypeTab">
-          <tr *ngFor="let item of pagedItems">
-            <td class="meta-muted">{{ $any(item).code }}</td>
-            <td class="year-cell">{{ $any(item).title }}</td>
+          <tr *ngFor="let item of pagedUeTypeItems">
+            <td class="meta-muted">{{ item.code }}</td>
+            <td class="year-cell">{{ item.title }}</td>
             <td>
               <div class="chip-list">
                 <span
                   class="catalog-chip"
                   [ngClass]="'tone-' + getChipTone(i)"
-                  *ngFor="let mention of $any(item).mentionNames; let i = index"
+                  *ngFor="let mention of item.mentionNames; let i = index"
                 >
                   {{ mention }}
                 </span>
@@ -128,102 +115,105 @@
                 <span
                   class="catalog-chip"
                   [ngClass]="'tone-' + getChipTone(i)"
-                  *ngFor="let module of $any(item).moduleNames; let i = index"
+                  *ngFor="let module of item.moduleNames; let i = index"
                 >
                   {{ module }}
                 </span>
               </div>
             </td>
-            <td><span class="status-pill active">{{ $any(item).status }}</span></td>
+            <td>
+              <span class="status-pill active">{{ item.status }}</span>
+            </td>
             <td class="actions-cell">
               <button
                 class="icon-btn menu"
                 type="button"
                 aria-label="Options"
-                (click)="$event.stopPropagation(); toggleTypeActionMenu($any(item).id)"
+                (click)="$event.stopPropagation(); toggleTypeActionMenu(item.id)"
               >
                 <mat-icon>more_vert</mat-icon>
               </button>
               <div
                 class="actions-menu"
-                *ngIf="openTypeActionId === $any(item).id"
+                *ngIf="openTypeActionId === item.id"
                 (click)="$event.stopPropagation()"
               >
-                <button type="button" (click)="editType($any(item))">Modifier</button>
-                <button type="button" (click)="deleteType($any(item).id)">Supprimer</button>
+                <button type="button" (click)="editType(item)">Modifier</button>
+                <button type="button" (click)="deleteType(item.id)">Supprimer</button>
               </div>
             </td>
           </tr>
         </tbody>
 
         <tbody *ngIf="isUeTab">
-          <tr *ngFor="let item of pagedItems">
-            <td class="meta-muted">{{ $any(item).code }}</td>
-            <td class="year-cell">{{ $any(item).title }}</td>
+          <tr *ngFor="let item of pagedUeItems">
+            <td class="meta-muted">{{ item.code }}</td>
+            <td class="year-cell">{{ item.title }}</td>
             <td>
               <div class="chip-list">
                 <span
                   class="catalog-chip"
                   [ngClass]="'tone-' + getChipTone(i)"
-                  *ngFor="let mention of $any(item).mentionNames; let i = index"
+                  *ngFor="let mention of item.mentionNames; let i = index"
                 >
                   {{ mention }}
                 </span>
               </div>
             </td>
-            <td><span class="status-pill active">{{ $any(item).status }}</span></td>
+            <td>
+              <span class="status-pill active">{{ item.status }}</span>
+            </td>
             <td class="actions-cell">
               <button
                 class="icon-btn menu"
                 type="button"
                 aria-label="Options"
-                (click)="$event.stopPropagation(); toggleUeActionMenu($any(item).id)"
+                (click)="$event.stopPropagation(); toggleUeActionMenu(item.id)"
               >
                 <mat-icon>more_vert</mat-icon>
               </button>
               <div
                 class="actions-menu"
-                *ngIf="openUeActionId === $any(item).id"
+                *ngIf="openUeActionId === item.id"
                 (click)="$event.stopPropagation()"
               >
-                <button type="button" (click)="editUe($any(item))">Modifier</button>
-                <button type="button" (click)="deleteUe($any(item).id)">Supprimer</button>
+                <button type="button" (click)="editUe(item)">Modifier</button>
+                <button type="button" (click)="deleteUe(item.id)">Supprimer</button>
               </div>
             </td>
           </tr>
         </tbody>
 
         <tbody *ngIf="isModuleTab">
-          <tr *ngFor="let item of pagedItems">
-            <td class="meta-muted">{{ $any(item).code }}</td>
-            <td class="year-cell">{{ $any(item).name }}</td>
+          <tr *ngFor="let item of pagedModuleItems">
+            <td class="meta-muted">{{ item.code }}</td>
+            <td class="year-cell">{{ item.name }}</td>
             <td>
               <div class="chip-list">
-                <span
-                  class="catalog-chip tone-blue"
-                  *ngFor="let ueTitle of $any(item).ueTitles"
-                >
+                <span class="catalog-chip tone-blue" *ngFor="let ueTitle of item.ueTitles">
                   {{ ueTitle }}
                 </span>
               </div>
             </td>
-            <td><span class="status-pill active">{{ $any(item).status }}</span></td>
+            <td>
+              <span class="status-pill active">{{ item.status }}</span>
+            </td>
             <td class="actions-cell">
               <button
                 class="icon-btn menu"
                 type="button"
                 aria-label="Options"
-                (click)="$event.stopPropagation(); toggleModuleActionMenu($any(item).id)"
+                (click)="$event.stopPropagation(); toggleModuleActionMenu(item.id)"
               >
                 <mat-icon>more_vert</mat-icon>
               </button>
               <div
                 class="actions-menu"
-                *ngIf="openModuleActionId === $any(item).id"
+                *ngIf="openModuleActionId === item.id"
                 (click)="$event.stopPropagation()"
               >
-                <button type="button" (click)="editModule($any(item))">Modifier</button>
-                <button type="button" (click)="deleteModule($any(item).id)">Supprimer</button>
+                <button type="button" (click)="editModule(item)">Modifier</button>
+                <button type="button" (click)="deleteModule(item.id)">Supprimer</button>
               </div>
             </td>
           </tr>
@@ -250,12 +240,7 @@
       </div>
 
       <div class="pagination number-pagination">
-        <button
-          class="page-nav-btn"
-          type="button"
-          [disabled]="!canPrev"
-          (click)="previousPage()"
-        >
+        <button class="page-nav-btn" type="button" [disabled]="!canPrev" (click)="previousPage()">
           <mat-icon>chevron_left</mat-icon>
         </button>
 
@@ -269,12 +254,7 @@
           {{ pageNumber }}
         </button>
 
-        <button
-          class="page-nav-btn"
-          type="button"
-          [disabled]="!canNext"
-          (click)="nextPage()"
-        >
+        <button class="page-nav-btn" type="button" [disabled]="!canNext" (click)="nextPage()">
           <mat-icon>chevron_right</mat-icon>
         </button>
       </div>

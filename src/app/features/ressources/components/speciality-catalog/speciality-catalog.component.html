@@ -1,28 +1,31 @@
 <div class="speciality-catalog">
   <div class="subtab-form">
     <label class="field select-field" *ngIf="isMentionSpecialityTab || isSpecialityTab">
-      <select
-        [ngModel]="specialityDomainName"
-        (ngModelChange)="onSpecialityDomainChange($event)"
-      >
+      <select [ngModel]="specialityDomainName" (ngModelChange)="onSpecialityDomainChange($event)">
         <option value="">Choisir le domaine</option>
-         <option *ngFor="let domain of domainOptions; trackBy: trackById" [value]="domain">{{ domain }}</option>
+        <option *ngFor="let domain of domainOptions; trackBy: trackById" [value]="domain">
+          {{ domain }}
+        </option>
       </select>
     </label>
 
     <label class="field select-field" *ngIf="isSpecialityTab">
       <select [(ngModel)]="specialityMentionName" [disabled]="mentionOptions.length === 0">
         <option value="">Choisir la mention</option>
-         <option *ngFor="let mention of mentionOptions; trackBy: trackById" [value]="mention">{{ mention }}</option>
+        <option *ngFor="let mention of mentionOptions; trackBy: trackById" [value]="mention">
+          {{ mention }}
+        </option>
       </select>
     </label>
 
-     <label class="field select-field" *ngIf="isSpecialityTab">
-       <select [(ngModel)]="specialityLevelName">
-         <option value="">Choisir le niveau</option>
-         <option *ngFor="let level of levelOptions; trackBy: trackById" [value]="level">{{ level }}</option>
-       </select>
-     </label>
+    <label class="field select-field" *ngIf="isSpecialityTab">
+      <select [(ngModel)]="specialityLevelName">
+        <option value="">Choisir le niveau</option>
+        <option *ngFor="let level of levelOptions; trackBy: trackById" [value]="level">
+          {{ level }}
+        </option>
+      </select>
+    </label>
 
     <label class="field" *ngIf="isCycleTab">
       <input
@@ -35,42 +38,57 @@
     <label class="field select-field" *ngIf="isCycleTab">
       <select [(ngModel)]="specialityDurationLabel">
         <option value="">Durée (années)</option>
-        <option *ngFor="let duration of cycleDurationOptions" [value]="duration">{{ duration }}</option>
+        <option *ngFor="let duration of cycleDurationOptions" [value]="duration">
+          {{ duration }}
+        </option>
       </select>
     </label>
 
     <label class="field select-field" *ngIf="isCycleTab">
       <select [(ngModel)]="specialityHourlyRateLabel">
         <option value="">Taux horaire</option>
-         <option *ngFor="let hourlyRate of hourlyRateOptions; trackBy: trackById" [value]="hourlyRate">{{ hourlyRate }}</option>
+        <option
+          *ngFor="let hourlyRate of hourlyRateOptions; trackBy: trackById"
+          [value]="hourlyRate"
+        >
+          {{ hourlyRate }}
+        </option>
       </select>
     </label>
 
     <label class="field select-field" *ngIf="isLevelTab">
       <select [(ngModel)]="specialityCycleName">
         <option value="">Cycle...</option>
-         <option *ngFor="let cycle of cycleOptions; trackBy: trackById" [value]="cycle">{{ cycle }}</option>
+        <option *ngFor="let cycle of cycleOptions; trackBy: trackById" [value]="cycle">
+          {{ cycle }}
+        </option>
       </select>
     </label>
 
-     <label class="field select-field" *ngIf="isSemesterTab">
-       <select [(ngModel)]="specialityLevelName">
-         <option value="">Niveau</option>
-         <option *ngFor="let level of levelOptions; trackBy: trackById" [value]="level">{{ level }}</option>
-       </select>
-     </label>
+    <label class="field select-field" *ngIf="isSemesterTab">
+      <select [(ngModel)]="specialityLevelName">
+        <option value="">Niveau</option>
+        <option *ngFor="let level of levelOptions; trackBy: trackById" [value]="level">
+          {{ level }}
+        </option>
+      </select>
+    </label>
 
     <label class="field select-field" *ngIf="isSemesterTab">
       <select [(ngModel)]="specialityItemName">
         <option value="">Semestre</option>
-         <option *ngFor="let semester of semesterOptions; trackBy: trackById" [value]="semester">{{ semester }}</option>
+        <option *ngFor="let semester of semesterOptions; trackBy: trackById" [value]="semester">
+          {{ semester }}
+        </option>
       </select>
     </label>
 
     <label class="field select-field" *ngIf="isSemesterTab">
       <select [(ngModel)]="specialityDurationLabel">
         <option value="">Durée (mois)</option>
-        <option *ngFor="let duration of semesterDurationOptions" [value]="duration">{{ duration }}</option>
+        <option *ngFor="let duration of semesterDurationOptions" [value]="duration">
+          {{ duration }}
+        </option>
       </select>
     </label>
 
@@ -150,7 +168,9 @@
             <td class="meta-muted">{{ item.domainName || 'Non défini' }}</td>
             <td>
               <div class="level-tags">
-                <span class="level-tag" *ngFor="let level of item.levelNames || []">{{ level }}</span>
+                <span class="level-tag" *ngFor="let level of item.levelNames || []">{{
+                  level
+                }}</span>
               </div>
             </td>
           </ng-container>
@@ -167,14 +187,20 @@
               <td class="meta-muted">{{ item.cycleName || 'Non défini' }}</td>
               <td>
                 <div class="document-tags">
-                  <span class="document-tag document-tag--provide" *ngFor="let document of item.documentItemsToProvide || []">
+                  <span
+                    class="document-tag document-tag--provide"
+                    *ngFor="let document of item.documentItemsToProvide || []"
+                  >
                     {{ document }}
                   </span>
                 </div>
               </td>
               <td>
                 <div class="document-tags">
-                  <span class="document-tag document-tag--withdraw" *ngFor="let document of item.documentItemsToWithdraw || []">
+                  <span
+                    class="document-tag document-tag--withdraw"
+                    *ngFor="let document of item.documentItemsToWithdraw || []"
+                  >
                     {{ document }}
                   </span>
                 </div>
@@ -223,7 +249,22 @@
           </td>
         </tr>
         <tr *ngIf="pagedSpecialityCatalogItems.length === 0">
-          <td [attr.colspan]="isSpecialityTab ? 6 : isLevelTab ? 7 : isCycleTab ? 5 : isSemesterTab ? 4 : isMentionSpecialityTab ? 4 : 3" class="empty-state">
+          <td
+            [attr.colspan]="
+              isSpecialityTab
+                ? 6
+                : isLevelTab
+                  ? 7
+                  : isCycleTab
+                    ? 5
+                    : isSemesterTab
+                      ? 4
+                      : isMentionSpecialityTab
+                        ? 4
+                        : 3
+            "
+            class="empty-state"
+          >
             Aucun élément disponible dans cette section.
           </td>
         </tr>
@@ -235,10 +276,7 @@
     <div class="page-size-control">
       <span>Éléments / page</span>
       <label class="page-size-select">
-        <select
-          [ngModel]="specialityPageSize"
-          (ngModelChange)="setSpecialityPageSize($event)"
-        >
+        <select [ngModel]="specialityPageSize" (ngModelChange)="setSpecialityPageSize($event)">
           <option *ngFor="let size of [5, 10, 15]" [value]="size">{{ size }}</option>
         </select>
       </label>

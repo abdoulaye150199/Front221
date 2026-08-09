@@ -114,10 +114,7 @@
           <div>
             <div class="profile-name">{{ student.name }}</div>
             <div class="profile-meta">Matricule : {{ student.matricule }}</div>
-            <span
-              class="status-pill"
-              [class.inactive]="student.status === 'Inactif'"
-            >
+            <span class="status-pill" [class.inactive]="student.status === 'Inactif'">
               {{ student.status }}
             </span>
           </div>

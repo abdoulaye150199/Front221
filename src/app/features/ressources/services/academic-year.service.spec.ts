@@ -26,7 +26,7 @@ describe('AcademicYearService', () => {
     const [firstYear] = service.getAll();
     const filtered = service.filterBySearchTerm(firstYear.year);
 
-    expect(filtered.some(item => item.id === firstYear.id)).toBe(true);
+    expect(filtered.some((item) => item.id === firstYear.id)).toBe(true);
   });
 
   it('should create a new academic year', () => {

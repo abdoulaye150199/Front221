@@ -8,7 +8,7 @@ export function hasRequiredTextValues(...values: Array<string | null | undefined
 
 export function parseAllowedNumberOption(
   value: string | number,
-  allowedValues: readonly number[]
+  allowedValues: readonly number[],
 ): number | null {
   const parsedValue = Number(value);
 

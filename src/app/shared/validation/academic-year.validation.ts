@@ -102,7 +102,7 @@ export function formatAcademicYearDate(value: string): string {
 export function validateAcademicYearForm(
   year: string,
   startDate: string,
-  endDate: string
+  endDate: string,
 ): AcademicYearValidationErrors {
   const errors: AcademicYearValidationErrors = {
     year: null,
@@ -135,29 +135,38 @@ export function validateAcademicYearForm(
     errors.endDate = 'Utilisez le format JJ/MM/AAAA pour la date de fermeture.';
   }
 
-  if (!errors.startDate && !errors.endDate && parsedStartDate && parsedEndDate
-    && parsedStartDate.timestamp >= parsedEndDate.timestamp) {
+  if (
+    !errors.startDate &&
+    !errors.endDate &&
+    parsedStartDate &&
+    parsedEndDate &&
+    parsedStartDate.timestamp >= parsedEndDate.timestamp
+  ) {
     errors.endDate = 'La date de fermeture doit être postérieure à la date d’ouverture.';
   }
 
-  if (schoolYearMatch && !errors.startDate && parsedStartDate
-    && parsedStartDate.year !== schoolYearMatch[1]) {
+  if (
+    schoolYearMatch &&
+    !errors.startDate &&
+    parsedStartDate &&
+    parsedStartDate.year !== schoolYearMatch[1]
+  ) {
     errors.startDate = 'La date d’ouverture doit appartenir à la première année saisie.';
   }
 
-  if (schoolYearMatch && !errors.endDate && parsedEndDate
-    && parsedEndDate.year !== schoolYearMatch[2]) {
+  if (
+    schoolYearMatch &&
+    !errors.endDate &&
+    parsedEndDate &&
+    parsedEndDate.year !== schoolYearMatch[2]
+  ) {
     errors.endDate = 'La date de fermeture doit appartenir à la deuxième année saisie.';
   }
 
   return errors;
 }
 
-export function isAcademicYearFormValid(
-  year: string,
-  startDate: string,
-  endDate: string
-): boolean {
+export function isAcademicYearFormValid(year: string, startDate: string, endDate: string): boolean {
   const errors = validateAcademicYearForm(year, startDate, endDate);
 
   return !errors.year && !errors.startDate && !errors.endDate;

@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { MAIN_LAYOUT_IMPORTS } from '../imports/page-imports';
+import { MAIN_LAYOUT_IMPORTS } from '../../shared/imports/page-imports';
 
 @Component({
   selector: 'app-main-layout',
