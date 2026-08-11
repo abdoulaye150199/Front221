@@ -431,15 +431,26 @@
   }
 
   .empty-cell {
+    width: 100%;
+    min-height: var(--slot-height);
     border: 1px dashed #d7dde4;
     border-radius: 14px;
-    height: var(--slot-height);
     display: flex;
     align-items: center;
     justify-content: center;
+    box-sizing: border-box;
     color: #cbd5e1;
     background: #fff;
     cursor: pointer;
+    padding: 0;
+
+    mat-icon {
+      margin: 0;
+      font-size: 28px;
+      width: 28px;
+      height: 28px;
+      line-height: 28px;
+    }
   }
 
   .view-placeholder {

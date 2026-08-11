@@ -6,7 +6,7 @@ import { describe, it, expect, beforeEach, vi, afterEach } from 'vitest';
 import { SessionDestructionService } from './session-destruction.service';
 import { AuthService } from './auth.service';
 
-// Mock services
+
 const mockAuthService = {
   isAuthenticated: vi.fn(() => true),
   logout: vi.fn(),
@@ -25,7 +25,7 @@ describe('SessionDestructionService', () => {
   const mockPlatformId = 'browser';
 
   beforeEach(() => {
-    // Clear any existing timers
+    
     vi.useFakeTimers();
 
     TestBed.configureTestingModule({
@@ -85,10 +85,10 @@ describe('SessionDestructionService', () => {
 
   describe('session monitoring', () => {
     it('should handle inactivity timeout', async () => {
-      // Set last activity to more than 30 minutes ago
+      
       service['lastActivityTime'] = Date.now() - 31 * 60 * 1000;
 
-      // Manually trigger the inactivity handler
+      
       service['handleInactivityLogout']();
 
       expect(authService.logout).toHaveBeenCalled();

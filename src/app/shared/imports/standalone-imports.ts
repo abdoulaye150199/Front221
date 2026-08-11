@@ -7,28 +7,19 @@ import { MatMenuModule } from '@angular/material/menu';
 import { MatTabsModule } from '@angular/material/tabs';
 import { RouterModule } from '@angular/router';
 
-/**
- * ========== BASE LAYERS ==========
- * Foundation imports - single responsibility
- */
+
 export const BASE_IMPORTS = [CommonModule] as const;
 export const ROUTER_IMPORTS = [RouterModule] as const;
 export const FORMS_IMPORTS = [FormsModule] as const;
 
-/**
- * ========== MATERIAL LAYERS ==========
- * Individual Material module imports - allows fine-grained composition
- */
+
 export const MATERIAL_ICON_IMPORTS = [MatIconModule] as const;
 export const MATERIAL_BUTTON_IMPORTS = [MatButtonModule] as const;
 export const MATERIAL_MENU_IMPORTS = [MatMenuModule] as const;
 export const MATERIAL_DIVIDER_IMPORTS = [MatDividerModule] as const;
 export const MATERIAL_TABS_IMPORTS = [MatTabsModule] as const;
 
-/**
- * ========== COMPOSITE IMPORTS ==========
- * Composed from base and material layers - eliminates duplication
- */
+
 export const COMMON_IMPORTS = BASE_IMPORTS;
 
 export const ICON_IMPORTS = [...BASE_IMPORTS, ...MATERIAL_ICON_IMPORTS] as const;

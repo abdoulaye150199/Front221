@@ -118,11 +118,7 @@ export class SpecialityCatalogFacade {
     }
   }
 
-  /**
-   * Generic method to get options based on category to reduce code duplication
-   * @param category The specialty section key
-   * @returns Array of string options for the given category
-   */
+  
   private getOptionsForCategory(category: SpecialitySectionKey): string[] {
     switch (category) {
       case 'Domaines':
@@ -132,7 +128,7 @@ export class SpecialityCatalogFacade {
           ? this.specialityCatalogService.getMentionOptions(this.specialityDomainName)
           : [];
       case 'Spécialité':
-        return []; // Handled elsewhere
+        return []; 
       case 'Cycle':
         return this.specialityCatalogService.getCycleOptions();
       case 'Niveau':
@@ -169,12 +165,7 @@ export class SpecialityCatalogFacade {
     return Array.from({ length: this.totalSpecialityPages }, (_, index) => index + 1);
   }
 
-  /**
-   * TrackBy function for ngFor loops to improve performance
-   * @param index Index of the item
-   * @param item The item object
-   * @returns Unique identifier for the item
-   */
+  
   trackById(_index: number, item: string | { id: string }): string {
     return typeof item === 'string' ? item : item.id;
   }
@@ -239,11 +230,7 @@ export class SpecialityCatalogFacade {
     this.openSpecialityActionId = null;
   }
 
-  /**
-   * Submits the specialty form based on the active tab
-   * Handles both creation and update of specialty items
-   * Resets the form and reloads items after submission
-   */
+  
   submitSpecialityItem(): void {
     if (!this.isSpecialityFormValid) {
       return;
@@ -276,10 +263,7 @@ export class SpecialityCatalogFacade {
     this.loadSpecialityCatalogItems();
   }
 
-  /**
-   * Populates the form with data from an existing item for editing
-   * @param item The specialty catalog item to edit
-   */
+  
   editSpecialityItem(item: SpecialityCatalogItem): void {
     this.openSpecialityActionId = null;
     this.editingSpecialityItemId = item.id;

@@ -33,15 +33,7 @@ export interface StoredUser extends User {
   salt: string;
 }
 
-/**
- * Service d'authentification unifié
- * Gère l'authentification locale et les tokens JWT (démo)
- *
- * NOTE: En production, l'authentification doit être gérée par un backend sécurisé.
- * - Le hachage de mot de passe doit se faire côté serveur (bcrypt)
- * - Les JWT doivent être signés avec un secret sécurisé
- * - Les credentials ne doivent jamais être stockés côté client
- */
+
 @Injectable({
   providedIn: 'root',
 })
@@ -56,10 +48,7 @@ export class AuthService {
     this.validateStoredToken();
   }
 
-  /**
-   * Login avec email/téléphone et mot de passe
-   * Retourne une réponse avec JWT tokens (en mode démo)
-   */
+  
   login(phoneOrEmail: string, password: string): Observable<AuthResponse> {
     if (this.shouldUseOfflineDemoAuth()) {
       return of(this.createOfflineDemoSession(phoneOrEmail));
@@ -91,7 +80,7 @@ export class AuthService {
       const normalizedIdentifier = phoneOrEmail.trim().toLowerCase();
       const users = this.getAllUsers();
 
-      // Trouver l'utilisateur
+      
       const user = users.find(
         (u) => u.email.toLowerCase() === normalizedIdentifier || u.phone === phoneOrEmail.trim(),
       );
@@ -103,7 +92,7 @@ export class AuthService {
         });
       }
 
-      // Vérifier le mot de passe
+      
       const isPasswordValid = this.verifyPassword(password, user.passwordHash, user.salt);
       if (!isPasswordValid) {
         return of({
@@ -112,11 +101,11 @@ export class AuthService {
         });
       }
 
-      // Créer les tokens JWT (uniquement en mode démo/mock)
+      
       const tokens = environment.mockData ? this.generateJwtTokens(user) : null;
       const userWithoutPassword = this.toUser(user);
 
-      // Sauvegarder les tokens et l'utilisateur (uniquement en démo)
+      
       if (tokens) {
         this.tokenService.setTokens(tokens.accessToken, tokens.refreshToken);
       }
@@ -135,25 +124,18 @@ export class AuthService {
     }
   }
 
-  /**
-   * Logout utilisateur
-   * Détruit complètement la session et les données sensibles
-   */
+  
   logout(): void {
     this.tokenService.clearAllSensitiveData();
     this.currentUserSubject.next(null);
   }
 
-  /**
-   * Récupérer l'utilisateur actuel
-   */
+  
   getCurrentUser(): User | null {
     return this.currentUserSubject.value;
   }
 
-  /**
-   * Vérifier si l'utilisateur est authentifié
-   */
+  
   isAuthenticated(): boolean {
     const token = this.tokenService.getAccessToken();
     if (!token) {
@@ -162,24 +144,17 @@ export class AuthService {
     return !this.tokenService.isTokenExpired(token);
   }
 
-  /**
-   * Récupérer le token d'accès actuel
-   */
+  
   getAccessToken(): string | null {
     return this.tokenService.getAccessToken();
   }
 
-  /**
-   * Récupérer le refresh token
-   */
+  
   getRefreshToken(): string | null {
     return this.tokenService.getRefreshToken();
   }
 
-  /**
-   * Rafraîchir le token d'accès
-   * En production, cela appellerait un endpoint backend
-   */
+  
   refreshAccessToken(): Observable<AuthResponse> {
     const refreshToken = this.tokenService.getRefreshToken();
     if (!refreshToken) {
@@ -225,7 +200,7 @@ export class AuthService {
         });
       }
 
-      // En mode démo, générer de nouveaux tokens
+      
       const newTokens = environment.mockData ? this.generateJwtTokens(storedUser) : null;
       if (newTokens) {
         this.tokenService.setTokens(newTokens.accessToken, newTokens.refreshToken);
@@ -244,10 +219,7 @@ export class AuthService {
     }
   }
 
-  /**
-   * Générer des tokens JWT (mode démo uniquement)
-   * En production, les tokens sont générés par le backend
-   */
+  
   private generateJwtTokens(user: StoredUser): JwtTokens {
     const now = Math.floor(Date.now() / 1000);
     const accessTokenExpiry = environment.auth.tokenExpiry;
@@ -276,37 +248,29 @@ export class AuthService {
     };
   }
 
-  /**
-   * Créer un JWT factice (démo uniquement)
-   * En production, utiliser une librairie JWT côté backend
-   */
+  
   private createJwt(payload: Record<string, unknown>): string {
     const header = { alg: 'HS256', typ: 'JWT' };
 
-    // Encodage base64url (simulé avec btoa pour la démo)
+    
     const headerEncoded = btoa(JSON.stringify(header));
     const payloadEncoded = btoa(JSON.stringify(payload));
 
-    // Valeur opaque de démonstration, sans secret embarqué.
+    
     const signature = btoa(`${String(payload['sub'])}.${String(payload['iat'])}`);
 
     return `${headerEncoded}.${payloadEncoded}.${signature}`;
   }
 
-  /**
-   * Vérifier le mot de passe
-   * NOTE: En production, cette vérification doit se faire côté serveur
-   */
+  
   private verifyPassword(password: string, hash: string, salt: string): boolean {
-    // Implémentation simple pour la démo (base64 n'est PAS un hachage sécurisé)
-    // EN PRODUCTION: Utiliser bcrypt côté serveur uniquement
+    
+    
     const simpleHash = btoa(password + salt);
     return simpleHash === hash;
   }
 
-  /**
-   * Convertir StoredUser en User sans mot de passe
-   */
+  
   private toUser(user: StoredUser): User {
     return {
       id: user.id,
@@ -319,9 +283,7 @@ export class AuthService {
     };
   }
 
-  /**
-   * Récupérer tous les utilisateurs depuis APP_DATA
-   */
+  
   private getAllUsers(): StoredUser[] {
     return MOCK_USERS;
   }
@@ -441,9 +403,7 @@ export class AuthService {
       .join(' ');
   }
 
-  /**
-   * Récupérer l'utilisateur depuis le sessionStorage
-   */
+  
   private getUserFromStorage(): User | null {
     if (!this.hasStorage()) {
       return null;
@@ -462,9 +422,7 @@ export class AuthService {
     }
   }
 
-  /**
-   * Persister l'utilisateur dans sessionStorage
-   */
+  
   private persistUser(user: User): void {
     if (this.hasStorage()) {
       sessionStorage.setItem('user_data', JSON.stringify(user));
@@ -481,9 +439,7 @@ export class AuthService {
     this.persistUser(response.user);
   }
 
-  /**
-   * Valider le token stocké
-   */
+  
   private validateStoredToken(): void {
     const token = this.tokenService.getAccessToken();
     if (token && this.tokenService.isTokenExpired(token)) {
@@ -491,9 +447,7 @@ export class AuthService {
     }
   }
 
-  /**
-   * Type guard pour User
-   */
+  
   private isUser(value: unknown): value is User {
     if (!value || typeof value !== 'object') {
       return false;
@@ -510,9 +464,7 @@ export class AuthService {
     );
   }
 
-  /**
-   * Vérifier si le stockage est disponible
-   */
+  
   private hasStorage(): boolean {
     return typeof sessionStorage !== 'undefined';
   }

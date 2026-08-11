@@ -4,12 +4,12 @@ import { ActivatedRouteSnapshot, Router, RouterStateSnapshot, UrlTree } from '@a
 import { AuthGuard, authGuard } from './auth-jwt.guard';
 import { AuthService } from '../services/auth.service';
 
-// Mock du service d'authentification
+
 const mockAuthService = {
   isAuthenticated: vi.fn(),
 };
 
-// Mock du router
+
 const mockRouter = {
   createUrlTree: vi.fn(),
 };

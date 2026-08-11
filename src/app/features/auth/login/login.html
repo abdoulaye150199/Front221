@@ -1,5 +1,5 @@
 <div class="login-wrapper">
-  <!-- Left Panel: Branding & Features -->
+  
   <div class="login-left-panel">
     <div class="branding-section">
       <div class="logo-wrapper">
@@ -9,7 +9,7 @@
       <p class="brand-subtitle">Plateforme de gestion scolaire</p>
     </div>
 
-    <!-- Features Section -->
+    
     <div class="features-section">
       <div class="feature-item" [innerHTML]="icons.features.secure"></div>
       <div class="feature-item" [innerHTML]="icons.features.tracking"></div>
@@ -17,7 +17,7 @@
     </div>
   </div>
 
-  <!-- Right Panel: Login Form -->
+  
   <div class="login-right-panel">
     <div class="login-header">
       <img src="/assets/image/image.png" alt="Ecole 221 Logo" class="header-logo-image" />
@@ -27,20 +27,20 @@
       <p class="welcome-text">Bienvenue sur <span class="brand-highlight">ECOLE 221</span></p>
       <h2 class="login-title">Se connecter</h2>
 
-      <!-- Google Sign In Button -->
+      
       <button type="button" class="google-signin-btn" aria-label="Se connecter avec Google">
         <span [innerHTML]="icons.google"></span>
         <span>Sign in with Google</span>
       </button>
 
-      <!-- Divider -->
+      
       <div class="divider">
         <span>ou</span>
       </div>
 
-      <!-- Login Form -->
+      
       <form [formGroup]="loginForm" (ngSubmit)="onLogin()">
-        <!-- Phone/Email Field -->
+        
         <div class="form-group">
           <label for="phone-email">Entrez votre numéro de téléphone ou votre email</label>
           <div class="input-wrapper">
@@ -62,7 +62,7 @@
           </span>
         </div>
 
-        <!-- Password Field -->
+        
         <div class="form-group">
           <label for="password">Entrez votre mot de passe</label>
           <div class="input-wrapper">
@@ -97,13 +97,13 @@
           </span>
         </div>
 
-        <!-- Login Error Message -->
+        
         <div class="error-alert" role="alert" aria-live="assertive" *ngIf="loginError">
           <span [innerHTML]="icons.error"></span>
           <span>{{ loginError }}</span>
         </div>
 
-        <!-- Login Button -->
+        
         <button
           type="submit"
           class="login-button"
@@ -115,7 +115,7 @@
         </button>
       </form>
 
-      <!-- Footer -->
+      
       <p class="login-footer">© 2025 Ecole 221 — Tous droits réservés</p>
     </div>
   </div>

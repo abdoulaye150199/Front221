@@ -13,7 +13,7 @@
     }
   }
 
-  // Summary Section
+  
   .summary-section {
     display: grid;
     grid-template-columns: minmax(250px, 1.05fr) repeat(2, minmax(200px, 1fr));
@@ -116,7 +116,7 @@
     }
   }
 
-  // School Info Section
+  
   .school-info-section {
     margin-top: 0.25rem;
     margin-bottom: 1.2rem;
@@ -192,7 +192,7 @@
     }
   }
 
-  // Events and Courses Grid
+  
   .events-courses-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
@@ -252,7 +252,7 @@
     }
   }
 
-  // Charts Section
+  
   .charts-section {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(380px, 1fr));
@@ -311,7 +311,7 @@
         }
       }
 
-      // Bar Chart
+      
       .bar-chart {
         display: flex;
         align-items: flex-end;
@@ -361,7 +361,7 @@
         }
       }
 
-      // Line Chart
+      
       .line-chart {
         .chart-line {
           margin-bottom: 1.25rem;

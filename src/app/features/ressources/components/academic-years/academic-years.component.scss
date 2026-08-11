@@ -1,6 +1,6 @@
 @use '../_resource-shared';
 
-// Override the flex layout from shared styles with a proper grid
+
 :host .subtab-form {
   display: flex !important;
   align-items: flex-start !important;
@@ -12,7 +12,7 @@
   min-width: 0;
 }
 
-// Field groups behave like the working forms in other tabs, but keep space for errors
+
 .field-group {
   display: grid;
   gap: 0.35rem;
@@ -22,7 +22,7 @@
   min-width: 0;
 }
 
-// Style the input fields
+
 .field-group .field {
   display: flex;
   align-items: center;
@@ -61,7 +61,7 @@
   font-weight: 600;
 }
 
-// Button styling
+
 :host .subtab-form .subtab-submit {
   flex: 0 0 auto;
   min-width: 112px;

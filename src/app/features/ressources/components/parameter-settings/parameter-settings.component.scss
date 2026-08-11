@@ -4,7 +4,7 @@
   display: block;
 }
 
-// Tabs styling - cohérent avec les autres composants
+
 .parameter-tabs {
   display: flex;
   align-items: center;
@@ -44,7 +44,7 @@
   }
 }
 
-// Formulaires et champs
+
 .subtab-form {
   display: flex;
   align-items: center;
@@ -94,12 +94,12 @@
   flex: 1.2 1 280px;
 }
 
-// Tableau
+
 .parameter-table {
   min-width: 840px;
 }
 
-// Tags et badges
+
 .level-tags {
   display: flex;
   align-items: center;
@@ -157,7 +157,7 @@
   }
 }
 
-// Status pills
+
 :host ::ng-deep .status-pill.danger,
 .status-pill.danger {
   background: #fee2e2;
@@ -172,7 +172,7 @@
   transition: all 0.18s ease;
 }
 
-// Responsive design
+
 @media (max-width: 900px) {
   .parameter-tabs {
     flex-direction: column;

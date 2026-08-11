@@ -13,9 +13,7 @@ export class TokenService {
     }
   }
 
-  /**
-   * Récupérer le token d'accès
-   */
+  
   getAccessToken(): string | null {
     if (!this.hasStorage()) {
       return null;
@@ -23,9 +21,7 @@ export class TokenService {
     return sessionStorage.getItem(this.accessTokenKey);
   }
 
-  /**
-   * Récupérer le refresh token
-   */
+  
   getRefreshToken(): string | null {
     if (!this.hasStorage()) {
       return null;
@@ -33,12 +29,10 @@ export class TokenService {
     return sessionStorage.getItem(this.refreshTokenKey);
   }
 
-  /**
-   * Vérifier si le token est expiré
-   */
+  
   isTokenExpired(token: string): boolean {
     try {
-      // Décoder le JWT (format: header.payload.signature)
+      
       const parts = token.split('.');
       if (parts.length !== 3) {
         return true;
@@ -62,9 +56,7 @@ export class TokenService {
     }
   }
 
-  /**
-   * Supprimer tous les tokens
-   */
+  
   clearTokens(): void {
     if (this.hasStorage()) {
       sessionStorage.removeItem(this.accessTokenKey);
@@ -72,21 +64,19 @@ export class TokenService {
     }
   }
 
-  /**
-   * Supprimer toutes les données sensibles du stockage
-   */
+  
   clearAllSensitiveData(): void {
     if (this.hasStorage()) {
-      // Supprimer les tokens
+      
       sessionStorage.removeItem(this.accessTokenKey);
       sessionStorage.removeItem(this.refreshTokenKey);
-      // Supprimer les données utilisateur
+      
       sessionStorage.removeItem('user_data');
       sessionStorage.removeItem('auth_session');
       sessionStorage.removeItem('device_id');
     }
 
-    // Aussi nettoyer localStorage
+    
     if (typeof localStorage !== 'undefined') {
       localStorage.removeItem('currentUser');
       localStorage.removeItem('auth_token');
@@ -95,16 +85,12 @@ export class TokenService {
     }
   }
 
-  /**
-   * Vérifier si l'utilisateur a une session active
-   */
+  
   isSessionActive(): boolean {
     return this.hasStorage() && sessionStorage.length > 0;
   }
 
-  /**
-   * Supprimer tous les tokens
-   */
+  
   private hasStorage(): boolean {
     return typeof sessionStorage !== 'undefined';
   }

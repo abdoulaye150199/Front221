@@ -2,10 +2,7 @@ import { HttpRequest, HttpHandlerFn, HttpEvent, HttpErrorResponse } from '@angul
 import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 
-/**
- * Intercepteur d'erreurs HTTP
- * Capture les erreurs et les logge dans la console
- */
+
 export function errorInterceptor(
   request: HttpRequest<unknown>,
   next: HttpHandlerFn,

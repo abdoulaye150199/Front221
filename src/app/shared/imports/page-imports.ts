@@ -14,10 +14,7 @@ import {
   ROUTER_IMPORTS,
 } from './standalone-imports';
 
-/**
- * ========== PAGE-LEVEL COMPOSITE IMPORTS ==========
- * Built by composing from standalone layers + page-specific components
- */
+
 
 export const MAIN_LAYOUT_IMPORTS = [
   ...BASE_IMPORTS,

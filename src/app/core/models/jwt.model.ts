@@ -1,7 +1,7 @@
 export interface JwtTokens {
   accessToken: string;
   refreshToken: string;
-  expiresIn: number; // en secondes
+  expiresIn: number; 
 }
 
 export interface JwtPayload {

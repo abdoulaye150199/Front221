@@ -3,18 +3,13 @@ import { isPlatformBrowser } from '@angular/common';
 import { Router } from '@angular/router';
 import { AuthService } from './auth.service';
 
-/**
- * Service pour gérer la destruction des sessions
- * - Logout automatique après inactivité
- * - Nettoyage complet des données sensibles
- * - Détection de fermeture de navigateur
- */
+
 @Injectable({
   providedIn: 'root',
 })
 export class SessionDestructionService implements OnDestroy {
   private inactivityTimeout: ReturnType<typeof setTimeout> | null = null;
-  private readonly INACTIVITY_TIME = 30 * 60 * 1000; // 30 minutes
+  private readonly INACTIVITY_TIME = 30 * 60 * 1000; 
   private lastActivityTime = Date.now();
   private isCleaningUp = false;
   private platformId = inject(PLATFORM_ID);
@@ -26,17 +21,15 @@ export class SessionDestructionService implements OnDestroy {
     private router: Router,
     private ngZone: NgZone,
   ) {
-    // Initialiser la surveillance seulement côté client
+    
     if (isPlatformBrowser(this.platformId)) {
       this.initializeSessionMonitoring();
     }
   }
 
-  /**
-   * Initialiser la surveillance de la session
-   */
+  
   private initializeSessionMonitoring(): void {
-    // Listener pour l'inactivité
+    
     this.ngZone.runOutsideAngular(() => {
       document.addEventListener('click', this.handleActivity, { passive: true });
       document.addEventListener('keydown', this.handleActivity);
@@ -63,9 +56,7 @@ export class SessionDestructionService implements OnDestroy {
     }
   }
 
-  /**
-   * Réinitialiser le timer d'inactivité
-   */
+  
   private resetInactivityTimer(): void {
     this.lastActivityTime = Date.now();
 
@@ -78,9 +69,7 @@ export class SessionDestructionService implements OnDestroy {
     }, this.INACTIVITY_TIME);
   }
 
-  /**
-   * Gérer le logout automatique après inactivité
-   */
+  
   private handleInactivityLogout(): void {
     if (this.authService.isAuthenticated()) {
       console.warn('Session expired due to inactivity');
@@ -91,39 +80,35 @@ export class SessionDestructionService implements OnDestroy {
     }
   }
 
-  /**
-   * Nettoyer complètement la session
-   */
+  
   private performCleanup(): void {
     if (this.isCleaningUp) {
-      return; // Éviter les nettoyages multiples
+      return; 
     }
 
     this.isCleaningUp = true;
 
-    // Arrêter le timer d'inactivité
+    
     if (this.inactivityTimeout) {
       clearTimeout(this.inactivityTimeout);
       this.inactivityTimeout = null;
     }
 
-    // Logout du service d'auth
+    
     this.authService.logout();
 
-    // Nettoyer le sessionStorage complètement
+    
     this.clearAllSessionData();
 
-    // Nettoyer le localStorage (pour l'ancien AuthService)
+    
     this.clearAllLocalStorageData();
 
-    // Nettoyer les variables locales sensibles
+    
     this.lastActivityTime = Date.now();
     this.isCleaningUp = false;
   }
 
-  /**
-   * Supprimer tous les données du sessionStorage
-   */
+  
   private clearAllSessionData(): void {
     if (typeof sessionStorage === 'undefined') {
       return;
@@ -141,13 +126,11 @@ export class SessionDestructionService implements OnDestroy {
       sessionStorage.removeItem(key);
     });
 
-    // Alternative: Nettoyer complètement
-    // sessionStorage.clear();
+    
+    
   }
 
-  /**
-   * Supprimer les données d'authentification du localStorage
-   */
+  
   private clearAllLocalStorageData(): void {
     if (typeof localStorage === 'undefined') {
       return;
@@ -160,26 +143,20 @@ export class SessionDestructionService implements OnDestroy {
     });
   }
 
-  /**
-   * Forcer le logout et le nettoyage
-   */
+  
   forceLogout(): void {
     this.performCleanup();
     void this.router.navigate(['/auth/login']);
   }
 
-  /**
-   * Obtenir le temps d'inactivité restant (en secondes)
-   */
+  
   getRemainingInactivityTime(): number {
     const elapsed = Date.now() - this.lastActivityTime;
     const remaining = Math.max(0, Math.floor((this.INACTIVITY_TIME - elapsed) / 1000));
     return remaining;
   }
 
-  /**
-   * Obtenir le status de la session
-   */
+  
   getSessionStatus(): {
     isActive: boolean;
     remainingTime: number;
