@@ -149,6 +149,12 @@ export class CoursComponent {
     }
   }
 
+  protectInlineEditing(event: KeyboardEvent): void {
+    if (this.editingCourseId && event.key !== 'Enter' && event.key !== 'Escape') {
+      event.stopPropagation();
+    }
+  }
+
   saveInlineEdit(course: Course): void {
     const field = this.editingField;
     if (!field || this.editingCourseId !== course.id) {
@@ -276,6 +282,14 @@ export class CoursComponent {
     }
 
     return [...groups.values()];
+  }
+
+  trackByGroup(_: number, group: CourseGroup): string {
+    return group.ue;
+  }
+
+  trackByCourse(_: number, course: Course): string {
+    return course.id;
   }
 
   coefficient(course: Course): number {

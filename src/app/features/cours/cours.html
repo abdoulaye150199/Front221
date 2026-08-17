@@ -1,4 +1,4 @@
-<div class="courses">
+<div class="courses" (keydown)="protectInlineEditing($event)">
   <ng-container *ngIf="detailCourse as course; else courseList">
     <section class="course-details-page" aria-labelledby="course-details-title">
       <div class="page-header">
@@ -404,8 +404,11 @@
             </tr>
           </thead>
           <tbody>
-            <ng-container *ngFor="let group of groupedCourses">
-              <tr *ngFor="let course of group.courses; let first = first" class="course-row">
+            <ng-container *ngFor="let group of groupedCourses; trackBy: trackByGroup">
+              <tr
+                *ngFor="let course of group.courses; let first = first; trackBy: trackByCourse"
+                class="course-row"
+              >
                 <td
                   *ngIf="first"
                   class="ue-cell"

@@ -1,4 +1,4 @@
-<div class="referentiel">
+<div class="referentiel" (keydown)="protectInlineEditing($event)">
   <div class="page-header">
     <div>
       <h1 class="page-title">Gestion Référentiel</h1>
@@ -108,28 +108,188 @@
         </tr>
       </thead>
       <tbody>
-        <ng-container *ngFor="let ue of ueList">
-          <tr *ngFor="let mod of ue.modules; let i = index">
+        <ng-container *ngFor="let ue of ueList; trackBy: trackByUe">
+          <tr *ngFor="let mod of ue.modules; let i = index; trackBy: trackByModule">
             <td *ngIf="i === 0" [attr.rowspan]="ue.modules.length + 1" class="ue-cell">
-              <span class="ue-code">{{ ue.code }}</span>
-              <span class="ue-title">{{ ue.title }}</span>
+              <ng-container *ngIf="isEditing(editKey(ue.id, 'code'), 'code'); else ueCodeValue">
+                <input
+                  class="inline-edit-input"
+                  type="text"
+                  [value]="editingValue"
+                  (input)="updateEditingValue($event)"
+                  (keydown.enter)="saveEditing(ue, null, 'code')"
+                  (keydown.escape)="cancelEditing()"
+                />
+              </ng-container>
+              <ng-template #ueCodeValue>
+                <span
+                  class="ue-code editable-value"
+                  title="Double-cliquez pour modifier"
+                  (dblclick)="startEditing(editKey(ue.id, 'code'), ue.code, 'code')"
+                  >{{ ue.code }}</span
+                >
+              </ng-template>
+              <ng-container *ngIf="isEditing(editKey(ue.id, 'title'), 'title'); else ueTitleValue">
+                <input
+                  class="inline-edit-input"
+                  type="text"
+                  [value]="editingValue"
+                  (input)="updateEditingValue($event)"
+                  (keydown.enter)="saveEditing(ue, null, 'title')"
+                  (keydown.escape)="cancelEditing()"
+                />
+              </ng-container>
+              <ng-template #ueTitleValue>
+                <span
+                  class="ue-title editable-value"
+                  title="Double-cliquez pour modifier"
+                  (dblclick)="startEditing(editKey(ue.id, 'title'), ue.title, 'title')"
+                  >{{ ue.title }}</span
+                >
+              </ng-template>
             </td>
-            <td>{{ mod.name }}</td>
-            <td class="coef-cell">{{ mod.coef }}</td>
+            <td (dblclick)="startEditing(editKey(mod.id, 'name'), mod.name, 'name')">
+              <ng-container *ngIf="isEditing(editKey(mod.id, 'name'), 'name'); else moduleValue">
+                <input
+                  class="inline-edit-input"
+                  type="text"
+                  [value]="editingValue"
+                  (input)="updateEditingValue($event)"
+                  (keydown.enter)="saveEditing(ue, mod, 'name')"
+                  (keydown.escape)="cancelEditing()"
+                />
+              </ng-container>
+              <ng-template #moduleValue>
+                <span class="editable-value" title="Double-cliquez pour modifier">{{
+                  mod.name
+                }}</span>
+              </ng-template>
+            </td>
+            <td
+              class="coef-cell"
+              (dblclick)="startEditing(editKey(mod.id, 'coef'), mod.coef, 'coef')"
+            >
+              <ng-container *ngIf="isEditing(editKey(mod.id, 'coef'), 'coef'); else coefValue">
+                <input
+                  class="inline-edit-input number-input"
+                  type="number"
+                  min="0"
+                  [value]="editingValue"
+                  (input)="updateEditingValue($event)"
+                  (keydown.enter)="saveEditing(ue, mod, 'coef')"
+                  (keydown.escape)="cancelEditing()"
+                />
+              </ng-container>
+              <ng-template #coefValue
+                ><span class="editable-value" title="Double-cliquez pour modifier">{{
+                  mod.coef
+                }}</span></ng-template
+              >
+            </td>
             <td *ngIf="i === 0" [attr.rowspan]="ue.modules.length" class="credit-cell">
-              <span class="credit-pill">{{ ue.credit }}</span>
+              <ng-container *ngIf="isEditing(editKey(ue.id, 'credit'), 'credit'); else creditValue">
+                <input
+                  class="inline-edit-input number-input"
+                  type="number"
+                  min="0"
+                  [value]="editingValue"
+                  (input)="updateEditingValue($event)"
+                  (keydown.enter)="saveEditing(ue, null, 'credit')"
+                  (keydown.escape)="cancelEditing()"
+                />
+              </ng-container>
+              <ng-template #creditValue>
+                <span
+                  class="credit-pill editable-value"
+                  title="Double-cliquez pour modifier"
+                  (dblclick)="startEditing(editKey(ue.id, 'credit'), ue.credit, 'credit')"
+                  >{{ ue.credit }}</span
+                >
+              </ng-template>
             </td>
             <td class="prof-cell">
-              <select [(ngModel)]="mod.professor" class="teacher-select">
-                <option value="">Sélectionner</option>
-                <option *ngFor="let teacher of professors" [value]="teacher.value">
-                  {{ teacher.label }}
-                </option>
-              </select>
+              <ng-container
+                *ngIf="isEditing(editKey(mod.id, 'professor'), 'professor'); else professorValue"
+              >
+                <select
+                  class="teacher-select"
+                  [value]="editingValue"
+                  (change)="updateEditingValue($event); saveEditing(ue, mod, 'professor')"
+                >
+                  <option value="">Sélectionner</option>
+                  <option *ngFor="let teacher of professors" [value]="teacher.value">
+                    {{ teacher.label }}
+                  </option>
+                </select>
+              </ng-container>
+              <ng-template #professorValue>
+                <span
+                  class="editable-value"
+                  title="Double-cliquez pour modifier"
+                  (dblclick)="
+                    startEditing(editKey(mod.id, 'professor'), mod.professor, 'professor')
+                  "
+                  >{{ getLabel(professors, mod.professor) || 'Sélectionner' }}</span
+                >
+              </ng-template>
             </td>
-            <td class="hours-cell">{{ mod.vhp }}</td>
-            <td class="hours-cell">{{ mod.tpe }}</td>
-            <td class="hours-cell hours-divider">{{ mod.vht }}</td>
+            <td
+              class="hours-cell"
+              (dblclick)="startEditing(editKey(mod.id, 'vhp'), mod.vhp, 'vhp')"
+            >
+              <ng-container *ngIf="isEditing(editKey(mod.id, 'vhp'), 'vhp'); else vhpValue">
+                <input
+                  class="inline-edit-input number-input"
+                  type="number"
+                  min="0"
+                  [value]="editingValue"
+                  (input)="updateEditingValue($event)"
+                  (keydown.enter)="saveEditing(ue, mod, 'vhp')"
+                  (keydown.escape)="cancelEditing()"
+                />
+              </ng-container>
+              <ng-template #vhpValue
+                ><span class="editable-value">{{ mod.vhp }}</span></ng-template
+              >
+            </td>
+            <td
+              class="hours-cell"
+              (dblclick)="startEditing(editKey(mod.id, 'tpe'), mod.tpe, 'tpe')"
+            >
+              <ng-container *ngIf="isEditing(editKey(mod.id, 'tpe'), 'tpe'); else tpeValue">
+                <input
+                  class="inline-edit-input number-input"
+                  type="number"
+                  min="0"
+                  [value]="editingValue"
+                  (input)="updateEditingValue($event)"
+                  (keydown.enter)="saveEditing(ue, mod, 'tpe')"
+                  (keydown.escape)="cancelEditing()"
+                />
+              </ng-container>
+              <ng-template #tpeValue
+                ><span class="editable-value">{{ mod.tpe }}</span></ng-template
+              >
+            </td>
+            <td
+              class="hours-cell hours-divider"
+              (dblclick)="startEditing(editKey(mod.id, 'vht'), mod.vht, 'vht')"
+            >
+              <ng-container *ngIf="isEditing(editKey(mod.id, 'vht'), 'vht'); else vhtValue">
+                <input
+                  class="inline-edit-input number-input"
+                  type="number"
+                  min="0"
+                  [value]="editingValue"
+                  (input)="updateEditingValue($event)"
+                  (keydown.enter)="saveEditing(ue, mod, 'vht')"
+                  (keydown.escape)="cancelEditing()"
+                />
+              </ng-container>
+              <ng-template #vhtValue
+                ><span class="editable-value">{{ mod.vht }}</span></ng-template
+              >
+            </td>
             <td class="actions-cell">
               <button class="icon-btn danger" type="button" aria-label="Supprimer">
                 <mat-icon>delete</mat-icon>

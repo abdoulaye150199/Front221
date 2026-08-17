@@ -297,6 +297,32 @@
     color: #111827;
   }
 
+  .editable-value {
+    cursor: text;
+  }
+
+  .inline-edit-input {
+    width: 100%;
+    min-width: 70px;
+    box-sizing: border-box;
+    padding: 0.4rem 0.5rem;
+    border: 1px solid #c1361c;
+    border-radius: 7px;
+    background: #fff;
+    color: #111827;
+    font: inherit;
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(193, 54, 28, 0.12);
+
+    &:focus {
+      border-color: #a82d17;
+    }
+  }
+
+  .number-input {
+    max-width: 82px;
+  }
+
   .hours-cell {
     text-align: center;
     font-weight: 600;
