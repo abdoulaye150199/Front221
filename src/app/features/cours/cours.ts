@@ -9,6 +9,21 @@ interface CourseGroup {
   courses: Course[];
 }
 
+type EditableCourseField =
+  | 'ue'
+  | 'module'
+  | 'coefficient'
+  | 'credits'
+  | 'professor'
+  | 'specialite'
+  | 'niveau'
+  | 'classe'
+  | 'semestre'
+  | 'vhp'
+  | 'tpe'
+  | 'vht'
+  | 'students';
+
 @Component({
   selector: 'app-cours',
   standalone: true,
@@ -32,6 +47,10 @@ export class CoursComponent {
   selectedClasse = 'toutes';
   selectedSemestre = 'tous';
   openCourseActionId: string | null = null;
+  detailCourse: Course | null = null;
+  editingCourseId: string | null = null;
+  editingField: EditableCourseField | null = null;
+  editingValue = '';
   readonly semesterTabs = ['S1', 'S2', 'S3', 'S4', 'S5', 'S6'];
   readonly academicContext = {
     domain: 'Sciences et Technologies',
@@ -83,6 +102,130 @@ export class CoursComponent {
 
   closeActionMenu(): void {
     this.openCourseActionId = null;
+  }
+
+  viewCourse(course: Course): void {
+    this.detailCourse = course;
+    this.closeActionMenu();
+  }
+
+  backToCourseList(): void {
+    this.detailCourse = null;
+  }
+
+  startInlineEditing(course: Course, field: EditableCourseField): void {
+    if (this.isEditing(course, field)) {
+      return;
+    }
+
+    this.closeActionMenu();
+    this.editingCourseId = course.id;
+    this.editingField = field;
+    this.editingValue = this.fieldValue(course, field);
+
+    if (typeof document !== 'undefined') {
+      setTimeout(() => {
+        const input = document.querySelector<HTMLInputElement>('.inline-edit-input');
+        input?.focus();
+        input?.setSelectionRange(input.value.length, input.value.length);
+      });
+    }
+  }
+
+  isEditing(course: Course, field: EditableCourseField): boolean {
+    return this.editingCourseId === course.id && this.editingField === field;
+  }
+
+  cancelInlineEditing(): void {
+    this.editingCourseId = null;
+    this.editingField = null;
+    this.editingValue = '';
+  }
+
+  updateEditingValue(event: Event): void {
+    const input = event.target as HTMLInputElement | null;
+    if (input) {
+      this.editingValue = input.value;
+    }
+  }
+
+  saveInlineEdit(course: Course): void {
+    const field = this.editingField;
+    if (!field || this.editingCourseId !== course.id) {
+      return;
+    }
+
+    const updatedCourse = { ...course };
+    const value = this.editingValue.trim();
+
+    if (
+      field === 'ue' ||
+      field === 'module' ||
+      field === 'professor' ||
+      field === 'specialite' ||
+      field === 'niveau' ||
+      field === 'classe' ||
+      field === 'semestre'
+    ) {
+      updatedCourse[field] = value || course[field];
+    } else if (field === 'coefficient') {
+      updatedCourse.coefficient = this.numberValue(value, this.coefficient(course));
+    } else if (field === 'credits') {
+      updatedCourse.credits = this.numberValue(value, course.credits);
+    } else if (field === 'vhp') {
+      updatedCourse.vhp = this.numberValue(value, this.plannedHours(course));
+      updatedCourse.hours = `${updatedCourse.vhp}h`;
+    } else if (field === 'tpe') {
+      updatedCourse.tpe = this.numberValue(value, this.personalWorkHours(course));
+    } else if (field === 'students') {
+      updatedCourse.students = this.numberValue(value, course.students);
+    } else {
+      updatedCourse.vht = this.numberValue(value, this.totalHours(course));
+    }
+
+    this.allCourses = this.allCourses.map((course) =>
+      course.id === updatedCourse.id ? updatedCourse : course,
+    );
+    if (this.detailCourse?.id === updatedCourse.id) {
+      this.detailCourse = updatedCourse;
+    }
+    this.cancelInlineEditing();
+  }
+
+  fieldValue(course: Course, field: EditableCourseField): string {
+    switch (field) {
+      case 'ue':
+        return course.ue;
+      case 'module':
+        return course.module;
+      case 'professor':
+        return course.professor;
+      case 'specialite':
+        return course.specialite;
+      case 'niveau':
+        return course.niveau;
+      case 'classe':
+        return course.classe;
+      case 'semestre':
+        return course.semestre;
+      case 'coefficient':
+        return String(this.coefficient(course));
+      case 'credits':
+        return String(course.credits);
+      case 'vhp':
+        return String(this.plannedHours(course));
+      case 'tpe':
+        return String(this.personalWorkHours(course));
+      case 'vht':
+        return String(this.totalHours(course));
+      case 'students':
+        return String(course.students);
+    }
+  }
+
+  private numberValue(value: number | string | null | undefined, fallback = 0): number {
+    const parsed = typeof value === 'string' ? Number.parseInt(value, 10) : Number(value);
+    return Number.isFinite(parsed) ? parsed : fallback;
   }
 
   get filteredCourses(): Course[] {

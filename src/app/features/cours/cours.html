@@ -1,194 +1,601 @@
 <div class="courses">
-  <div class="page-header">
-    <div class="title-wrap">
-      <h1 class="page-title">Gestion des Cours</h1>
-      <span class="course-count">({{ totalResults }})</span>
-    </div>
-    <button mat-flat-button class="primary-btn" type="button">
-      <mat-icon>add</mat-icon>
-      Nouveau Cours
-    </button>
-  </div>
+  <ng-container *ngIf="detailCourse as course; else courseList">
+    <section class="course-details-page" aria-labelledby="course-details-title">
+      <div class="page-header">
+        <div class="title-wrap details-title-wrap">
+          <button
+            mat-stroked-button
+            class="back-btn"
+            type="button"
+            aria-label="Retour à la liste des cours"
+            (click)="backToCourseList()"
+          >
+            <mat-icon>arrow_back</mat-icon>
+            Retour aux cours
+          </button>
+          <div>
+            <h1 id="course-details-title" class="page-title">Détails du cours</h1>
+            <p class="details-subtitle">Consultez les informations pédagogiques du cours.</p>
+          </div>
+        </div>
+      </div>
 
-  <div class="filters-card">
-    <div class="filters-title">Filtres académiques</div>
-    <div class="filters-grid">
-      <div class="filter-field">
-        <label for="course-speciality">Spécialité</label>
-        <select id="course-speciality" [(ngModel)]="selectedSpecialite">
-          <option *ngFor="let item of specialites" [value]="item.value">
-            {{ item.label }}
-          </option>
-        </select>
-      </div>
-      <div class="filter-field">
-        <label for="course-level">Niveau</label>
-        <select id="course-level" [(ngModel)]="selectedNiveau">
-          <option *ngFor="let item of niveaux" [value]="item.value">
-            {{ item.label }}
-          </option>
-        </select>
-      </div>
-      <div class="filter-field">
-        <label for="course-class">Classe</label>
-        <select id="course-class" [(ngModel)]="selectedClasse">
-          <option *ngFor="let item of classes" [value]="item.value">
-            {{ item.label }}
-          </option>
-        </select>
-      </div>
-      <div class="filter-field">
-        <label for="course-semester">Semestre</label>
-        <select id="course-semester" [(ngModel)]="selectedSemestre">
-          <option *ngFor="let item of semestres" [value]="item.value">
-            {{ item.label }}
-          </option>
-        </select>
-      </div>
-    </div>
-  </div>
+      <article class="course-details-card">
+        <div class="details-course-heading">
+          <span class="details-course-icon"><mat-icon>school</mat-icon></span>
+          <div>
+            <ng-container *ngIf="isEditing(course, 'ue'); else detailsUeValue">
+              <input
+                class="inline-edit-input details-inline-input"
+                type="text"
+                [value]="editingValue"
+                (input)="updateEditingValue($event)"
+                (keydown.enter)="saveInlineEdit(course)"
+                (keydown.escape)="cancelInlineEditing()"
+              />
+            </ng-container>
+            <ng-template #detailsUeValue>
+              <span
+                class="details-course-ue details-editable"
+                title="Double-cliquez pour modifier"
+                (dblclick)="$event.stopPropagation(); startInlineEditing(course, 'ue')"
+                >{{ course.ue }}</span
+              >
+            </ng-template>
+            <ng-container *ngIf="isEditing(course, 'module'); else detailsModuleValue">
+              <input
+                class="inline-edit-input details-inline-input"
+                type="text"
+                [value]="editingValue"
+                (input)="updateEditingValue($event)"
+                (keydown.enter)="saveInlineEdit(course)"
+                (keydown.escape)="cancelInlineEditing()"
+              />
+            </ng-container>
+            <ng-template #detailsModuleValue>
+              <h2
+                class="details-editable"
+                title="Double-cliquez pour modifier"
+                (dblclick)="$event.stopPropagation(); startInlineEditing(course, 'module')"
+              >
+                {{ course.module }}
+              </h2>
+            </ng-template>
+          </div>
+        </div>
 
-  <section class="academic-context" aria-label="Contexte académique">
-    <div>
-      <strong>Domaine</strong><span>{{ academicContext.domain }}</span>
-    </div>
-    <div>
-      <strong>Spécialité</strong><span>{{ academicContext.speciality }}</span>
-    </div>
-    <div>
-      <strong>Mention</strong><span>{{ academicContext.mention }}</span>
-    </div>
-    <div>
-      <strong>Grade</strong><span>{{ academicContext.grade }}</span>
-    </div>
-  </section>
+        <div class="details-section">
+          <h3>Informations générales</h3>
+          <div class="details-grid">
+            <div>
+              <span>Professeur</span>
+              <ng-container *ngIf="isEditing(course, 'professor'); else detailsProfessorValue">
+                <input
+                  class="inline-edit-input"
+                  type="text"
+                  [value]="editingValue"
+                  (input)="updateEditingValue($event)"
+                  (keydown.enter)="saveInlineEdit(course)"
+                  (keydown.escape)="cancelInlineEditing()"
+                />
+              </ng-container>
+              <ng-template #detailsProfessorValue
+                ><strong
+                  class="details-editable"
+                  title="Double-cliquez pour modifier"
+                  (dblclick)="$event.stopPropagation(); startInlineEditing(course, 'professor')"
+                  >{{ course.professor }}</strong
+                ></ng-template
+              >
+            </div>
+            <div>
+              <span>Spécialité</span>
+              <ng-container *ngIf="isEditing(course, 'specialite'); else detailsSpecialiteValue">
+                <input
+                  class="inline-edit-input"
+                  type="text"
+                  [value]="editingValue"
+                  (input)="updateEditingValue($event)"
+                  (keydown.enter)="saveInlineEdit(course)"
+                  (keydown.escape)="cancelInlineEditing()"
+                />
+              </ng-container>
+              <ng-template #detailsSpecialiteValue
+                ><strong
+                  class="details-editable"
+                  title="Double-cliquez pour modifier"
+                  (dblclick)="$event.stopPropagation(); startInlineEditing(course, 'specialite')"
+                  >{{ course.specialite }}</strong
+                ></ng-template
+              >
+            </div>
+            <div>
+              <span>Niveau</span>
+              <ng-container *ngIf="isEditing(course, 'niveau'); else detailsNiveauValue">
+                <input
+                  class="inline-edit-input"
+                  type="text"
+                  [value]="editingValue"
+                  (input)="updateEditingValue($event)"
+                  (keydown.enter)="saveInlineEdit(course)"
+                  (keydown.escape)="cancelInlineEditing()"
+                />
+              </ng-container>
+              <ng-template #detailsNiveauValue
+                ><strong
+                  class="details-editable"
+                  title="Double-cliquez pour modifier"
+                  (dblclick)="$event.stopPropagation(); startInlineEditing(course, 'niveau')"
+                  >{{ course.niveau }}</strong
+                ></ng-template
+              >
+            </div>
+            <div>
+              <span>Classe</span>
+              <ng-container *ngIf="isEditing(course, 'classe'); else detailsClasseValue">
+                <input
+                  class="inline-edit-input"
+                  type="text"
+                  [value]="editingValue"
+                  (input)="updateEditingValue($event)"
+                  (keydown.enter)="saveInlineEdit(course)"
+                  (keydown.escape)="cancelInlineEditing()"
+                />
+              </ng-container>
+              <ng-template #detailsClasseValue
+                ><strong
+                  class="details-editable"
+                  title="Double-cliquez pour modifier"
+                  (dblclick)="$event.stopPropagation(); startInlineEditing(course, 'classe')"
+                  >{{ course.classe }}</strong
+                ></ng-template
+              >
+            </div>
+            <div>
+              <span>Semestre</span>
+              <ng-container *ngIf="isEditing(course, 'semestre'); else detailsSemestreValue">
+                <input
+                  class="inline-edit-input"
+                  type="text"
+                  [value]="editingValue"
+                  (input)="updateEditingValue($event)"
+                  (keydown.enter)="saveInlineEdit(course)"
+                  (keydown.escape)="cancelInlineEditing()"
+                />
+              </ng-container>
+              <ng-template #detailsSemestreValue
+                ><strong
+                  class="details-editable"
+                  title="Double-cliquez pour modifier"
+                  (dblclick)="$event.stopPropagation(); startInlineEditing(course, 'semestre')"
+                  >{{ course.semestre }}</strong
+                ></ng-template
+              >
+            </div>
+            <div>
+              <span>Crédits</span>
+              <ng-container *ngIf="isEditing(course, 'credits'); else detailsCreditsValue">
+                <input
+                  class="inline-edit-input number-input"
+                  type="number"
+                  min="0"
+                  [value]="editingValue"
+                  (input)="updateEditingValue($event)"
+                  (keydown.enter)="saveInlineEdit(course)"
+                  (keydown.escape)="cancelInlineEditing()"
+                />
+              </ng-container>
+              <ng-template #detailsCreditsValue
+                ><strong
+                  class="details-editable"
+                  title="Double-cliquez pour modifier"
+                  (dblclick)="$event.stopPropagation(); startInlineEditing(course, 'credits')"
+                  >{{ course.credits }}</strong
+                ></ng-template
+              >
+            </div>
+          </div>
+        </div>
 
-  <div class="table-card">
-    <div class="table-toolbar">
-      <label class="search-box">
-        <mat-icon>search</mat-icon>
-        <input
-          type="search"
-          aria-label="Rechercher une unité d'enseignement, un module ou un professeur"
-          placeholder="Rechercher un cours..."
-          [(ngModel)]="searchTerm"
-          (ngModelChange)="onSearchChange($event)"
-        />
-      </label>
-      <div class="toolbar-actions">
-        <button mat-stroked-button class="export-btn" type="button">
-          <mat-icon>content_copy</mat-icon>
-          Dupliquer le référentiel
-        </button>
-        <button mat-stroked-button class="export-btn" type="button">
-          <mat-icon>download</mat-icon>
-          Télécharger le résumé
-        </button>
+        <div class="details-section details-hours-section">
+          <h3>Volume horaire et évaluation</h3>
+          <div class="details-hours-grid">
+            <div>
+              <span>Coefficient</span>
+              <ng-container *ngIf="isEditing(course, 'coefficient'); else detailsCoefficientValue">
+                <input
+                  class="inline-edit-input number-input"
+                  type="number"
+                  min="0"
+                  [value]="editingValue"
+                  (input)="updateEditingValue($event)"
+                  (keydown.enter)="saveInlineEdit(course)"
+                  (keydown.escape)="cancelInlineEditing()"
+                />
+              </ng-container>
+              <ng-template #detailsCoefficientValue
+                ><strong
+                  class="details-editable"
+                  title="Double-cliquez pour modifier"
+                  (dblclick)="$event.stopPropagation(); startInlineEditing(course, 'coefficient')"
+                  >{{ coefficient(course) }}</strong
+                ></ng-template
+              >
+            </div>
+            <div>
+              <span>VHP</span>
+              <ng-container *ngIf="isEditing(course, 'vhp'); else detailsVhpValue">
+                <input
+                  class="inline-edit-input number-input"
+                  type="number"
+                  min="0"
+                  [value]="editingValue"
+                  (input)="updateEditingValue($event)"
+                  (keydown.enter)="saveInlineEdit(course)"
+                  (keydown.escape)="cancelInlineEditing()"
+                />
+              </ng-container>
+              <ng-template #detailsVhpValue
+                ><strong
+                  class="details-editable"
+                  title="Double-cliquez pour modifier"
+                  (dblclick)="$event.stopPropagation(); startInlineEditing(course, 'vhp')"
+                  >{{ plannedHours(course) }} h</strong
+                ></ng-template
+              >
+            </div>
+            <div>
+              <span>TPE</span>
+              <ng-container *ngIf="isEditing(course, 'tpe'); else detailsTpeValue">
+                <input
+                  class="inline-edit-input number-input"
+                  type="number"
+                  min="0"
+                  [value]="editingValue"
+                  (input)="updateEditingValue($event)"
+                  (keydown.enter)="saveInlineEdit(course)"
+                  (keydown.escape)="cancelInlineEditing()"
+                />
+              </ng-container>
+              <ng-template #detailsTpeValue
+                ><strong
+                  class="details-editable"
+                  title="Double-cliquez pour modifier"
+                  (dblclick)="$event.stopPropagation(); startInlineEditing(course, 'tpe')"
+                  >{{ personalWorkHours(course) }} h</strong
+                ></ng-template
+              >
+            </div>
+            <div>
+              <span>VHT</span>
+              <ng-container *ngIf="isEditing(course, 'vht'); else detailsVhtValue">
+                <input
+                  class="inline-edit-input number-input"
+                  type="number"
+                  min="0"
+                  [value]="editingValue"
+                  (input)="updateEditingValue($event)"
+                  (keydown.enter)="saveInlineEdit(course)"
+                  (keydown.escape)="cancelInlineEditing()"
+                />
+              </ng-container>
+              <ng-template #detailsVhtValue
+                ><strong
+                  class="details-editable"
+                  title="Double-cliquez pour modifier"
+                  (dblclick)="$event.stopPropagation(); startInlineEditing(course, 'vht')"
+                  >{{ totalHours(course) }} h</strong
+                ></ng-template
+              >
+            </div>
+          </div>
+        </div>
+      </article>
+    </section>
+  </ng-container>
+
+  <ng-template #courseList>
+    <div class="page-header">
+      <div class="title-wrap">
+        <h1 class="page-title">Gestion des Cours</h1>
+        <span class="course-count">({{ totalResults }})</span>
       </div>
-    </div>
-
-    <div class="semester-tabs" role="tablist" aria-label="Semestres">
-      <button
-        *ngFor="let semester of semesterTabs"
-        type="button"
-        role="tab"
-        [class.active]="selectedSemestre === semester"
-        [attr.aria-selected]="selectedSemestre === semester"
-        (click)="selectSemester(semester)"
-      >
-        Semestre {{ semester.slice(1) }}
+      <button mat-flat-button class="primary-btn" type="button">
+        <mat-icon>add</mat-icon>
+        Nouveau Cours
       </button>
     </div>
 
-    <div class="table-wrapper">
-      <table class="courses-table">
-        <thead>
-          <tr>
-            <th>Unité d'enseignement</th>
-            <th>Module</th>
-            <th>Coef.</th>
-            <th>Crédit</th>
-            <th>Professeur</th>
-            <th>VHP</th>
-            <th>TPE</th>
-            <th>VHT</th>
-            <th class="actions-header">Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          <ng-container *ngFor="let group of groupedCourses">
-            <tr *ngFor="let course of group.courses; let first = first">
-              <td *ngIf="first" class="ue-cell" [attr.rowspan]="group.courses.length">
-                <span class="ue-code">{{ group.ue }}</span>
-              </td>
-              <td class="module-cell">{{ course.module }}</td>
-              <td>{{ coefficient(course) }}</td>
-              <td *ngIf="first" [attr.rowspan]="group.courses.length">
-                <span class="credit-pill">{{ group.credits }}</span>
-              </td>
-              <td>
-                <div class="teacher-cell">
-                  <span class="teacher-avatar"><mat-icon>person</mat-icon></span>
-                  {{ course.professor }}
-                </div>
-              </td>
-              <td>{{ plannedHours(course) }}</td>
-              <td>{{ personalWorkHours(course) }}</td>
-              <td>{{ totalHours(course) }}</td>
-              <td class="actions-cell">
-                <button
-                  class="icon-btn action-trigger"
-                  type="button"
-                  aria-label="Afficher les actions du cours"
-                  [attr.aria-expanded]="openCourseActionId === course.id"
-                  (click)="$event.stopPropagation(); toggleActionMenu(course.id)"
-                >
-                  <mat-icon>more_vert</mat-icon>
-                </button>
-                <div *ngIf="openCourseActionId === course.id" class="action-menu" role="menu">
-                  <button type="button" role="menuitem" (click)="closeActionMenu()">
-                    <mat-icon>visibility</mat-icon>
-                    Voir
-                  </button>
-                  <button type="button" role="menuitem" (click)="closeActionMenu()">
-                    <mat-icon>edit</mat-icon>
-                    Modifier
-                  </button>
-                  <button
-                    type="button"
-                    role="menuitem"
-                    class="danger-action"
-                    (click)="closeActionMenu()"
-                  >
-                    <mat-icon>delete</mat-icon>
-                    Supprimer
-                  </button>
-                </div>
-              </td>
-            </tr>
-          </ng-container>
-          <tr *ngIf="groupedCourses.length === 0">
-            <td class="empty-state" colspan="9">
-              Aucun cours ne correspond aux critères sélectionnés.
-            </td>
-          </tr>
-        </tbody>
-      </table>
+    <div class="filters-card">
+      <div class="filters-title">Filtres académiques</div>
+      <div class="filters-grid">
+        <div class="filter-field">
+          <label for="course-speciality">Spécialité</label>
+          <select id="course-speciality" [(ngModel)]="selectedSpecialite">
+            <option *ngFor="let item of specialites" [value]="item.value">{{ item.label }}</option>
+          </select>
+        </div>
+        <div class="filter-field">
+          <label for="course-level">Niveau</label>
+          <select id="course-level" [(ngModel)]="selectedNiveau">
+            <option *ngFor="let item of niveaux" [value]="item.value">{{ item.label }}</option>
+          </select>
+        </div>
+        <div class="filter-field">
+          <label for="course-class">Classe</label>
+          <select id="course-class" [(ngModel)]="selectedClasse">
+            <option *ngFor="let item of classes" [value]="item.value">{{ item.label }}</option>
+          </select>
+        </div>
+        <div class="filter-field">
+          <label for="course-semester">Semestre</label>
+          <select id="course-semester" [(ngModel)]="selectedSemestre">
+            <option *ngFor="let item of semestres" [value]="item.value">{{ item.label }}</option>
+          </select>
+        </div>
+      </div>
     </div>
 
-    <div class="table-footer">
-      <div class="results">
-        Affichage de {{ startIndex }} à {{ endIndex }} sur {{ totalResults }} résultats
+    <section class="academic-context" aria-label="Contexte académique">
+      <div>
+        <strong>Domaine</strong><span>{{ academicContext.domain }}</span>
       </div>
-      <div class="pagination">
-        <button mat-stroked-button type="button" [disabled]="!canPrev" (click)="previousPage()">
-          Précédent
+      <div>
+        <strong>Spécialité</strong><span>{{ academicContext.speciality }}</span>
+      </div>
+      <div>
+        <strong>Mention</strong><span>{{ academicContext.mention }}</span>
+      </div>
+      <div>
+        <strong>Grade</strong><span>{{ academicContext.grade }}</span>
+      </div>
+    </section>
+
+    <div class="table-card">
+      <div class="table-toolbar">
+        <label class="search-box">
+          <mat-icon>search</mat-icon>
+          <input
+            type="search"
+            aria-label="Rechercher une unité d'enseignement, un module ou un professeur"
+            placeholder="Rechercher un cours..."
+            [(ngModel)]="searchTerm"
+            (ngModelChange)="onSearchChange($event)"
+          />
+        </label>
+        <div class="toolbar-actions">
+          <button mat-stroked-button class="export-btn" type="button">
+            <mat-icon>content_copy</mat-icon>
+            Dupliquer le référentiel
+          </button>
+          <button mat-stroked-button class="export-btn" type="button">
+            <mat-icon>download</mat-icon>
+            Télécharger le résumé
+          </button>
+        </div>
+      </div>
+
+      <div class="semester-tabs" role="tablist" aria-label="Semestres">
+        <button
+          *ngFor="let semester of semesterTabs"
+          type="button"
+          role="tab"
+          [class.active]="selectedSemestre === semester"
+          [attr.aria-selected]="selectedSemestre === semester"
+          (click)="selectSemester(semester)"
+        >
+          Semestre {{ semester.slice(1) }}
         </button>
-        <span class="page-indicator">{{ currentPage }}</span>
-        <button mat-stroked-button type="button" [disabled]="!canNext" (click)="nextPage()">
-          Suivant
-        </button>
+      </div>
+
+      <div class="table-wrapper">
+        <table class="courses-table">
+          <thead>
+            <tr>
+              <th>Unité d'enseignement</th>
+              <th>Module</th>
+              <th>Coef.</th>
+              <th>Crédit</th>
+              <th>Professeur</th>
+              <th>VHP</th>
+              <th>TPE</th>
+              <th>VHT</th>
+              <th class="actions-header">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <ng-container *ngFor="let group of groupedCourses">
+              <tr *ngFor="let course of group.courses; let first = first" class="course-row">
+                <td
+                  *ngIf="first"
+                  class="ue-cell"
+                  [attr.rowspan]="group.courses.length"
+                  (dblclick)="startInlineEditing(course, 'ue')"
+                >
+                  <ng-container *ngIf="isEditing(course, 'ue'); else ueValue">
+                    <input
+                      class="inline-edit-input"
+                      type="text"
+                      [value]="editingValue"
+                      (input)="updateEditingValue($event)"
+                      (keydown.enter)="saveInlineEdit(course)"
+                      (keydown.escape)="cancelInlineEditing()"
+                    />
+                  </ng-container>
+                  <ng-template #ueValue>
+                    <span class="ue-code" title="Double-cliquez pour modifier">{{ group.ue }}</span>
+                  </ng-template>
+                </td>
+                <td class="module-cell" (dblclick)="startInlineEditing(course, 'module')">
+                  <ng-container *ngIf="isEditing(course, 'module'); else moduleValue">
+                    <input
+                      class="inline-edit-input"
+                      type="text"
+                      [value]="editingValue"
+                      (input)="updateEditingValue($event)"
+                      (keydown.enter)="saveInlineEdit(course)"
+                      (keydown.escape)="cancelInlineEditing()"
+                    />
+                  </ng-container>
+                  <ng-template #moduleValue>
+                    <span title="Double-cliquez pour modifier">{{ course.module }}</span>
+                  </ng-template>
+                </td>
+                <td (dblclick)="startInlineEditing(course, 'coefficient')">
+                  <ng-container *ngIf="isEditing(course, 'coefficient'); else coefficientValue">
+                    <input
+                      class="inline-edit-input number-input"
+                      type="number"
+                      min="0"
+                      [value]="editingValue"
+                      (input)="updateEditingValue($event)"
+                      (keydown.enter)="saveInlineEdit(course)"
+                      (keydown.escape)="cancelInlineEditing()"
+                    />
+                  </ng-container>
+                  <ng-template #coefficientValue>
+                    <span title="Double-cliquez pour modifier">{{ coefficient(course) }}</span>
+                  </ng-template>
+                </td>
+                <td
+                  *ngIf="first"
+                  [attr.rowspan]="group.courses.length"
+                  (dblclick)="startInlineEditing(course, 'credits')"
+                >
+                  <ng-container *ngIf="isEditing(course, 'credits'); else creditsValue">
+                    <input
+                      class="inline-edit-input number-input"
+                      type="number"
+                      min="0"
+                      [value]="editingValue"
+                      (input)="updateEditingValue($event)"
+                      (keydown.enter)="saveInlineEdit(course)"
+                      (keydown.escape)="cancelInlineEditing()"
+                    />
+                  </ng-container>
+                  <ng-template #creditsValue>
+                    <span class="credit-pill" title="Double-cliquez pour modifier">{{
+                      group.credits
+                    }}</span>
+                  </ng-template>
+                </td>
+                <td (dblclick)="startInlineEditing(course, 'professor')">
+                  <ng-container *ngIf="isEditing(course, 'professor'); else professorValue">
+                    <input
+                      class="inline-edit-input"
+                      type="text"
+                      [value]="editingValue"
+                      (input)="updateEditingValue($event)"
+                      (keydown.enter)="saveInlineEdit(course)"
+                      (keydown.escape)="cancelInlineEditing()"
+                    />
+                  </ng-container>
+                  <ng-template #professorValue>
+                    <div class="teacher-cell" title="Double-cliquez pour modifier">
+                      <span class="teacher-avatar"><mat-icon>person</mat-icon></span
+                      >{{ course.professor }}
+                    </div>
+                  </ng-template>
+                </td>
+                <td (dblclick)="startInlineEditing(course, 'vhp')">
+                  <ng-container *ngIf="isEditing(course, 'vhp'); else vhpValue">
+                    <input
+                      class="inline-edit-input number-input"
+                      type="number"
+                      min="0"
+                      [value]="editingValue"
+                      (input)="updateEditingValue($event)"
+                      (keydown.enter)="saveInlineEdit(course)"
+                      (keydown.escape)="cancelInlineEditing()"
+                    />
+                  </ng-container>
+                  <ng-template #vhpValue>
+                    <span title="Double-cliquez pour modifier">{{ plannedHours(course) }}</span>
+                  </ng-template>
+                </td>
+                <td (dblclick)="startInlineEditing(course, 'tpe')">
+                  <ng-container *ngIf="isEditing(course, 'tpe'); else tpeValue">
+                    <input
+                      class="inline-edit-input number-input"
+                      type="number"
+                      min="0"
+                      [value]="editingValue"
+                      (input)="updateEditingValue($event)"
+                      (keydown.enter)="saveInlineEdit(course)"
+                      (keydown.escape)="cancelInlineEditing()"
+                    />
+                  </ng-container>
+                  <ng-template #tpeValue>
+                    <span title="Double-cliquez pour modifier">{{
+                      personalWorkHours(course)
+                    }}</span>
+                  </ng-template>
+                </td>
+                <td (dblclick)="startInlineEditing(course, 'vht')">
+                  <ng-container *ngIf="isEditing(course, 'vht'); else vhtValue">
+                    <input
+                      class="inline-edit-input number-input"
+                      type="number"
+                      min="0"
+                      [value]="editingValue"
+                      (input)="updateEditingValue($event)"
+                      (keydown.enter)="saveInlineEdit(course)"
+                      (keydown.escape)="cancelInlineEditing()"
+                    />
+                  </ng-container>
+                  <ng-template #vhtValue>
+                    <span title="Double-cliquez pour modifier">{{ totalHours(course) }}</span>
+                  </ng-template>
+                </td>
+                <td class="actions-cell" (dblclick)="$event.stopPropagation()">
+                  <button
+                    class="icon-btn action-trigger"
+                    type="button"
+                    aria-label="Afficher les actions du cours"
+                    [attr.aria-expanded]="openCourseActionId === course.id"
+                    (click)="$event.stopPropagation(); toggleActionMenu(course.id)"
+                  >
+                    <mat-icon>more_vert</mat-icon>
+                  </button>
+                  <div *ngIf="openCourseActionId === course.id" class="action-menu" role="menu">
+                    <button type="button" role="menuitem" (click)="viewCourse(course)">
+                      <mat-icon>visibility</mat-icon>Voir
+                    </button>
+                    <button
+                      type="button"
+                      role="menuitem"
+                      class="danger-action"
+                      (click)="closeActionMenu()"
+                    >
+                      <mat-icon>delete</mat-icon>Supprimer
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            </ng-container>
+            <tr *ngIf="groupedCourses.length === 0">
+              <td class="empty-state" colspan="9">
+                Aucun cours ne correspond aux critères sélectionnés.
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="table-footer">
+        <div class="results">
+          Affichage de {{ startIndex }} à {{ endIndex }} sur {{ totalResults }} résultats
+        </div>
+        <div class="pagination">
+          <button mat-stroked-button type="button" [disabled]="!canPrev" (click)="previousPage()">
+            Précédent
+          </button>
+          <span class="page-indicator">{{ currentPage }}</span>
+          <button mat-stroked-button type="button" [disabled]="!canNext" (click)="nextPage()">
+            Suivant
+          </button>
+        </div>
       </div>
     </div>
-  </div>
+  </ng-template>
 </div>
